@@ -65,9 +65,12 @@ export class MapComponent extends React.Component {
     }
 
     fetchData(address){
+        console.log(address)
         fetch(`api/GeoData/GetGeoData/${address}`)
-              .then(response => response.json())
+              .then(response => 
+                response.json())
               .then(data => {
+                  console.log(data)
                   this.setState({ geoData: data }, () =>  {this.showPopup()});  
               })
               
@@ -78,7 +81,13 @@ export class MapComponent extends React.Component {
         const projectionTo = 'EPSG:3857';
 
         var content = document.getElementById('popup-content');
-        const geoObject = this.state.geoData.response.GeoObjectCollection.featureMember[0].GeoObject
+        let fm = this.state.geoData.response.GeoObjectCollection.featureMember[0]
+
+        if (!fm){
+            return
+        }
+
+        const geoObject = fm.GeoObject
         content.innerText = geoObject.name
         let coordinates = geoObject.Point.pos.split(" ").map(s => +s)
         coordinates = transform(coordinates, projectionFrom, projectionTo)
@@ -174,8 +183,14 @@ export class MapComponent extends React.Component {
             })
         });
         this.overlay = overlay
+        
+    }
 
-        this.fetchData('Москва, улица Новый Арбат, дом 24')
+    componentDidUpdate(prevProps, prevState){
+        if (this.props.searchAddress != prevProps.searchAddress && 
+            this.props.searchAddress !== ''){
+            this.fetchData(this.props.searchAddress)
+        }
     }
 
     render() {
