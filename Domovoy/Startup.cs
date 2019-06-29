@@ -5,6 +5,17 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore.SqlServer;
+using AutoMapper;
+using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.EntityFrameworkCore;
+using Domovoy.Models.DomainObjects;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI;
+using Domovoy.Data;
 
 namespace Domovoy
 {
@@ -20,13 +31,62 @@ namespace Domovoy
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-
-            // In production, the React files will be served from this directory
-            services.AddSpaStaticFiles(configuration =>
+            services.AddEntityFrameworkSqlServer().AddDbContext<DomovoyContext>(opt =>
             {
-                configuration.RootPath = "ClientApp/build";
+                opt.UseSqlServer("Server=as21430;Database=ContractsPIR;Trusted_Connection=True;");
+
+                opt.UseSqlServer(Configuration.GetConnectionString("domovoyConnection"),
+                b =>
+                {
+                    b.MigrationsAssembly("Domovoy");
+                    //b.UseNetTopologySuite();
+                });
             });
+
+            //Identity
+            services.AddIdentity<User, IdentityRole<long>>(o =>
+            {
+                o.Password.RequireDigit = false;
+                o.Password.RequireLowercase = false;
+                o.Password.RequireUppercase = false;
+                o.Password.RequireNonAlphanumeric = false;
+                o.Password.RequiredLength = 6;
+            })
+            .AddDefaultUI(UIFramework.Bootstrap4)
+            .AddSignInManager<SignInManager<User>>()
+            .AddEntityFrameworkStores<DomovoyContext>()
+            .AddDefaultTokenProviders();
+
+            //Authentication
+            services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
+            })
+            .AddCookie(options =>
+            {
+                options.LoginPath = new PathString("/auth/login");
+                options.LogoutPath = new PathString("/home/index");
+            });
+
+            //Mapper
+            services.AddAutoMapper();
+
+            //Validation
+            services
+                .AddMvc()
+                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<Startup>());
+
+            //Policy
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("SuperAdmin", policy => policy.RequireRole("super_admin"));
+                options.AddPolicy("Administration", policy => policy.RequireRole("admin"));
+                options.AddPolicy("All", policy => policy.RequireRole(new string[] { "admin", "manager", "super_user", "user" }));
+                options.AddPolicy("Management", policy => policy.RequireRole(new string[] { "admin", "manager" }));
+                options.AddPolicy("SuperRight", policy => policy.RequireRole(new string[] { "admin", "super_user" }));
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -36,33 +96,22 @@ namespace Domovoy
             {
                 app.UseDeveloperExceptionPage();
             }
-            else
-            {
-                app.UseExceptionHandler("/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-            }
 
-            app.UseHttpsRedirection();
+            app.UseExceptionHandler("/Home/Error");
+            app.UseStatusCodePagesWithReExecute("/Error/{0}");
+
+            app.UseDefaultFiles();
             app.UseStaticFiles();
-            app.UseSpaStaticFiles();
+            app.UseCookiePolicy();
+            app.UseAuthentication();
 
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller}/{action=Index}/{id?}");
+                    template: "{controller=Home}/{action=Index}/{id?}");
             });
 
-            app.UseSpa(spa =>
-            {
-                spa.Options.SourcePath = "ClientApp";
-
-                if (env.IsDevelopment())
-                {
-                    spa.UseReactDevelopmentServer(npmScript: "start");
-                }
-            });
         }
     }
 }
