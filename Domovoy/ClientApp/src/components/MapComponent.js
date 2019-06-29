@@ -9,7 +9,7 @@ import Feature from 'ol/Feature';
 import Point from 'ol/geom/Point';
 import { Circle as CircleStyle, Fill, Stroke, Style, Text } from 'ol/style';
 import { transform, get, transformExtent } from 'ol/proj.js'
-import {ZoomToExtent} from 'ol/control.js';
+import { ZoomToExtent } from 'ol/control.js';
 
 import { EPSG3857_X_MIN, EPSG3857_Y_MIN, EPSG3857_X_MAX, EPSG3857_Y_MAX } from '../constants/constants'
 
@@ -81,11 +81,11 @@ export class MapComponent extends React.Component {
         const projectionFrom = 'EPSG:4326';
         const projectionTo = 'EPSG:3857';
         let coordinates = str.split(" ").map(s => +s)
-        if (needConvert){
+        if (needConvert) {
             coordinates = transform(coordinates, projectionFrom, projectionTo)
         }
         return coordinates
-        
+
     }
 
     showPopup() {
@@ -106,13 +106,13 @@ export class MapComponent extends React.Component {
         let lowerCorner = this.getCoordinates(geoObject.boundedBy.Envelope.lowerCorner, true)
         let upperCorner = this.getCoordinates(geoObject.boundedBy.Envelope.upperCorner, true)
 
-        const ext = [lowerCorner[0], lowerCorner[1], upperCorner[0],upperCorner[1]]
+        const ext = [lowerCorner[0], lowerCorner[1], upperCorner[0], upperCorner[1]]
         if (this.zoomToExtent)
             this.map.removeControl(this.zoomToExtent)
         this.zoomToExtent = new ZoomToExtent({ extent: ext })
         this.map.addControl(this.zoomToExtent)
 
-        
+
         console.log(ext)
         this.map.getView().fit(ext, this.map.getSize());
     }
@@ -205,17 +205,13 @@ export class MapComponent extends React.Component {
         });
         this.overlay = overlay
 
-        this.showHouseInfo(34966)
     }
 
-    showHouseInfo(id){
+    showHouseInfo(id) {
         fetch(`api/GeoData/GetHouse/${id}`)
-            .then(response =>{
-                console.log(response)
-                return response.json()}
-                )
+            .then(response => response.json())
             .then(data => {
-                console.log('house',data)                
+                console.log('house', data)
             })
     }
 
@@ -231,21 +227,19 @@ export class MapComponent extends React.Component {
         return (
 
             <div id='component-root'>
-                <OrderComponent
-                    isUserRequestFromShown={this.state.isUserRequestFromShown}
-                    userName={this.state.userName}
-                    userTel={this.state.userTel}
-                    requestHeader={this.state.requestHeader}
-                    requestBody={this.state.requestBody}
-                    toggle={this.toggle}
-                    handleChange={this.handleChange}
-                    handleSubmit={this.handleSubmit}
-                    isNewUserRequest={this.state.isNewUserRequest}
-                />
-                <div id='map-container'></div>
-                <div id="popup" className="ol-popup">
-                    <a href="#" id="popup-closer" className="ol-popup-closer"></a>
-                    <div id="popup-content"></div>
+               
+                <div className='container'>
+                    <div className='row'>
+                        <div className='col-lg-5'></div>
+                        <div className='col-lg-7'>
+                            <div id='map-container'></div>
+                            <div id="popup" className="ol-popup">
+                                <a href="#" id="popup-closer" className="ol-popup-closer"></a>
+                                <div id="popup-content"></div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         )

@@ -89,7 +89,9 @@ namespace Domovoy
 
 
             services.AddScoped<IDomovoyContextFactory, DomovoyContextFactory>();
-            services.AddScoped<IHouseRepository, HouseRepository>();
+            services.AddScoped<IHouseRepository>(provider => new HouseRepository(
+                Configuration.GetConnectionString("domovoyConnection"),
+                provider.GetService<IDomovoyContextFactory>()));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
