@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-export class MyHome extends Component {
+export class ChangeUK extends Component {
 
     constructor(props) {
         super(props)
@@ -21,10 +21,10 @@ export class MyHome extends Component {
     render() {
         return (
             <div>
-                <h1>Мой дом</h1>
-
+                <h1>Выбор Управляющей компании</h1>
+                
                 <div>
-                    Инфа по дому
+                    Форма торгов?
                 </div>
             </div>
         )

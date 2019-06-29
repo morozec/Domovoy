@@ -1,6 +1,8 @@
 ﻿import React from 'react';
 import {HouseMenu} from './HouseMenu';
 import {MyHome} from './MyHome';
+import {ChangeUK} from './ChangeUK';
+import {ChangeTariff} from './ChangeTariff';
 import './House.css';
 
 export class HouseComponent extends React.Component {
@@ -18,6 +20,19 @@ export class HouseComponent extends React.Component {
         this.setState({activeButton:newValue})
     }
 
+    // fetchData(id) {
+
+    //     console.log(id)
+
+    //     fetch(`api/GeoData/GetGeoData/${id}`)
+    //         .then(response =>
+    //             response.json())
+    //         .then(data => {
+    //             console.log(data)
+    //             this.setState({ geoData: data }, () => { this.showPopup() });
+    //         })
+    // }
+
 
     render() {
 
@@ -26,10 +41,10 @@ export class HouseComponent extends React.Component {
 
         switch(this.state.activeButton) {
             case "ChangeTariff":
-                pageDiv = <h1>Выбор тарифа</h1>
+                pageDiv = <ChangeTariff />
                 break;
             case "ChangeUK":
-                pageDiv = <h1>Выбор УК</h1>
+                pageDiv = <ChangeUK />
                 break;
             default:
                 pageDiv = <MyHome />;
