@@ -1,0 +1,14 @@
+/* HOUSE - PAGE*/
+.house-page {
+    min-height: 50vh;
+}
+
+/* HOUSE-MENU */
+.house-menu {
+    border-right: solid 1px #eee;
+    height: 100%;
+}
+
+.house-menu-button {
+    margin-bottom: 5px;
+}

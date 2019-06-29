@@ -11,7 +11,7 @@ export default class App extends Component {
     return (
       <Layout>
             <Route exact path='/' component={MapComponent} />
-            <Route exact path='/House' component={HouseComponent} />  
+            <Route exact path='/House/:id' component={HouseComponent} />  
       </Layout>
     );
   }
