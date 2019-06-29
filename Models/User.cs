@@ -6,12 +6,14 @@ namespace Models
     /// <summary>
     /// Пользователь.
     /// </summary>
-    public class User : IdentityUser<long>
+    public class User
     {
         #region Constructors
         #endregion //Constructors
 
         #region DataProperties
+
+        public int UserId { get; set; }
 
         /// <summary>
         /// Имя.

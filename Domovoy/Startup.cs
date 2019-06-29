@@ -43,30 +43,30 @@ namespace Domovoy
             });
 
             //Identity
-            services.AddIdentity<User, IdentityRole<long>>(o =>
-            {
-                o.Password.RequireDigit = false;
-                o.Password.RequireLowercase = false;
-                o.Password.RequireUppercase = false;
-                o.Password.RequireNonAlphanumeric = false;
-                o.Password.RequiredLength = 6;
-            })
-            .AddDefaultUI(UIFramework.Bootstrap4)
-            .AddSignInManager<SignInManager<User>>()
-            .AddEntityFrameworkStores<DomovoyContext>()
-            .AddDefaultTokenProviders();
+            //services.AddIdentity<User, IdentityRole<long>>(o =>
+            //{
+            //    o.Password.RequireDigit = false;
+            //    o.Password.RequireLowercase = false;
+            //    o.Password.RequireUppercase = false;
+            //    o.Password.RequireNonAlphanumeric = false;
+            //    o.Password.RequiredLength = 6;
+            //})
+            //.AddDefaultUI(UIFramework.Bootstrap4)
+            //.AddSignInManager<SignInManager<User>>()
+            //.AddEntityFrameworkStores<DomovoyContext>()
+            //.AddDefaultTokenProviders();
 
             //Authentication
-            services.AddAuthentication(options =>
-            {
-                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
-            })
-            .AddCookie(options =>
-            {
-                options.LoginPath = new PathString("/auth/login");
-                options.LogoutPath = new PathString("/home/index");
-            });
+            //services.AddAuthentication(options =>
+            //{
+            //    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            //    options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
+            //})
+            //.AddCookie(options =>
+            //{
+            //    options.LoginPath = new PathString("/auth/login");
+            //    options.LogoutPath = new PathString("/home/index");
+            //});
 
             //Mapper
             services.AddAutoMapper();
@@ -77,14 +77,14 @@ namespace Domovoy
                 .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<Startup>());
 
             //Policy
-            services.AddAuthorization(options =>
-            {
-                options.AddPolicy("SuperAdmin", policy => policy.RequireRole("super_admin"));
-                options.AddPolicy("Administration", policy => policy.RequireRole("admin"));
-                options.AddPolicy("All", policy => policy.RequireRole(new string[] { "admin", "manager", "super_user", "user" }));
-                options.AddPolicy("Management", policy => policy.RequireRole(new string[] { "admin", "manager" }));
-                options.AddPolicy("SuperRight", policy => policy.RequireRole(new string[] { "admin", "super_user" }));
-            });
+            //services.AddAuthorization(options =>
+            //{
+            //    options.AddPolicy("SuperAdmin", policy => policy.RequireRole("super_admin"));
+            //    options.AddPolicy("Administration", policy => policy.RequireRole("admin"));
+            //    options.AddPolicy("All", policy => policy.RequireRole(new string[] { "admin", "manager", "super_user", "user" }));
+            //    options.AddPolicy("Management", policy => policy.RequireRole(new string[] { "admin", "manager" }));
+            //    options.AddPolicy("SuperRight", policy => policy.RequireRole(new string[] { "admin", "super_user" }));
+            //});
 
 
             services.AddScoped<IDomovoyContextFactory, DomovoyContextFactory>();
