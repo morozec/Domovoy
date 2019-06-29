@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Domovoy.Data.Factories;
+using DBRepository.Factories;
 using Microsoft.EntityFrameworkCore;
 using Models;
 
-namespace Domovoy.Data.Repositories
+namespace DBRepository.Repositories
 {
     public class UserRepository : BaseRepository, IUserRepository
     {

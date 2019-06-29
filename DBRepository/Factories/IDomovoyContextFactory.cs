@@ -1,4 +1,4 @@
-﻿namespace Domovoy.Data.Factories
+﻿namespace DBRepository.Factories
 {
     public interface IDomovoyContextFactory
     {

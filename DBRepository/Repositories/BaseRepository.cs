@@ -1,6 +1,6 @@
-﻿using Domovoy.Data.Factories;
+﻿using DBRepository.Factories;
 
-namespace Domovoy.Data.Repositories
+namespace DBRepository.Repositories
 {
     public abstract class BaseRepository
     {

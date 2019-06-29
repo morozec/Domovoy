@@ -1,10 +1,9 @@
-﻿
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Models;
 
-namespace Domovoy.Data
+namespace DBRepository
 {
     public class DomovoyContext : IdentityDbContext<User, IdentityRole<long>, long>
     {

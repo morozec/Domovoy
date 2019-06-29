@@ -1,8 +1,6 @@
-﻿
+﻿using Microsoft.EntityFrameworkCore;
 
-using Microsoft.EntityFrameworkCore;
-
-namespace Domovoy.Data.Factories
+namespace DBRepository.Factories
 {
     public class DomovoyContextFactory : IDomovoyContextFactory
     {

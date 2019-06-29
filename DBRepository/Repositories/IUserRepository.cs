@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Models;
 
-namespace Domovoy.Data.Repositories
+namespace DBRepository.Repositories
 {
     public interface IUserRepository
     {
