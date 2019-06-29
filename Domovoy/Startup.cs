@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore.SqlServer;
 using AutoMapper;
 using DBRepository;
 using DBRepository.Factories;
+using DBRepository.Repositories;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -88,6 +89,7 @@ namespace Domovoy
 
 
             services.AddScoped<IDomovoyContextFactory, DomovoyContextFactory>();
+            services.AddScoped<IHouseRepository, HouseRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

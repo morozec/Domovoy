@@ -85,6 +85,7 @@ export class MapComponent extends React.Component {
             coordinates = transform(coordinates, projectionFrom, projectionTo)
         }
         return coordinates
+        
     }
 
     showPopup() {
@@ -204,7 +205,20 @@ export class MapComponent extends React.Component {
         });
         this.overlay = overlay
 
+        this.showHouseInfo(34966)
     }
+
+    showHouseInfo(id){
+        fetch(`api/GeoData/GetHouse/${id}`)
+            .then(response =>{
+                console.log(response)
+                return response.json()}
+                )
+            .then(data => {
+                console.log('house',data)                
+            })
+    }
+
 
     componentDidUpdate(prevProps, prevState) {
         if (this.props.searchAddress != prevProps.searchAddress &&
