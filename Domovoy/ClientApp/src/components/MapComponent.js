@@ -1,6 +1,6 @@
 import React from 'react'
 import { Tile as TileLayer, Vector as VectorLayer } from 'ol/layer.js';
-import {Cluster, OSM, Vector as VectorSource} from 'ol/source.js';
+import { Cluster, OSM, Vector as VectorSource } from 'ol/source.js';
 import Map from 'ol/Map.js';
 import View from 'ol/View.js';
 import OrderComponent from './OrderComponent'
@@ -8,7 +8,8 @@ import Overlay from 'ol/Overlay.js';
 import Feature from 'ol/Feature';
 import Point from 'ol/geom/Point';
 import { Circle as CircleStyle, Fill, Stroke, Style, Text } from 'ol/style';
-import {transform, get} from 'ol/proj.js'
+import { transform, get, transformExtent } from 'ol/proj.js'
+import {ZoomToExtent} from 'ol/control.js';
 
 import { EPSG3857_X_MIN, EPSG3857_Y_MIN, EPSG3857_X_MAX, EPSG3857_Y_MAX } from '../constants/constants'
 
@@ -28,7 +29,7 @@ export class MapComponent extends React.Component {
             requestBody: '',
             X: 0,
             Y: 0,
-            geoData: {}        
+            geoData: {}
         }
 
         this.toggle = this.toggle.bind(this)
@@ -64,36 +65,55 @@ export class MapComponent extends React.Component {
         }))
     }
 
-    fetchData(address){
+    fetchData(address) {
         console.log(address)
         fetch(`api/GeoData/GetGeoData/${address}`)
-              .then(response => 
+            .then(response =>
                 response.json())
-              .then(data => {
-                  console.log(data)
-                  this.setState({ geoData: data }, () =>  {this.showPopup()});  
-              })
-              
-      }
+            .then(data => {
+                console.log(data)
+                this.setState({ geoData: data }, () => { this.showPopup() });
+            })
 
-    showPopup(){
+    }
+
+    getCoordinates(str, needConvert = true) {
         const projectionFrom = 'EPSG:4326';
         const projectionTo = 'EPSG:3857';
+        let coordinates = str.split(" ").map(s => +s)
+        if (needConvert){
+            coordinates = transform(coordinates, projectionFrom, projectionTo)
+        }
+        return coordinates
+    }
+
+    showPopup() {
+
 
         var content = document.getElementById('popup-content');
         let fm = this.state.geoData.response.GeoObjectCollection.featureMember[0]
 
-        if (!fm){
+        if (!fm) {
             return
         }
 
         const geoObject = fm.GeoObject
         content.innerText = geoObject.name
-        let coordinates = geoObject.Point.pos.split(" ").map(s => +s)
-        coordinates = transform(coordinates, projectionFrom, projectionTo)
-        console.log(coordinates)
+        let coordinates = this.getCoordinates(geoObject.Point.pos)
         this.overlay.setPosition(coordinates)
+
+        let lowerCorner = this.getCoordinates(geoObject.boundedBy.Envelope.lowerCorner, true)
+        let upperCorner = this.getCoordinates(geoObject.boundedBy.Envelope.upperCorner, true)
+
+        const ext = [lowerCorner[0], lowerCorner[1], upperCorner[0],upperCorner[1]]
+        if (this.zoomToExtent)
+            this.map.removeControl(this.zoomToExtent)
+        this.zoomToExtent = new ZoomToExtent({ extent: ext })
+        this.map.addControl(this.zoomToExtent)
+
         
+        console.log(ext)
+        this.map.getView().fit(ext, this.map.getSize());
     }
 
     showMarkers() {
@@ -149,7 +169,7 @@ export class MapComponent extends React.Component {
     }
 
     componentDidMount() {
-        let container = document.getElementById('popup');        
+        let container = document.getElementById('popup');
         let closer = document.getElementById('popup-closer');
 
         let overlay = new Overlay({
@@ -168,7 +188,7 @@ export class MapComponent extends React.Component {
         };
 
         this.clustersLayer = new VectorLayer({})
-        let map = new Map({
+        this.map = new Map({
             layers: [
                 new TileLayer({
                     source: new OSM()
@@ -183,12 +203,12 @@ export class MapComponent extends React.Component {
             })
         });
         this.overlay = overlay
-        
+
     }
 
-    componentDidUpdate(prevProps, prevState){
-        if (this.props.searchAddress != prevProps.searchAddress && 
-            this.props.searchAddress !== ''){
+    componentDidUpdate(prevProps, prevState) {
+        if (this.props.searchAddress != prevProps.searchAddress &&
+            this.props.searchAddress !== '') {
             this.fetchData(this.props.searchAddress)
         }
     }
