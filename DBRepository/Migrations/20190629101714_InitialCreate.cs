@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Domovoy.Migrations
+namespace DBRepository.Migrations
 {
     public partial class InitialCreate : Migration
     {

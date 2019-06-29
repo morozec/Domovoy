@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace Domovoy.Models.DomainObjects
+namespace Models
 {
     /// <summary>
     /// Пользователь.

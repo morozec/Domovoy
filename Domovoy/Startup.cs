@@ -7,15 +7,16 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore.SqlServer;
 using AutoMapper;
+using Domovoy.Data;
+using Domovoy.Data.Factories;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.EntityFrameworkCore;
-using Domovoy.Models.DomainObjects;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
-using Domovoy.Data;
+using Models;
 
 namespace Domovoy
 {
@@ -87,6 +88,8 @@ namespace Domovoy
                 options.AddPolicy("SuperRight", policy => policy.RequireRole(new string[] { "admin", "super_user" }));
             });
 
+
+            services.AddScoped<IDomovoyContextFactory, DomovoyContextFactory>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

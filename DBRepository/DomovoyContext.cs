@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Domovoy.Models.DomainObjects;
+using Models;
 
 namespace Domovoy.Data
 {

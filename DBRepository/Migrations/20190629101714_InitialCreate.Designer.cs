@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace Domovoy.Migrations
+namespace DBRepository.Migrations
 {
     [DbContext(typeof(DomovoyContext))]
     [Migration("20190629101714_InitialCreate")]
