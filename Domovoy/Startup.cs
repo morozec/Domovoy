@@ -34,8 +34,6 @@ namespace Domovoy
         {
             services.AddEntityFrameworkSqlServer().AddDbContext<DomovoyContext>(opt =>
             {
-                opt.UseSqlServer("Server=as21430;Database=ContractsPIR;Trusted_Connection=True;");
-
                 opt.UseSqlServer(Configuration.GetConnectionString("domovoyConnection"),
                 b =>
                 {
@@ -113,6 +111,16 @@ namespace Domovoy
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
+            });
+
+            app.UseSpa(spa =>
+            {
+                spa.Options.SourcePath = "ClientApp";
+
+                if (env.IsDevelopment())
+                {
+                    spa.UseReactDevelopmentServer(npmScript: "start");
+                }
             });
 
         }
