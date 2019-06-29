@@ -36,7 +36,9 @@ namespace DBRepository.Repositories
         {
             using (var context = DomovoyContextFactory.CreateDbContext(ConnectionString))
             {
-                return await context.Houses.SingleOrDefaultAsync(h => h.HouseId == id);
+                return await context.Houses
+                    .Include(e => e.UK)
+                    .SingleOrDefaultAsync(h => h.HouseId == id);
             }
         }
     }

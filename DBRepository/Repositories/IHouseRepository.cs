@@ -12,6 +12,7 @@ namespace DBRepository.Repositories
 
         Task<List<House>> GetHousesByAddress(string address);
 
+        Task<House> GetHousesById(int id);
 
     }
 }
