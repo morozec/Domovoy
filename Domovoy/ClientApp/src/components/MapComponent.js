@@ -55,7 +55,7 @@ export class MapComponent extends React.Component {
             requestBody: '',
             X: coordinate[0],
             Y: coordinate[1],
-            isNewUserRequest: true
+            isNewUserRequest: true,            
         })
     }
 
@@ -66,13 +66,16 @@ export class MapComponent extends React.Component {
     }
 
     fetchData(address) {
-        console.log(address)
+        
         fetch(`api/GeoData/GetGeoData/${address}`)
             .then(response =>
                 response.json())
-            .then(data => {
-                console.log(data)
-                this.setState({ geoData: data }, () => { this.showPopup() });
+            .then(data => {      
+                console.log(data)          
+                this.setState({ geoData: data }, () => { 
+                    this.showPopup()
+
+                 });
             })
 
     }
@@ -217,6 +220,7 @@ export class MapComponent extends React.Component {
 
 
     componentDidUpdate(prevProps, prevState) {
+        console.log(this.props.value)
         if (this.props.searchAddress != prevProps.searchAddress &&
             this.props.searchAddress !== '') {
             this.fetchData(this.props.searchAddress)
@@ -230,7 +234,7 @@ export class MapComponent extends React.Component {
                
                 <div className='container'>
                     <div className='row'>
-                        <div className='col-lg-5'></div>
+                        <div className='col-lg-5'>{this.state.houseInfo}</div>
                         <div className='col-lg-7'>
                             <div id='map-container'></div>
                             <div id="popup" className="ol-popup">

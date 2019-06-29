@@ -3,6 +3,8 @@ import { Container } from 'reactstrap';
 import { NavMenu } from './NavMenu';
 import { MapComponent } from './MapComponent'
 
+const MyContext = React.createContext(); 
+
 export class Layout extends Component {
   static displayName = Layout.name;
 
@@ -20,11 +22,14 @@ export class Layout extends Component {
     this.setState({ searchAddress: e.target.value })
   }
 
-  handleSearchButtonClick(){
+  handleSearchButtonClick(){    
     this.setState({resultSearchAddress:this.state.searchAddress})
   }
 
   render() {
+
+    
+    
     return (
       <div>
         <NavMenu
@@ -33,8 +38,9 @@ export class Layout extends Component {
           handleSearchButtonClick={this.handleSearchButtonClick}
         />
         <Container>
-          {this.props.children}
+          <MapComponent searchAddress = {this.state.resultSearchAddress} />
         </Container>
+        
 
       </div>
     );
