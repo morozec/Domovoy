@@ -1,6 +1,6 @@
 import React from 'react'
-import { OSM } from 'ol/source.js';
 import { Tile as TileLayer, Vector as VectorLayer } from 'ol/layer.js';
+import {Cluster, OSM, Vector as VectorSource} from 'ol/source.js';
 import Map from 'ol/Map.js';
 import View from 'ol/View.js';
 import OrderComponent from './OrderComponent'
@@ -8,14 +8,16 @@ import Overlay from 'ol/Overlay.js';
 import Feature from 'ol/Feature';
 import Point from 'ol/geom/Point';
 import { Circle as CircleStyle, Fill, Stroke, Style, Text } from 'ol/style';
+import {transform, get} from 'ol/proj.js'
 
 import { EPSG3857_X_MIN, EPSG3857_Y_MIN, EPSG3857_X_MAX, EPSG3857_Y_MAX } from '../constants/constants'
 
 import 'ol/ol.css';
+import './MapComponent.css'
 
 export class MapComponent extends React.Component {
 
-    constructor(props){
+    constructor(props) {
         super(props)
         this.state = {
             isUserRequestFromShown: false,
@@ -26,12 +28,13 @@ export class MapComponent extends React.Component {
             requestBody: '',
             X: 0,
             Y: 0,
-            userRequests: []
+            geoData: {}        
         }
 
         this.toggle = this.toggle.bind(this)
+        this.fetchData = this.fetchData.bind(this)
     }
-    
+
 
     handleChange(event) {
         const { name, value } = event.target
@@ -43,27 +46,101 @@ export class MapComponent extends React.Component {
     }
 
     handleMapClick(coordinate) {
-        this.setState({ 
-            isUserRequestFromShown: true, 
-            userName: '', 
-            userTel: '', 
-            requestHeader: '', 
-            requestBody: '', 
-            X: coordinate[0], 
-            Y: coordinate[1], 
-            isNewUserRequest: true 
+        this.setState({
+            isUserRequestFromShown: true,
+            userName: '',
+            userTel: '',
+            requestHeader: '',
+            requestBody: '',
+            X: coordinate[0],
+            Y: coordinate[1],
+            isNewUserRequest: true
         })
     }
 
-    toggle(){
+    toggle() {
         this.setState(prevState => ({
-          isUserRequestFromShown: !prevState.isUserRequestFromShown
-        }))        
+            isUserRequestFromShown: !prevState.isUserRequestFromShown
+        }))
+    }
+
+    fetchData(address){
+        fetch(`api/GeoData/GetGeoData/${address}`)
+              .then(response => response.json())
+              .then(data => {
+                  this.setState({ geoData: data }, () =>  {this.showPopup()});  
+              })
+              
       }
 
-    componentDidMount() {
-        let container = document.getElementById('popup');
+    showPopup(){
+        const projectionFrom = 'EPSG:4326';
+        const projectionTo = 'EPSG:3857';
+
         var content = document.getElementById('popup-content');
+        const geoObject = this.state.geoData.response.GeoObjectCollection.featureMember[0].GeoObject
+        content.innerText = geoObject.name
+        let coordinates = geoObject.Point.pos.split(" ").map(s => +s)
+        coordinates = transform(coordinates, projectionFrom, projectionTo)
+        console.log(coordinates)
+        this.overlay.setPosition(coordinates)
+        
+    }
+
+    showMarkers() {
+        this.map.removeLayer(this.clustersLayer)
+
+        const urFeatures = []
+        for (let i = 0; i < this.state.datas.length; ++i) {
+            const data = this.state.datas[i]
+            const coordinates = [data.x, data.y]
+            const feature = new Feature(new Point(coordinates))
+            feature.setId(data.id)
+            urFeatures.push(feature)
+        }
+        const source = new VectorSource({
+            features: urFeatures
+        })
+        const clusterSource = new Cluster({
+            distance: 40,
+            source: source
+        })
+
+        var styleCache = {};
+        this.clustersLayer = new VectorLayer({
+            source: clusterSource,
+            style: function (feature) {
+                var size = feature.get('features').length;
+                var style = styleCache[size];
+                if (!style) {
+                    style = new Style({
+                        image: new CircleStyle({
+                            radius: 10,
+                            stroke: new Stroke({
+                                color: '#fff'
+                            }),
+                            fill: new Fill({
+                                color: '#3399CC'
+                            })
+                        }),
+                        text: new Text({
+                            text: size.toString(),
+                            fill: new Fill({
+                                color: '#fff'
+                            })
+                        })
+                    });
+                    styleCache[size] = style;
+                }
+                return style;
+            }
+        });
+
+        this.map.addLayer(this.clustersLayer)
+    }
+
+    componentDidMount() {
+        let container = document.getElementById('popup');        
         let closer = document.getElementById('popup-closer');
 
         let overlay = new Overlay({
@@ -81,11 +158,13 @@ export class MapComponent extends React.Component {
             return false;
         };
 
+        this.clustersLayer = new VectorLayer({})
         let map = new Map({
             layers: [
                 new TileLayer({
                     source: new OSM()
                 }),
+                this.clustersLayer
             ],
             overlays: [overlay],
             target: 'map-container',
@@ -94,48 +173,9 @@ export class MapComponent extends React.Component {
                 zoom: 2
             })
         });
+        this.overlay = overlay
 
-        //const context = this
-        //map.on('click', function (evt) {
-        //    let coordinate = evt.coordinate
-        //    let featuresCount = 0
-        //    map.forEachFeatureAtPixel(evt.pixel, function (feature, layer) {
-        //        // if (!this.isAuthenticated){
-        //        //   content.innerText = "Необходима авторизация для просмотра заявок."
-        //        //   overlay.setPosition(coordinate)
-        //        //   return
-        //        // }
-
-        //        featuresCount++
-        //        const innerFeatures = feature.getProperties().features
-        //        if (innerFeatures.length > 1) {
-        //            content.innerText = "В выбранную область попадает несколько заявок. Приблизьтесь и выберете одну зявку."
-        //            overlay.setPosition(coordinate)
-        //        } else {
-        //            const id = innerFeatures[0].getId()
-        //            fetch(`api/UserRequest/GetUserRequest/${id}`)
-        //                .then(response => response.json())
-        //                .then(data => {
-        //                    context.setState({
-        //                        userName: data.userName,
-        //                        userTel: data.userTel,
-        //                        requestHeader: data.requestHeader,
-        //                        requestBody: data.requestBody,
-        //                        isUserRequestFromShown: true,
-        //                        isNewUserRequest: false
-        //                    })
-        //                });
-        //        }
-        //    })
-
-        //    if (featuresCount === 0) {
-        //        const x = coordinate[0]
-        //        const correctX = x > 0 ? x % EPSG3857_X_MAX : x % EPSG3857_X_MIN
-        //        const y = coordinate[1]
-        //        const correctY = y > 0 ? y % EPSG3857_Y_MAX : y % EPSG3857_Y_MIN
-        //        context.handleMapClick([correctX, correctY])
-        //    }
-        //})
+        this.fetchData('Москва, улица Новый Арбат, дом 24')
     }
 
     render() {
