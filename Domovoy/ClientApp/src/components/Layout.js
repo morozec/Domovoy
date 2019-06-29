@@ -33,7 +33,7 @@ export class Layout extends Component {
           handleSearchButtonClick={this.handleSearchButtonClick}
         />
         <Container>
-          <MapComponent searchAddress={this.state.resultSearchAddress} />
+          {this.props.children}
         </Container>
 
       </div>
