@@ -37,7 +37,7 @@ namespace Domovoy
                 opt.UseSqlServer(Configuration.GetConnectionString("domovoyConnection"),
                 b =>
                 {
-                    b.MigrationsAssembly("Domovoy");
+                    b.MigrationsAssembly("DBRepository");
                     //b.UseNetTopologySuite();
                 });
             });
