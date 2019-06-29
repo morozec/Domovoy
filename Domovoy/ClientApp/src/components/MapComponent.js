@@ -95,47 +95,47 @@ export class MapComponent extends React.Component {
             })
         });
 
-        const context = this
-        map.on('click', function (evt) {
-            let coordinate = evt.coordinate
-            let featuresCount = 0
-            map.forEachFeatureAtPixel(evt.pixel, function (feature, layer) {
-                // if (!this.isAuthenticated){
-                //   content.innerText = "Необходима авторизация для просмотра заявок."
-                //   overlay.setPosition(coordinate)
-                //   return
-                // }
+        //const context = this
+        //map.on('click', function (evt) {
+        //    let coordinate = evt.coordinate
+        //    let featuresCount = 0
+        //    map.forEachFeatureAtPixel(evt.pixel, function (feature, layer) {
+        //        // if (!this.isAuthenticated){
+        //        //   content.innerText = "Необходима авторизация для просмотра заявок."
+        //        //   overlay.setPosition(coordinate)
+        //        //   return
+        //        // }
 
-                featuresCount++
-                const innerFeatures = feature.getProperties().features
-                if (innerFeatures.length > 1) {
-                    content.innerText = "В выбранную область попадает несколько заявок. Приблизьтесь и выберете одну зявку."
-                    overlay.setPosition(coordinate)
-                } else {
-                    const id = innerFeatures[0].getId()
-                    fetch(`api/UserRequest/GetUserRequest/${id}`)
-                        .then(response => response.json())
-                        .then(data => {
-                            context.setState({
-                                userName: data.userName,
-                                userTel: data.userTel,
-                                requestHeader: data.requestHeader,
-                                requestBody: data.requestBody,
-                                isUserRequestFromShown: true,
-                                isNewUserRequest: false
-                            })
-                        });
-                }
-            })
+        //        featuresCount++
+        //        const innerFeatures = feature.getProperties().features
+        //        if (innerFeatures.length > 1) {
+        //            content.innerText = "В выбранную область попадает несколько заявок. Приблизьтесь и выберете одну зявку."
+        //            overlay.setPosition(coordinate)
+        //        } else {
+        //            const id = innerFeatures[0].getId()
+        //            fetch(`api/UserRequest/GetUserRequest/${id}`)
+        //                .then(response => response.json())
+        //                .then(data => {
+        //                    context.setState({
+        //                        userName: data.userName,
+        //                        userTel: data.userTel,
+        //                        requestHeader: data.requestHeader,
+        //                        requestBody: data.requestBody,
+        //                        isUserRequestFromShown: true,
+        //                        isNewUserRequest: false
+        //                    })
+        //                });
+        //        }
+        //    })
 
-            if (featuresCount === 0) {
-                const x = coordinate[0]
-                const correctX = x > 0 ? x % EPSG3857_X_MAX : x % EPSG3857_X_MIN
-                const y = coordinate[1]
-                const correctY = y > 0 ? y % EPSG3857_Y_MAX : y % EPSG3857_Y_MIN
-                context.handleMapClick([correctX, correctY])
-            }
-        })
+        //    if (featuresCount === 0) {
+        //        const x = coordinate[0]
+        //        const correctX = x > 0 ? x % EPSG3857_X_MAX : x % EPSG3857_X_MIN
+        //        const y = coordinate[1]
+        //        const correctY = y > 0 ? y % EPSG3857_Y_MAX : y % EPSG3857_Y_MIN
+        //        context.handleMapClick([correctX, correctY])
+        //    }
+        //})
     }
 
     render() {
