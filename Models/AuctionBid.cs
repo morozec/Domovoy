@@ -22,6 +22,15 @@ namespace Models
 
         public DateTime DateAdd { get; set; }
 
+        [NotMapped]
+        public string DateAddStr
+        {
+            get
+            {
+                return DateAdd.ToShortDateString();
+            }
+        }
+
         public virtual Auction Auction { get; set; }
         public virtual Organization Organization { get; set; }
     }

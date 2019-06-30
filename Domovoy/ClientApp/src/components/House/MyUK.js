@@ -31,14 +31,19 @@ export class MyUK extends Component {
     render() {
 		
 		console.log(this.state.auctionBidsData);
-		
+        let count = 0; 
         return (
+
             <div>
                 <div className="house-block">
                     <p className="house-block-caption">{this.state.houseData ? this.state.houseData.address : "..."}</p>
-                    <p className="house-block-uk">{this.state.houseData && this.state.houseData.uk ? this.state.houseData.uk.name : "..."}</p>
+                </div>
+                <div className="house-block">
+                    
+                    <p className="house-block-uk">{this.state.houseData ? "Стоимость обслуживания в прошлом году: " + this.state.houseData.maintenanceCost + "руб." : "..."} </p>
+                    <p className="house-block-uk">{this.state.houseData && this.state.houseData.uk ? "Моя УК: " + this.state.houseData.uk.name + " (рейтинг " + this.state.houseData.uk.rank + ")" : "..."}</p>
 					
-					
+                    <p><a href="123">ТЗ на обслуживание в 2020 году.docx</a></p>
 
                     <div className="block-holder">
                         <table className="table table-hover table-striped house-violations">
@@ -52,7 +57,7 @@ export class MyUK extends Component {
                                 </tr>
                             </thead>
                             <tbody>
-                                {this.state.auctionBidsData != null ? this.state.auctionBidsData.map(v => <tr key={v.auctionBidId}><td>{""}</td><td>{v.dateAdd}</td><td>{v.organization.name}</td><td>{v.organization.rank}</td><td>{v.cost}</td></tr>) : <tr></tr>}
+                                {this.state.auctionBidsData != null ? this.state.auctionBidsData.map(v =>  <tr key={v.auctionBidId}><td>{++count}</td><td>{v.dateAddStr}</td><td>{v.organization.name}</td><td>{v.organization.rank}</td><td>{v.cost}</td></tr>) : <tr></tr>}
                             </tbody>
                         </table>
                     </div>
