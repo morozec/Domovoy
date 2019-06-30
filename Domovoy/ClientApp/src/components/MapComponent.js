@@ -7,10 +7,11 @@ import OrderComponent from './OrderComponent'
 import Overlay from 'ol/Overlay.js';
 import Feature from 'ol/Feature';
 import Point from 'ol/geom/Point';
-import { Circle as CircleStyle, Fill, Stroke, Style, Text } from 'ol/style';
+import { Circle as CircleStyle, Fill, Stroke, Style, Text , Icon} from 'ol/style';
 import { transform, get, transformExtent } from 'ol/proj.js'
 import { ZoomToExtent } from 'ol/control.js';
 import { Form, Button, Input } from 'reactstrap';
+import Polyline from 'ol/format/Polyline.js';
 import { Link } from 'react-router-dom';
 
 
@@ -113,7 +114,52 @@ export class MapComponent extends React.Component {
         const geoObject = fm.GeoObject
         content.innerText = this.props.house.address
         let coordinates = this.getCoordinates(geoObject.Point.pos)
-        this.overlay.setPosition(coordinates)
+        // this.overlay.setPosition(coordinates)
+        if (!this.marker){
+            let marker = new Feature({
+                type:'icon',
+                geometry:new Point(coordinates)
+            })
+    
+            // marker.getGeometry().setCoordinates([-5701523.274225562, -3508003.9130105716])
+    
+            var styles = {            
+                'icon': new Style({
+                  image: new Icon({
+                    anchor: [0.5, 1],
+                    src: 'img/Sloy_x0020_1.png'
+                  })
+                }),
+    
+                'geoMarker': new Style({
+                    image: new CircleStyle({
+                      radius: 7,
+                      fill: new Fill({color: 'black'}),
+                      stroke: new Stroke({
+                        color: 'white', width: 2
+                      })
+                    })
+                })
+            }
+    
+            var vectorLayer = new VectorLayer({
+                source: new VectorSource({
+                  features: [marker]
+                }),
+                style: function(feature) {
+                  
+                  return styles[feature.get('type')];
+                }
+              });
+    
+              this.marker = marker
+            this.map.addLayer(vectorLayer)
+        }
+        else{
+            this.marker.getGeometry().setCoordinates(coordinates)
+        }
+        
+        
 
         let lowerCorner = this.getCoordinates(geoObject.boundedBy.Envelope.lowerCorner, true)
         let upperCorner = this.getCoordinates(geoObject.boundedBy.Envelope.upperCorner, true)
@@ -133,6 +179,9 @@ export class MapComponent extends React.Component {
     componentDidMount() {
         let container = document.getElementById('popup');
         let closer = document.getElementById('popup-closer');
+       
+          
+        
 
         let overlay = new Overlay({
             element: container,
@@ -148,14 +197,12 @@ export class MapComponent extends React.Component {
             closer.blur();
             return false;
         };
-
-        this.clustersLayer = new VectorLayer({})
+        
         this.map = new Map({
             layers: [
                 new TileLayer({
                     source: new OSM()
-                }),
-                this.clustersLayer
+                }), 
             ],
             overlays: [overlay],
             target: 'map-container',
@@ -164,7 +211,7 @@ export class MapComponent extends React.Component {
                 zoom: 2
             })
         });
-        this.overlay = overlay
+        this.overlay = overlay        
 
     }
 
@@ -191,7 +238,7 @@ render() {
                             <span>Стоимость обслуживания в мес.</span> <p>{`${this.props.house.maintenanceCost}руб`}</p>
                             <span>Количество аварий в год</span> <p>{this.props.house.countAccident}</p>
                             <span>Управляющая компания</span> <p>{this.props.house.uk && this.props.house.uk.name}</p>
-                            <span>Год постройки</span> <p>{this.props.house.BuildYear}</p>
+                            <span>Год постройки</span> <p>{this.props.house.buildYear}</p>
 
 
                             <p>Сравнить стоимость обслуживания</p>
