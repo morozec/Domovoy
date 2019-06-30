@@ -66,7 +66,8 @@ namespace DBRepository.Repositories
             {
                 return await context.AuctionBids
                     .Include(e => e.Organization)
-                    .Where(e => e.AuctionId == id).ToListAsync();
+                    .Include(e => e.Auction)
+                    .Where(e => e.Auction.HouseId == id).ToListAsync();
             }
         }
     }
