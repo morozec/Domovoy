@@ -20,5 +20,6 @@ namespace DBRepository.Repositories
 
         Task<List<AuctionBid>> GetAuctionBids(int id);
 
+        Task<List<HouseWork>> GetHouseWorks(int id);
     }
 }

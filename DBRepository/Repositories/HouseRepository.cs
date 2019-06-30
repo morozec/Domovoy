@@ -49,7 +49,9 @@ namespace DBRepository.Repositories
             using (var context = DomovoyContextFactory.CreateDbContext(ConnectionString))
             {
                 return await context.HouseViolations
-                    .Where(e => e.HouseId == id).ToListAsync();
+                    .Where(e => e.HouseId == id)
+                    .OrderByDescending(e => e.ViolationDate)
+                    .ToListAsync();
             }
         }
 
@@ -69,7 +71,19 @@ namespace DBRepository.Repositories
                 return await context.AuctionBids
                     .Include(e => e.Organization)
                     .Include(e => e.Auction)
-                    .Where(e => e.Auction.HouseId == id).ToListAsync();
+                    .Where(e => e.Auction.HouseId == id)
+                    .ToListAsync();
+            }
+        }
+
+        public async Task<List<HouseWork>> GetHouseWorks(int id)
+        {
+            using (var context = DomovoyContextFactory.CreateDbContext(ConnectionString))
+            {
+                return await context.HouseWorks
+                    .Where(e => e.HouseId == id)
+                    .OrderByDescending(e => e.WorkDate)
+                    .ToListAsync();
             }
         }
     }

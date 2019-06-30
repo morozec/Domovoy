@@ -29,7 +29,7 @@ export class HouseComponent extends React.Component {
                 response.json())
             .then(data => {
                 this.setState({ houseData: data });
-            })
+            }).catch(ex => console.log(ex))
     }
 
     handleChange(newValue){

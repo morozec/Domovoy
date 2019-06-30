@@ -4,14 +4,16 @@ using DBRepository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DBRepository.Migrations
 {
     [DbContext(typeof(DomovoyContext))]
-    partial class DomovoyContextModelSnapshot : ModelSnapshot
+    [Migration("20190630075815_AddHouseWork")]
+    partial class AddHouseWork
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -141,7 +143,7 @@ namespace DBRepository.Migrations
 
                     b.Property<double?>("FactCost");
 
-                    b.Property<int>("HouseId");
+                    b.Property<int>("HoustId");
 
                     b.Property<string>("WorkDate");
 
@@ -149,7 +151,7 @@ namespace DBRepository.Migrations
 
                     b.HasKey("HouseWorkId");
 
-                    b.HasIndex("HouseId");
+                    b.HasIndex("HoustId");
 
                     b.ToTable("HouseWorks");
                 });
@@ -237,7 +239,7 @@ namespace DBRepository.Migrations
                 {
                     b.HasOne("Models.House", "House")
                         .WithMany()
-                        .HasForeignKey("HouseId")
+                        .HasForeignKey("HoustId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

@@ -67,6 +67,11 @@ namespace Domovoy.Controllers
             return await _houseRepository.GetAuctionBids(id);
         }
 
+        [HttpGet("[action]/{id}")]
+        public async Task<List<HouseWork>> GetHouseWorks(int id)
+        {
+            return await _houseRepository.GetHouseWorks(id);
+        }
 
     }
 }

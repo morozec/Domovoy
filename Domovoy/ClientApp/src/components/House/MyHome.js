@@ -8,13 +8,17 @@ export class MyHome extends Component {
         
         this.state = {
             houseData: this.props.houseData,
+            worksData: null,
             violationsData: null
         }
 
         this.fetchDataViolations = this.fetchDataViolations.bind(this)
+        this.fetchDataWorks = this.fetchDataWorks.bind(this)
 
-        if (this.state.houseData != null)
+        if (this.state.houseData != null) {
             this.fetchDataViolations(this.state.houseData.houseId)
+            this.fetchDataWorks(this.state.houseData.houseId)
+        }
         
     }
 
@@ -24,13 +28,24 @@ export class MyHome extends Component {
                 response.json())
             .then(data => {
                 this.setState({ violationsData: data });
+            }).catch(ex => console.log(ex))
+    }
+
+
+    fetchDataWorks(id) {
+        fetch(`api/GeoData/GetHouseWorks/${id}`)
+            .then(response =>
+                response.json())
+            .then(data => {
+                this.setState({ worksData: data });
             })
+            .catch(ex => console.log(ex))
     }
 
     render() {
 
         //console.log(this.state.houseData);
-        console.log(this.state.violationsData);
+        //console.log(this.state.worksData);
 
         return (
             <div>
@@ -79,10 +94,29 @@ export class MyHome extends Component {
 
                 </div>
 
-               
-
                 <div className="house-block">
-                    <p className="house-block-caption">Выполненные работы</p>
+                    <p className="house-block-caption">Выполненные работы [{this.state.worksData ? this.state.worksData.length : "0"}]</p>
+                    <div className="block-holder">
+                        <table className="table table-hover table-striped house-violations">
+                            <thead>
+                                <tr>
+                                    <th>Дата</th>
+                                    <th>Описание</th>
+                                    <th>Стоимость</th>
+                                    <th>Объем</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {this.state.worksData != null ? this.state.worksData.map(v => 
+                                    <tr key={v.houseWorkId}>
+                                        <td>{v.workDate}</td>
+                                        <td>{v.workName}</td>
+                                        <td>{v.factCost}</td>
+                                        <td>{v.factAmount ? v.factAmount + " " + v.amountMeasure : "-"}</td>
+                                    </tr>) : <tr></tr>}
+                            </tbody>
+                        </table>
+                    </div>                    
                 </div>
 
                 <div className="house-block"> 

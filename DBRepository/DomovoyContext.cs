@@ -18,5 +18,7 @@ namespace DBRepository
 
         public virtual DbSet<Auction> Auctions { get; set; }
         public virtual DbSet<AuctionBid> AuctionBids { get; set; }
+
+        public virtual DbSet<HouseWork> HouseWorks { get; set; }
     }
 }

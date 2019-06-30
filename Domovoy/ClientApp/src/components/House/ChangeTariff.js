@@ -21,11 +21,10 @@ export class ChangeTariff extends Component {
     render() {
         return (
             <div>
-                <h1>Выбор тарифа</h1>
-                
-                <div>
-                    Что-то про выбор тарифа???
-                </div>
+                 <div className="house-block">
+                    <p className="house-block-caption">{this.state.houseData ? this.state.houseData.address : "..."}</p>
+                    <p className="house-block-uk">{this.state.houseData && this.state.houseData.uk ? this.state.houseData.uk.name : "..."}</p>
+				</div>
             </div>
         )
     }
