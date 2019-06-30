@@ -58,8 +58,9 @@ renderHouses(){
   render() {
     return (
       <header>
-        <Navbar className="navbar-expand-sm navbar-toggleable-sm ng-white" light>
+        <Navbar className="navbar-expand-sm navbar-toggleable-sm ng-white">
           <Container>
+            
             <NavbarBrand tag={Link} to="/">Домовой</NavbarBrand>  
 
               {this.renderHouses()}             

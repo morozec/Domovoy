@@ -4,34 +4,46 @@ body {
 }
 
 .container {
-    background-color: #fff;
+    
 }
 
 header {
-    background-color: #fff;
     height: 224px;
-    /* background: url(./img/header.jpg) no-repeat; */
+    background: url(../img/header.jpg) no-repeat;
+    background-color: #fff;
+}
+
+header .navbar {
+    padding-top:40px;
+}
+
+header .navbar-brand {
+
 }
 
 /* PAGE-MENU */
 .page-menu {
-    border-right: solid 1px #eee;
+    /* border-right: solid 1px #eee; */
     height: 100%;
     padding: 2rem;
 }
 
 .page-menu-button {
-    color: #5155B6 !important;
-    margin-bottom: 1rem;
+    background-color: #F6F6F6 !important;
+    color: #5D5E6E !important;
+    margin-bottom: 23px;
     border-radius: 0px !important;
-    border-bottom: 2px #ddd solid;
+    line-height: 20px;
+    font-size: 20px;
+    padding: 22px;
+    font-weight: 600;
 }
 
 .page-menu-button.active {
-    color:#007bff !important;
+    color:#5D5E6E !important;
     border-radius: 0px;
-    background-color: #fff !important;
-    border-bottom: 2px #5155B6 solid;
+    background-color: #62C9E4 !important;
+    /* border-bottom: 2px #5155B6 solid; */
 }
 
 .block-holder {
