@@ -27,14 +27,11 @@ export class CustomMenu extends React.Component {
     constructor(props, context) {
         super(props, context);
 
-        this.handleChange = this.handleChange.bind(this);
-
-        this.state = { value: '' };
+        this.handleChange = this.handleChange.bind(this);       
     }
 
     handleChange(e) {
-        const eValue = e.target.value.toLowerCase()
-        this.setState({ value: eValue });
+        const eValue = e.target.value.toLowerCase()        
         this.props.handleSearchAddressChange(eValue)
     }
 
@@ -44,9 +41,7 @@ export class CustomMenu extends React.Component {
             style,
             className,
             'aria-labelledby': labeledBy,
-        } = this.props;
-
-        const { value } = this.state;
+        } = this.props;        
 
         return (
             <div style={style} className={className} aria-labelledby={labeledBy}>
@@ -55,7 +50,7 @@ export class CustomMenu extends React.Component {
                     className="mb-1"
                     placeholder="Найти свой дом"
                     onChange={this.handleChange}                    
-                    value={value}
+                    value={this.props.searchAddress}
                     onSelect={this.props.onSelected}
                 />
                 <ul className="list-unstyled block-holder bg-white">

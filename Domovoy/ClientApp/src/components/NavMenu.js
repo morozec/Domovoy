@@ -46,16 +46,17 @@ handleSelected(){
 renderHouses(){
   const context = this
   return(
-    <CustomMenu handleSearchAddressChange={this.handleSearchAddressChange} onSelected = {this.handleSelected} className='block-search'>
+    <CustomMenu searchAddress={this.state.searchAddress} handleSearchAddressChange={this.handleSearchAddressChange} onSelected = {this.handleSelected} className='block-search'>
           {this.state.isDropDownVisible && this.state.houses.map(h => <Dropdown.Item 
                   key={h.houseId}                     
-                  onClick={(e) => {context.setState({isDropDownVisible:false}); this.props.handleMenuSelected(h)}}
+                  onClick={(e) => {context.setState({isDropDownVisible:false, searchAddress:h.address}); this.props.handleMenuSelected(h)}}
               >
                   {h.address}
               </Dropdown.Item>)}
       </CustomMenu>    
   )
 }
+
 
   render() {
     return (
@@ -67,7 +68,7 @@ renderHouses(){
                 <NavbarBrand tag={Link} to="/">
                   <img src={logo} />
                 </NavbarBrand>  
-                {this.renderHouses()}
+                {window.location.pathname==="/" && this.renderHouses()}
               </div>
               <div className="col-lg-7">
                 <div className="header-menu">
