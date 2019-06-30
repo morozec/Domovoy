@@ -56,7 +56,7 @@ export class CustomMenu extends React.Component {
                     placeholder="Введите адрес для поиска..."
                     onChange={this.handleChange}                    
                     value={value}
-                    onSelect={this.props.handleMenuSelected}
+                    onSelect={this.props.onSelected}
                 />
                 <ul className="list-unstyled">
                     {React.Children.toArray(children)}

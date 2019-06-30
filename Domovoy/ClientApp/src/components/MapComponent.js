@@ -11,10 +11,10 @@ import { Circle as CircleStyle, Fill, Stroke, Style, Text } from 'ol/style';
 import { transform, get, transformExtent } from 'ol/proj.js'
 import { ZoomToExtent } from 'ol/control.js';
 import { Form, Button, Input } from 'reactstrap';
-import { Dropdown } from 'react-bootstrap'
+
 
 import { EPSG3857_X_MIN, EPSG3857_Y_MIN, EPSG3857_X_MAX, EPSG3857_Y_MAX } from '../constants/constants'
-import { CustomToggle, CustomMenu } from './CustomToggle'
+
 
 import 'ol/ol.css';
 import './MapComponent.css'
@@ -40,9 +40,8 @@ export class MapComponent extends React.Component {
         }
 
         this.toggle = this.toggle.bind(this)
-        this.fetchData = this.fetchData.bind(this)       
-        this.handleSearchAddressChange = this.handleSearchAddressChange.bind(this)
-        this.handleMenuSelected = this.handleMenuSelected.bind(this)
+        this.fetchData = this.fetchData.bind(this)      
+        
     }
 
 
@@ -76,7 +75,7 @@ export class MapComponent extends React.Component {
 
     fetchData() {
 
-        fetch(`api/GeoData/GetGeoData/${this.state.house.address}`)
+        fetch(`api/GeoData/GetGeoData/${this.props.house.address}`)
             .then(response =>
                 response.json())
             .then(data => {
@@ -111,7 +110,7 @@ export class MapComponent extends React.Component {
         }
 
         const geoObject = fm.GeoObject
-        content.innerText = this.state.house.address
+        content.innerText = this.props.house.address
         let coordinates = this.getCoordinates(geoObject.Point.pos)
         this.overlay.setPosition(coordinates)
 
@@ -125,62 +124,11 @@ export class MapComponent extends React.Component {
         this.map.addControl(this.zoomToExtent)
 
 
-        console.log(ext)
+        //console.log(ext)
         this.map.getView().fit(ext, this.map.getSize());
     }
 
-    showMarkers() {
-        this.map.removeLayer(this.clustersLayer)
-
-        const urFeatures = []
-        for (let i = 0; i < this.state.datas.length; ++i) {
-            const data = this.state.datas[i]
-            const coordinates = [data.x, data.y]
-            const feature = new Feature(new Point(coordinates))
-            feature.setId(data.id)
-            urFeatures.push(feature)
-        }
-        const source = new VectorSource({
-            features: urFeatures
-        })
-        const clusterSource = new Cluster({
-            distance: 40,
-            source: source
-        })
-
-        var styleCache = {};
-        this.clustersLayer = new VectorLayer({
-            source: clusterSource,
-            style: function (feature) {
-                var size = feature.get('features').length;
-                var style = styleCache[size];
-                if (!style) {
-                    style = new Style({
-                        image: new CircleStyle({
-                            radius: 10,
-                            stroke: new Stroke({
-                                color: '#fff'
-                            }),
-                            fill: new Fill({
-                                color: '#3399CC'
-                            })
-                        }),
-                        text: new Text({
-                            text: size.toString(),
-                            fill: new Fill({
-                                color: '#fff'
-                            })
-                        })
-                    });
-                    styleCache[size] = style;
-                }
-                return style;
-            }
-        });
-
-        this.map.addLayer(this.clustersLayer)
-    }
-
+    
     componentDidMount() {
         let container = document.getElementById('popup');
         let closer = document.getElementById('popup-closer');
@@ -219,78 +167,15 @@ export class MapComponent extends React.Component {
 
     }
 
-    showHouseInfo(id) {
-        fetch(`api/GeoData/GetHouse/${id}`)
-            .then(response => response.json())
-            .then(data => {
-                this.setState({ house: data }, ()=> this.fetchData())
-            })
+    componentDidUpdate(prevProps,prevState){
+        if (this.props.house.houseId != prevProps.house.houseId){
+            this.fetchData()
+        }
     }
 
+    
 
-    handleSearchAddressChange(value) {
-        console.log(value)
-        this.setState({ searchAddress: value, isDropDownVisible:true }, () => {
-            if (this.state.searchAddress===''){
-                this.setState({isDropDownVisible:false, houses:[]})
-            }else{
-                fetch(`api/GeoData/GetFirstHousesByAddress/${this.state.searchAddress}/10`)
-                    .then(response => response.json())
-                    .then(data => {                    
-                        this.setState({ houses: data })
-                    })
-            }
-
-        })
-    }
-
-    handleMenuSelected(){
-        this.setState({isDropDownVisible:true})
-    }
-
-// handleSearchButtonClick() {
-
-
-//     fetch(`api/GeoData/GetFirstHouseByAddress/${this.state.searchAddress}`)
-//         .then(response => response.json())
-//         .then(data => {
-//             console.log('house', data)
-//             this.setState({ house: data })
-//         })
-//         .then(() => this.fetchData(this.state.house.address))
-//         .catch(ex => {
-//             console.log(ex)
-//         })
-
-// }
-
-
-
-renderHouses() {
-    return (
-
-        <CustomMenu handleSearchAddressChange={this.handleSearchAddressChange} handleMenuSelected={this.handleMenuSelected} >
-            {this.state.isDropDownVisible && this.state.houses.map(h => <Dropdown.Item 
-                    key={h.houseId}                     
-                    onClick={(e) => {this.showHouseInfo(h.houseId); this.setState({isDropDownVisible:false})}}
-                >
-                    {h.address}
-                </Dropdown.Item>)}
-        </CustomMenu>
-
-        // <Dropdown>
-        //     <Dropdown.Menu as={CustomMenu} show={true} handleSearchAddressChange={this.handleSearchAddressChange}>
-        //         {this.state.houses.map(h => <Dropdown.Item 
-        //             key={h.houseId}                     
-        //             onClick={(e) => {this.showHouseInfo(h.houseId)}}
-        //         >
-        //             {h.address}
-        //         </Dropdown.Item>)}
-        //     </Dropdown.Menu>
-        // </Dropdown>
-
-    )
-}
+    
 
 render() {
     return (
@@ -305,11 +190,9 @@ render() {
                                     onChange={this.handleSearchAddressChange}
                                 />
                                 <Button type="submit">Поиск</Button>
-                            </Form> */}
+                            </Form> */}                       
 
-                        {this.renderHouses()}
-
-                        <div>{this.state.house.address}</div>
+                        <div>{this.props.house.address}</div>
                     </div>
                     <div className='col-lg-7'>
                         <div id='map-container'></div>

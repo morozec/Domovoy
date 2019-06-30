@@ -11,8 +11,7 @@ export default class App extends Component {
   render () {
     return (
       <Layout>
-            <Route exact path='/' component={MapComponent} />
-            <Route exact path='/House/:id' component={HouseComponent} />  
+            
       </Layout>
     );
   }
