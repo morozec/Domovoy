@@ -1,5 +1,6 @@
 body {
     background-color: #E2E2E2;
+    font-family: 'Roboto', sans-serif;
 }
 
 .container {
@@ -19,5 +20,22 @@ header {
 }
 
 .page-menu-button {
-    margin-bottom: 5px;
+    color: #5155B6 !important;
+    margin-bottom: 1rem;
+    border-radius: 0px !important;
+    border-bottom: 2px #ddd solid;
+}
+
+.page-menu-button.active {
+    color:#007bff !important;
+    border-radius: 0px;
+    background-color: #fff !important;
+    border-bottom: 2px #5155B6 solid;
+}
+
+.block-holder {
+    max-height: 250px;
+    
+    display: block;
+    overflow-y: auto;
 }

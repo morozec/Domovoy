@@ -10,10 +10,13 @@ export class HouseComponent extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            activeButton:"MyHome"
+            activeButton:"MyHome",
+            id: this.props.match.params.id
         }
 
         this.handleChange = this.handleChange.bind(this)
+
+        //console.log(this.props.match.params.id);
     }
 
     handleChange(newValue){
@@ -41,13 +44,13 @@ export class HouseComponent extends React.Component {
 
         switch(this.state.activeButton) {
             case "ChangeTariff":
-                pageDiv = <ChangeTariff />
+                pageDiv = <ChangeTariff id={this.state.id}/>
                 break;
             case "ChangeUK":
-                pageDiv = <ChangeUK />
+                pageDiv = <ChangeUK id={this.state.id}/>
                 break;
             default:
-                pageDiv = <MyHome />;
+                pageDiv = <MyHome id={this.state.id}/>;
         }
 
         return (
