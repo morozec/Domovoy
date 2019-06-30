@@ -44,7 +44,7 @@ handleSelected(){
 renderHouses(){
   const context = this
   return(
-    <CustomMenu handleSearchAddressChange={this.handleSearchAddressChange} onSelected = {this.handleSelected} className='block-holder'>
+    <CustomMenu handleSearchAddressChange={this.handleSearchAddressChange} onSelected = {this.handleSelected} className='block-search'>
           {this.state.isDropDownVisible && this.state.houses.map(h => <Dropdown.Item 
                   key={h.houseId}                     
                   onClick={(e) => {context.setState({isDropDownVisible:false}); this.props.handleMenuSelected(h)}}

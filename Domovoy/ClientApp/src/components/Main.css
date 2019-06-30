@@ -38,4 +38,23 @@ header {
     
     display: block;
     overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.map-container {
+    z-index: 100;
+}
+
+.block-search {
+    position: absolute;
+    top:150px;
+    /* left: 0; */
+    display: block;
+    z-index: 9999;
+    max-width: 400px;
+    width: 400px;
+}
+
+.block-search input, .block-search ul {
+    width: 100% !important;
 }

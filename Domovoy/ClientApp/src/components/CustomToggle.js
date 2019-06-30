@@ -52,13 +52,13 @@ export class CustomMenu extends React.Component {
             <div style={style} className={className} aria-labelledby={labeledBy}>
                 <FormControl
                     autoFocus
-                    className="mx-3 my-2 w-auto"
+                    className="mb-1"
                     placeholder="Введите адрес для поиска..."
                     onChange={this.handleChange}                    
                     value={value}
                     onSelect={this.props.onSelected}
                 />
-                <ul className="list-unstyled">
+                <ul className="list-unstyled block-holder bg-white">
                     {React.Children.toArray(children)}
                 </ul>
             </div>

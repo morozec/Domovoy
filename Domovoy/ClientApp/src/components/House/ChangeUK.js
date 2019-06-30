@@ -5,18 +5,21 @@ export class ChangeUK extends Component {
     constructor(props) {
         super(props)
         
-        //this.handleButtonClick = this.handleButtonClick.bind(this)
+        this.state = {
+            auctionData: null,
+
+        }
     }
     
+    fetchDataAuction(id) {
+        fetch(`api/GeoData/GetAuction/${id}`)
+            .then(response =>
+                response.json())
+            .then(data => {
+                this.setState({ auctionData: data });
+            })
+    }
 
-    // handleButtonClick(e, buttonTag){
-
-    //     e.preventDefault();
-
-    //     this.props.handleChange(false);
-        
-    //     console.log(buttonTag);
-    // }
 
     render() {
         return (
