@@ -37,6 +37,15 @@ namespace Domovoy.Controllers
             var house = await _houseRepository.GetHousesById(id);
             return house;
         }
-        
+
+
+        [HttpGet("[action]/{id}")]
+        public async Task<List<HouseViolation>> GetHouseViolations(int id)
+        {
+            var violations = await _houseRepository.GetHouseViolations(id);
+            return violations;
+        }
+
+
     }
 }

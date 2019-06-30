@@ -1,0 +1,23 @@
+body {
+    background-color: #E2E2E2;
+}
+
+.container {
+    background-color: #fff;
+}
+
+header {
+    background-color: #fff;
+    height: 224px;
+}
+
+/* PAGE-MENU */
+.page-menu {
+    border-right: solid 1px #eee;
+    height: 100%;
+    padding: 2rem;
+}
+
+.page-menu-button {
+    margin-bottom: 5px;
+}

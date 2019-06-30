@@ -41,5 +41,14 @@ namespace DBRepository.Repositories
                     .SingleOrDefaultAsync(h => h.HouseId == id);
             }
         }
+
+        public async Task<List<HouseViolation>> GetHouseViolations(int id)
+        {
+            using (var context = DomovoyContextFactory.CreateDbContext(ConnectionString))
+            {
+                return await context.HouseViolations
+                    .Where(e => e.HouseId == id).ToListAsync();
+            }
+        }
     }
 }

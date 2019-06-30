@@ -6,17 +6,22 @@ export class HouseMenu extends Component {
         super(props)
         
         this.handleButtonClick = this.handleButtonClick.bind(this)
+
+        
     }
     
-    // componentDidUpdate() {
-    //событие при вызове обновления компонента
-    // }
+    //  componentDidUpdate() {
+    // //событие при вызове обновления компонента
+    //     jq(".dropdown-menu").dropdown();
+    //  }
 
     handleButtonClick(e, buttonTag){
         e.preventDefault();
         this.props.handleChange(buttonTag);
     }
 
+
+   
     render() {
         
         //метка на выбранную кнопку
@@ -26,23 +31,14 @@ export class HouseMenu extends Component {
         
         return (
 
-            <div className="nav flex-column nav-pills house-menu" aria-orientation="vertical">
-                <a className={`nav-link house-menu-button ${MyHomeActive}`}  href="#Мой дом" onClick={ e => this.handleButtonClick(e, "MyHome")}>Мой дом</a>
-                <a className={`nav-link house-menu-button ${ChangeTariffActive}`} href="#Выбор тарифа" onClick={ e => this.handleButtonClick(e, "ChangeTariff")}>Выбор тарифа</a>
-                <a className={`nav-link house-menu-button ${ChangeUKActive}`} href="#Выбор УК" onClick={ e => this.handleButtonClick(e, "ChangeUK")}>Выбор УК</a>
-
-                <div className="dropdown clearfix">
-                <div className="dropdown-toggle" data-toggle="dropdown"><a>Click Me</a></div>
-                    <ul className="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">
-                        <li><a href="#">One</a></li>
-                        <li><a href="#">Two</a></li>
-                        <li><a href="#">three</a></li>
-
-                    </ul>
-                </div>
-
+            <div className="nav flex-column nav-pills page-menu" aria-orientation="vertical">
+                <a className={`nav-link page-menu-button ${MyHomeActive}`}  href="#Мой дом" onClick={ e => this.handleButtonClick(e, "MyHome")}>Мой дом</a>
+                <a className={`nav-link page-menu-button ${ChangeTariffActive}`} href="#Выбор тарифа" onClick={ e => this.handleButtonClick(e, "ChangeTariff")}>Выбор тарифа</a>
+                <a className={`nav-link page-menu-button ${ChangeUKActive}`} href="#Выбор УК" onClick={ e => this.handleButtonClick(e, "ChangeUK")}>Выбор УК</a>
             </div>
 
         )
     }
+
+    
 }
