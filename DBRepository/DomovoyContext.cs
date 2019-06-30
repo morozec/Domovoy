@@ -14,5 +14,6 @@ namespace DBRepository
         public virtual DbSet<OrganizationType> OrganizationTypes { get; set; }
         public virtual DbSet<Organization> Organizations { get; set; }
         public virtual DbSet<House> Houses { get; set; }
+        public virtual DbSet<HouseViolation> HouseViolations { get; set; }
     }
 }

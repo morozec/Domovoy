@@ -23,9 +23,22 @@ export class MyHome extends Component {
             <div>
                 <h1>Мой дом</h1>
 
-                <div>
-                    Инфа по дому
+                <div className="house-myhouse-address">
+                    Адрес и управляющая компания
                 </div>
+
+                <div className="house-myhouse-info">
+                    Информация по дому
+                </div>
+
+                <div className="house-myhouse-jobs">
+                    Выполненные работы
+                </div>
+
+                <div className="house-myhouse-violations"> 
+                    Нарушения / Предписания
+                </div>
+
             </div>
         )
     }

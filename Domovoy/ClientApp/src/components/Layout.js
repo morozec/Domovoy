@@ -3,8 +3,6 @@ import { Container } from 'reactstrap';
 import { NavMenu } from './NavMenu';
 import { MapComponent } from './MapComponent'
 
-const MyContext = React.createContext(); 
-
 export class Layout extends Component {
   static displayName = Layout.name;
 
