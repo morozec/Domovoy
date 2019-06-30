@@ -43,7 +43,7 @@ export class Layout extends Component {
           <div className="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
               <ul className="navbar-nav mr-auto">                 
                   <li className="nav-item">
-                      <a className="nav-link" href="//codeply.com">О ПРОЕКТЕ</a>
+                      <a className="nav-link" href="#">О ПРОЕКТЕ</a>
                   </li>
                   <li className="nav-item">
                       <a className="nav-link" href="#">РЕЙТИНГ ДОМОВ</a>
