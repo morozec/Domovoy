@@ -31,7 +31,7 @@ export class MyUK extends Component {
     render() {
 		
 		console.log(this.state.auctionBidsData);
-		
+        let count = 0; 
         return (
             <div>
                 <div className="house-block">
@@ -52,7 +52,7 @@ export class MyUK extends Component {
                                 </tr>
                             </thead>
                             <tbody>
-                                {this.state.auctionBidsData != null ? this.state.auctionBidsData.map(v => <tr key={v.auctionBidId}><td>{""}</td><td>{v.dateAdd}</td><td>{v.organization.name}</td><td>{v.organization.rank}</td><td>{v.cost}</td></tr>) : <tr></tr>}
+                                {this.state.auctionBidsData != null ? this.state.auctionBidsData.map(v =>  <tr key={v.auctionBidId}><td>{++count}</td><td>{v.dateAdd}</td><td>{v.organization.name}</td><td>{v.organization.rank}</td><td>{v.cost}</td></tr>) : <tr></tr>}
                             </tbody>
                         </table>
                     </div>
