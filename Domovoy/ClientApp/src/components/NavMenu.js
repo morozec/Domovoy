@@ -28,7 +28,7 @@ export class NavMenu extends Component {
         if (this.state.searchAddress===''){
             this.setState({isDropDownVisible:false, houses:[]})
         }else{
-            fetch(`api/GeoData/GetFirstHousesByAddress/${this.state.searchAddress}/10`)
+            fetch(`api/GeoData/GetFirstHousesByAddress/${this.state.searchAddress}/100`)
                 .then(response => response.json())
                 .then(data => {                    
                     this.setState({ houses: data })
