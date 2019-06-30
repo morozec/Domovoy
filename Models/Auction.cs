@@ -19,5 +19,23 @@ namespace Models
         public DateTime DateEnd { get; set; }
 
         public string Status { get; set; }
+
+        [NotMapped]
+        public string DateStartStr
+        {
+            get
+            {
+                return DateStart.ToShortDateString();
+            }
+        }
+
+        [NotMapped]
+        public string DateEndStr
+        {
+            get
+            {
+                return DateEnd.ToShortDateString();
+            }
+        }
     }
 }

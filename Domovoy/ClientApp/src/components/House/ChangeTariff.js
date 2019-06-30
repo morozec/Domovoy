@@ -5,6 +5,9 @@ export class ChangeTariff extends Component {
     constructor(props) {
         super(props)
         
+        this.state = {
+            houseData : this.props.houseData
+        }
         //this.handleButtonClick = this.handleButtonClick.bind(this)
     }
     

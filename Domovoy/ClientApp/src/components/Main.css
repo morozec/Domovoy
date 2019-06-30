@@ -1,5 +1,5 @@
 body {
-    background-color: #E2E2E2;
+    background-color: #F6F6F6;
     font-family: 'Roboto', sans-serif;
 }
 
@@ -25,7 +25,7 @@ header .navbar-brand {
 .page-menu {
     /* border-right: solid 1px #eee; */
     height: 100%;
-    padding: 2rem;
+    padding: 1rem;
 }
 
 .page-menu-button {
@@ -70,4 +70,8 @@ header .navbar-brand {
 
 .block-search input, .block-search ul {
     width: 100% !important;
+}
+
+p.block-link {
+    padding: .5rem 0;
 }

@@ -24,7 +24,7 @@ export class MyUK extends Component {
                 response.json())
             .then(data => {
                 this.setState({ auctionBidsData: data });
-            })
+            }).catch(ex => console.log(ex))
     }
 
 
@@ -35,15 +35,16 @@ export class MyUK extends Component {
         return (
 
             <div>
-                <div className="house-block">
-                    <p className="house-block-caption">{this.state.houseData ? this.state.houseData.address : "..."}</p>
+                <div className="house-block block-address">
+                    <p className="block-address-caption">{this.state.houseData ? this.state.houseData.address : "..."}</p>
                 </div>
+
                 <div className="house-block">
                     
-                    <p className="house-block-uk">{this.state.houseData ? "Стоимость обслуживания в прошлом году: " + this.state.houseData.maintenanceCost + "руб." : "..."} </p>
-                    <p className="house-block-uk">{this.state.houseData && this.state.houseData.uk ? "Моя УК: " + this.state.houseData.uk.name + " (рейтинг " + this.state.houseData.uk.rank + ")" : "..."}</p>
+                    <p className="house-block-caption">{this.state.houseData ? "Стоимость обслуживания в прошлом году: " + this.state.houseData.maintenanceCost + "руб." : "..."} </p>
+                    <p className="house-block-caption">{this.state.houseData && this.state.houseData.uk ? "Моя УК: " + this.state.houseData.uk.name + " (рейтинг " + this.state.houseData.uk.rank + ")" : "..."}</p>
 					
-                    <p><a href="123">ТЗ на обслуживание в 2020 году.docx</a></p>
+                    <p className="block-link"><a href="123">ТЗ на обслуживание в 2020 году.docx</a></p>
 
                     <div className="block-holder">
                         <table className="table table-hover table-striped house-violations">
@@ -57,9 +58,12 @@ export class MyUK extends Component {
                                 </tr>
                             </thead>
                             <tbody>
-                                {this.state.auctionBidsData != null ? this.state.auctionBidsData.map(v =>  <tr key={v.auctionBidId}><td>{++count}</td><td>{v.dateAddStr}</td><td>{v.organization.name}</td><td>{v.organization.rank}</td><td>{v.cost}</td></tr>) : <tr></tr>}
+                                {this.state.auctionBidsData != null  ? this.state.auctionBidsData.map(v =>  <tr key={v.auctionBidId}><td>{++count}</td><td>{v.dateAddStr}</td><td>{v.organization.name}</td><td>{v.organization.rank}</td><td>{v.cost}</td></tr>) : <tr></tr>}
                             </tbody>
                         </table>
+                        <p className="house-block-caption">
+                            {this.state.auctionBidsData != null && this.state.auctionBidsData.length > 0 ? "Дата окончания аукциона: " + this.state.auctionBidsData[0].auction.dateEndStr : "Аукцион в данный момент не проводится"}
+                            </p>
                     </div>
                 </div>
             </div>

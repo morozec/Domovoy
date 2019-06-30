@@ -31,7 +31,7 @@
     margin-left:1rem;
     margin-right:1rem;
     background-color: #fff;
-    border-radius: 4px;
+    /* border-radius: 4px; */
     box-shadow: -1px 1px 4px rgba(0,0,0,0.2);
 }
 
@@ -100,4 +100,15 @@
 .house-info-item-data {
     color: #5155B6;
     font-weight: 600;
+}
+
+.block-address {
+    /* height: 88px; */
+}
+
+p.block-address-caption {
+    font-size: 20px;
+    color: #62C9E4;
+    padding: 1.3rem .25rem;
+    margin: 0;
 }
