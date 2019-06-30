@@ -117,7 +117,7 @@ export class MapComponent extends React.Component {
         // this.overlay.setPosition(coordinates)
         if (!this.marker){
             let marker = new Feature({
-                type:'geoMarker',
+                type:'icon',
                 geometry:new Point(coordinates)
             })
     
@@ -127,7 +127,7 @@ export class MapComponent extends React.Component {
                 'icon': new Style({
                   image: new Icon({
                     anchor: [0.5, 1],
-                    src: '../img/Sloy_x0020_1.png'
+                    src: 'img/Sloy_x0020_1.png'
                   })
                 }),
     
