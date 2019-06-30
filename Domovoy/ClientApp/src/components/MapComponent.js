@@ -31,7 +31,8 @@ export class MapComponent extends React.Component {
             X: 0,
             Y: 0,
             geoData: {},
-            searchAddress:''
+            searchAddress:'',
+            house:{}
         }
 
         this.toggle = this.toggle.bind(this)
@@ -105,7 +106,7 @@ export class MapComponent extends React.Component {
         }
 
         const geoObject = fm.GeoObject
-        content.innerText = geoObject.name
+        content.innerText = this.state.house.address
         let coordinates = this.getCoordinates(geoObject.Point.pos)
         this.overlay.setPosition(coordinates)
 
@@ -217,7 +218,8 @@ export class MapComponent extends React.Component {
         fetch(`api/GeoData/GetHouse/${id}`)
             .then(response => response.json())
             .then(data => {
-                console.log('house', data)
+                
+                this.setState({house:data})
             })
     }
     
@@ -227,7 +229,19 @@ export class MapComponent extends React.Component {
     }
 
     handleSearchButtonClick(){
-        this.fetchData(this.state.searchAddress)
+        
+        
+        fetch(`api/GeoData/GetFirstHouseByAddress/${this.state.searchAddress}`)
+            .then(response => response.json())
+            .then(data =>{
+                console.log('house', data)
+                this.setState({house:data})
+            })
+            .then(()=>this.fetchData(this.state.house.address))
+            .catch(ex =>{
+                console.log(ex)
+            })
+        
     }
 
     render() {
@@ -244,6 +258,8 @@ export class MapComponent extends React.Component {
                                 />
                                 <Button type="submit">Поиск</Button>
                             </Form>
+
+                            <div>{this.state.house.address}</div>
                         </div>
                         <div className='col-lg-7'>
                             <div id='map-container'></div>
