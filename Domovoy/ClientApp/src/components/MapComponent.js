@@ -11,6 +11,7 @@ import { Circle as CircleStyle, Fill, Stroke, Style, Text } from 'ol/style';
 import { transform, get, transformExtent } from 'ol/proj.js'
 import { ZoomToExtent } from 'ol/control.js';
 import { Form, Button, Input } from 'reactstrap';
+import { Link } from 'react-router-dom';
 
 
 import { EPSG3857_X_MIN, EPSG3857_Y_MIN, EPSG3857_X_MAX, EPSG3857_Y_MAX } from '../constants/constants'
@@ -196,7 +197,12 @@ render() {
 
 
                             <p>Сравнить стоимость обслуживания</p>
-                            <Button color="info">Понизить цену</Button> <Button color="primary">Повысить качество</Button>
+                            <Link to={`/House/${this.props.house.houseId}`}>
+                                <Button color="info">Понизить цену</Button>
+                            </Link>
+                            <Link to={`/House/${this.props.house.houseId}`}>
+                                <Button color="primary">Повысить качество</Button>
+                            </Link>
                         </div>}
 
                         
