@@ -57,6 +57,7 @@ renderHouses(){
   )
 }
 
+
   render() {
     return (
       <header>
@@ -67,7 +68,7 @@ renderHouses(){
                 <NavbarBrand tag={Link} to="/">
                   <img src={logo} />
                 </NavbarBrand>  
-                {this.renderHouses()}
+                {window.location.pathname==="/" && this.renderHouses()}
               </div>
               <div className="col-lg-7">
                 <div className="header-menu">
