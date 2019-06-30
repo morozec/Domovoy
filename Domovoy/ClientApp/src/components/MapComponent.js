@@ -226,32 +226,56 @@ export class MapComponent extends React.Component {
     
 
 render() {
+
+    let divDetails = <div className="details">
+        
+        <h3>Немного статистики</h3>
+
+        <p className="detail-item">
+            Управляющих организаций
+            <span className="float-right">1 684</span>
+        </p>
+
+        <p className="detail-item">
+            Домов
+            <span className="float-right">22 577</span>
+        </p>
+
+        <p className="detail-item">
+            Работ по домам за 2018 год
+            <span className="float-right">18 316</span>
+        </p>
+
+        <p className="detail-item">
+            Предписаний в адрес УК от надзорных органов
+            <span className="float-right">35 579</span>
+        </p>        
+
+    </div>;
+
+    if (this.props.house.address != null) {
+
+        divDetails = <div className="details">
+        <h3>{this.props.house.address}</h3>
+
+        <p className="detail-item">Стоимость обслуживания в мес. <span className="float-right">{`${this.props.house.maintenanceCost} руб`}</span></p>
+        <p className="detail-item">Количество аварий в год <span className="float-right">{this.props.house.countAccident}</span></p>
+        <p className="detail-item">Управляющая компания <br/><span>{this.props.house.uk && this.props.house.uk.name}</span></p>
+        <p className="detail-item">Год постройки <span  className="float-right">{this.props.house.buildYear}</span></p>
+
+        <Link to={`/House/${this.props.house.houseId}`}>
+            <Button color="primary" className="detail-button">Подробнее</Button>
+        </Link>
+        </div>;
+        console.log(divDetails);
+    }
+    
     return (
 
         <div id='component-root'>
                 <div className='row'>
                     <div className='col-lg-5 bg-white'>
-                                     
-                        {this.props.house.address &&
-                        <div className="details">
-                            <h3>{this.props.house.address}</h3>
-
-                            <p className="detail-item">Стоимость обслуживания в мес. <span className="float-right">{`${this.props.house.maintenanceCost} руб`}</span></p>
-                            <p className="detail-item">Количество аварий в год <span className="float-right">{this.props.house.countAccident}</span></p>
-                            <p className="detail-item">Управляющая компания <br/><span>{this.props.house.uk && this.props.house.uk.name}</span></p>
-                            <p className="detail-item">Год постройки <span  className="float-right">{this.props.house.buildYear}</span></p>
-
-                            {/* <p className="detail-caption">Сравнить стоимость обслуживания</p>
-                            <Link to={`/House/${this.props.house.houseId}`}>
-                                <Button color="info">Понизить цену</Button>
-                            </Link> */}
-                            <Link to={`/House/${this.props.house.houseId}`}>
-                                <Button color="primary" className="detail-button">Подробнее</Button>
-                            </Link>
-                        </div>}
-
-                        
-                        
+                        {divDetails}
                     </div>
                     <div className='col-lg-7 p-0'>
                         <div id='map-container'></div>
