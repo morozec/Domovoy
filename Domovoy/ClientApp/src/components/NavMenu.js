@@ -63,9 +63,7 @@ renderHouses(){
             
             <NavbarBrand tag={Link} to="/">Домовой</NavbarBrand>  
 
-              {this.renderHouses()}
-
-            <Link to="House/1" > House </Link>      
+              {this.renderHouses()}             
           </Container>
         </Navbar>
       </header>

@@ -185,14 +185,22 @@ render() {
             <div className='container'>
                 <div className='row'>
                     <div className='col-lg-5'>
-                        {/* <Form inline onSubmit={e => { e.preventDefault(); this.handleSearchButtonClick() }}>
-                                <Input type="text" placeholder="Введите адрес для поиска" className=" mr-sm-2" value={this.state.searchAddress}
-                                    onChange={this.handleSearchAddressChange}
-                                />
-                                <Button type="submit">Поиск</Button>
-                            </Form> */}                       
+                                     
+                        {this.props.house.address &&
+                        <div>
+                            <h3>{this.props.house.address}</h3>
+                            <span>Стоимость обслуживания в мес.</span> <p>{`${this.props.house.maintenanceCost}руб`}</p>
+                            <span>Количество аварий в год</span> <p>{this.props.house.countAccident}</p>
+                            <span>Управляющая компания</span> <p>{this.props.house.uk && this.props.house.uk.name}</p>
+                            <span>Год постройки</span> <p>{this.props.house.BuildYear}</p>
 
-                        <div>{this.props.house.address}</div>
+
+                            <p>Сравнить стоимость обслуживания</p>
+                            <Button color="info">Понизить цену</Button> <Button color="primary">Повысить качество</Button>
+                        </div>}
+
+                        
+                        
                     </div>
                     <div className='col-lg-7'>
                         <div id='map-container'></div>
