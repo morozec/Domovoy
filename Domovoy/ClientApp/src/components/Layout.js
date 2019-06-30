@@ -8,23 +8,7 @@ const MyContext = React.createContext();
 export class Layout extends Component {
   static displayName = Layout.name;
 
-  constructor() {
-    super()
-    this.state = {
-      searchAddress: '',
-      resultSearchAddress :''
-    }
-    this.handleSearchAddressChange = this.handleSearchAddressChange.bind(this)
-    this.handleSearchButtonClick = this.handleSearchButtonClick.bind(this)
-  }
-
-  handleSearchAddressChange(e) {
-    this.setState({ searchAddress: e.target.value })
-  }
-
-  handleSearchButtonClick(){    
-    this.setState({resultSearchAddress:this.state.searchAddress})
-  }
+  
 
   render() {
 
@@ -32,13 +16,9 @@ export class Layout extends Component {
     
     return (
       <div>
-        <NavMenu
-          searchAddress={this.state.searchAddress}
-          handleSearchAddressChange={this.handleSearchAddressChange}
-          handleSearchButtonClick={this.handleSearchButtonClick}
-        />
+        <NavMenu       />
         <Container>
-          <MapComponent searchAddress = {this.state.resultSearchAddress} />
+          {this.props.children}
         </Container>
         
 

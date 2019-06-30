@@ -10,6 +10,7 @@ import Point from 'ol/geom/Point';
 import { Circle as CircleStyle, Fill, Stroke, Style, Text } from 'ol/style';
 import { transform, get, transformExtent } from 'ol/proj.js'
 import { ZoomToExtent } from 'ol/control.js';
+import {  Form, Button, Input } from 'reactstrap';
 
 import { EPSG3857_X_MIN, EPSG3857_Y_MIN, EPSG3857_X_MAX, EPSG3857_Y_MAX } from '../constants/constants'
 
@@ -29,11 +30,13 @@ export class MapComponent extends React.Component {
             requestBody: '',
             X: 0,
             Y: 0,
-            geoData: {}
+            geoData: {},
+            searchAddress:''
         }
 
         this.toggle = this.toggle.bind(this)
         this.fetchData = this.fetchData.bind(this)
+        this.handleSearchAddressChange = this.handleSearchAddressChange.bind(this)
     }
 
 
@@ -55,7 +58,7 @@ export class MapComponent extends React.Component {
             requestBody: '',
             X: coordinate[0],
             Y: coordinate[1],
-            isNewUserRequest: true,            
+            isNewUserRequest: true,
         })
     }
 
@@ -66,16 +69,16 @@ export class MapComponent extends React.Component {
     }
 
     fetchData(address) {
-        
+
         fetch(`api/GeoData/GetGeoData/${address}`)
             .then(response =>
                 response.json())
-            .then(data => {      
-                console.log(data)          
-                this.setState({ geoData: data }, () => { 
+            .then(data => {
+                console.log(data)
+                this.setState({ geoData: data }, () => {
                     this.showPopup()
 
-                 });
+                });
             })
 
     }
@@ -217,24 +220,31 @@ export class MapComponent extends React.Component {
                 console.log('house', data)
             })
     }
+    
 
+    handleSearchAddressChange(e){
+        this.setState({searchAddress:e.target.value})
+    }
 
-    componentDidUpdate(prevProps, prevState) {
-        console.log(this.props.value)
-        if (this.props.searchAddress != prevProps.searchAddress &&
-            this.props.searchAddress !== '') {
-            this.fetchData(this.props.searchAddress)
-        }
+    handleSearchButtonClick(){
+        this.fetchData(this.state.searchAddress)
     }
 
     render() {
         return (
 
             <div id='component-root'>
-               
+
                 <div className='container'>
                     <div className='row'>
-                        <div className='col-lg-5'>{this.state.houseInfo}</div>
+                        <div className='col-lg-5'>
+                            <Form inline onSubmit={e => { e.preventDefault(); this.handleSearchButtonClick() }}>
+                                <Input type="text" placeholder="Введите адрес для поиска" className=" mr-sm-2" value={this.state.searchAddress}
+                                    onChange={this.handleSearchAddressChange}
+                                />
+                                <Button type="submit">Поиск</Button>
+                            </Form>
+                        </div>
                         <div className='col-lg-7'>
                             <div id='map-container'></div>
                             <div id="popup" className="ol-popup">
