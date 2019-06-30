@@ -42,9 +42,10 @@ export class Layout extends Component {
 
 
         <Navbar sticky="bottom" className="navbar navbar-expand-md navbar-dark bg-dark">
+          <Container>
           <div className="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
               <ul className="navbar-nav mr-auto">                 
-                  <li className="nav-item">
+                  {/* <li className="nav-item">
                       <a className="nav-link" href="#">О ПРОЕКТЕ</a>
                   </li>
                   <li className="nav-item">
@@ -52,9 +53,14 @@ export class Layout extends Component {
                   </li>
                   <li className="nav-item">
                       <a className="nav-link" href="#">ЗАДАТЬ ВОПРОС</a>
-                  </li>                  
+                  </li> */}
+                  <li className="nav-item">
+                      <a className="nav-link" href="http://eias.fstrf.ru/jkh_calc/#63" target="_blank">КАЛЬКУЛЯТОР КОММУНАЛЬНЫХ ПЛАТЕЖЕЙ</a>
+                  </li>
+                              
               </ul>
           </div>
+          
           
           <div className="navbar-collapse collapse w-100 order-3 dual-collapse2">
               <ul className="navbar-nav ml-auto">
@@ -63,6 +69,7 @@ export class Layout extends Component {
                   </li>                  
               </ul>
           </div>
+          </Container>
       </Navbar>
 
       </div>

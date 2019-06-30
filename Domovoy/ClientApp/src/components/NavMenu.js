@@ -3,6 +3,8 @@ import { Container, Navbar, NavbarBrand } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import './NavMenu.css';
 
+import logo from '../img/logo_domovoy.svg';
+
 import { CustomToggle, CustomMenu } from './CustomToggle'
 import { Dropdown } from 'react-bootstrap'
 
@@ -60,10 +62,23 @@ renderHouses(){
       <header>
         <Navbar className="navbar-expand-sm navbar-toggleable-sm ng-white">
           <Container>
-            
-            <NavbarBrand tag={Link} to="/">Домовой</NavbarBrand>  
+            <div className="row w-100">
+              <div className="col-lg-5">
+                <NavbarBrand tag={Link} to="/">
+                  <img src={logo} />
+                </NavbarBrand>  
+                {this.renderHouses()}
+              </div>
+              <div className="col-lg-7">
+                <div className="header-menu">
+                  <a href="#" className="header-menu-item">О ПРОЕКТЕ</a>
+                  <a href="#" className="header-menu-item">РЕЙТИНГ ДОМОВ</a>
+                  <a href="#" className="header-menu-item">ЗАДАТЬ ВОПРОС</a>
+                </div>
 
-              {this.renderHouses()}             
+                
+              </div>
+              </div>
           </Container>
         </Navbar>
       </header>

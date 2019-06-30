@@ -24,10 +24,9 @@ export class ChangeTariff extends Component {
     render() {
         return (
             <div>
-                 <div className="house-block">
-                    <p className="house-block-caption">{this.state.houseData ? this.state.houseData.address : "..."}</p>
-                    <p className="house-block-uk">{this.state.houseData && this.state.houseData.uk ? this.state.houseData.uk.name : "..."}</p>
-				</div>
+                <div className="house-block block-address">
+                    <p className="block-address-caption">{this.state.houseData ? this.state.houseData.address : "..."}</p>
+                </div>
             </div>
         )
     }

@@ -182,13 +182,11 @@ render() {
     return (
 
         <div id='component-root'>
-
-            <div className='container'>
                 <div className='row'>
-                    <div className='col-lg-5'>
+                    <div className='col-lg-5 bg-white'>
                                      
                         {this.props.house.address &&
-                        <div>
+                        <div className="details">
                             <h3>{this.props.house.address}</h3>
                             <span>Стоимость обслуживания в мес.</span> <p>{`${this.props.house.maintenanceCost}руб`}</p>
                             <span>Количество аварий в год</span> <p>{this.props.house.countAccident}</p>
@@ -208,7 +206,7 @@ render() {
                         
                         
                     </div>
-                    <div className='col-lg-7'>
+                    <div className='col-lg-7 p-0'>
                         <div id='map-container'></div>
                         <div id="popup" className="ol-popup">
                             <a href="#" id="popup-closer" className="ol-popup-closer"></a>
@@ -216,8 +214,6 @@ render() {
                         </div>
                     </div>
                 </div>
-
-            </div>
         </div>
     )
 }

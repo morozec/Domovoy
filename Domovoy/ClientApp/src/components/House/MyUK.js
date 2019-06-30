@@ -62,7 +62,7 @@ export class MyUK extends Component {
                             </tbody>
                         </table>
                         <p className="house-block-caption">
-                            {this.state.auctionBidsData != null && this.state.auctionBidsData.length > 0 ? "Дата окончания аукциона: " + this.state.auctionBidsData[0].auction.dateEndStr : "Аукцион в данный момент не проводится"}
+                            {this.state.auctionBidsData != null && this.state.auctionBidsData.length > 0 ? "Дата окончания аукциона: " + this.state.auctionBidsData[0].auction.dateEndStr : "В данный момент выборы УК не проводятся"}
                             </p>
                     </div>
                 </div>

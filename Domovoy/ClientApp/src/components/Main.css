@@ -1,3 +1,16 @@
+/* html {
+    height: 100%;
+}
+
+body , #root, #root > div, .container, #component-root, #component-root > .row, #map-container {
+    min-height: 100%;
+    height: 100%;
+} */
+
+#map-container {
+    height: 68vh;
+}
+
 body {
     background-color: #F6F6F6;
     font-family: 'Roboto', sans-serif;
@@ -8,7 +21,7 @@ body {
 }
 
 header {
-    height: 224px;
+    height: 174px;
     background: url(../img/header.jpg) no-repeat;
     background-color: #fff;
 }
@@ -60,12 +73,13 @@ header .navbar-brand {
 
 .block-search {
     position: absolute;
-    top:150px;
+    top:80px;
     /* left: 0; */
     display: block;
     z-index: 9999;
-    max-width: 400px;
-    width: 400px;
+    max-width: 100%;
+    width: 100%;
+    padding-right:15px;
 }
 
 .block-search input, .block-search ul {
@@ -74,4 +88,24 @@ header .navbar-brand {
 
 p.block-link {
     padding: .5rem 0;
+}
+
+.header-menu {
+    /* margin-left: 200px; */
+    padding-top:.6rem;
+}
+
+a.header-menu-item {
+    color: #fff;
+    font-size:12px;
+    margin: 0 1rem;
+}
+
+.details {
+    padding: 1rem;
+}
+
+.details h3 {
+    font-size: 20px;
+    font-weight: bold;
 }

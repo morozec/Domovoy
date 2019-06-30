@@ -53,7 +53,7 @@ export class CustomMenu extends React.Component {
                 <FormControl
                     autoFocus
                     className="mb-1"
-                    placeholder="Введите адрес для поиска..."
+                    placeholder="Найти свой дом"
                     onChange={this.handleChange}                    
                     value={value}
                     onSelect={this.props.onSelected}
