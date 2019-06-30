@@ -113,3 +113,8 @@ p.block-address-caption {
     padding: 1.3rem .25rem;
     margin: 0;
 }
+
+.detail-caption {
+    font-size: 20px;
+    color: #5D5E6E;
+}

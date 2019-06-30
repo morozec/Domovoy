@@ -46,8 +46,8 @@ header .navbar-brand {
     color: #5D5E6E !important;
     margin-bottom: 23px;
     border-radius: 0px !important;
-    line-height: 20px;
-    font-size: 20px;
+    line-height: 1rem;
+    font-size: 1rem;
     padding: 22px;
     font-weight: 600;
 }
@@ -103,9 +103,27 @@ a.header-menu-item {
 
 .details {
     padding: 1rem;
+    padding-top: 2rem;
 }
 
 .details h3 {
     font-size: 20px;
     font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+p.detail-item {
+    border-bottom: solid 1px;
+    border-color: #BBBCCB;
+    font-size: .87rem;
+    padding-bottom: .5rem;
+    font-weight: 400;
+}
+
+.detail-item span {
+    font-weight: bold;
+}
+
+.detail-button {
+    width: 100%;
 }

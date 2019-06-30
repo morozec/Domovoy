@@ -235,18 +235,18 @@ render() {
                         {this.props.house.address &&
                         <div className="details">
                             <h3>{this.props.house.address}</h3>
-                            <span>Стоимость обслуживания в мес.</span> <p>{`${this.props.house.maintenanceCost}руб`}</p>
-                            <span>Количество аварий в год</span> <p>{this.props.house.countAccident}</p>
-                            <span>Управляющая компания</span> <p>{this.props.house.uk && this.props.house.uk.name}</p>
-                            <span>Год постройки</span> <p>{this.props.house.buildYear}</p>
 
+                            <p className="detail-item">Стоимость обслуживания в мес. <span className="float-right">{`${this.props.house.maintenanceCost} руб`}</span></p>
+                            <p className="detail-item">Количество аварий в год <span className="float-right">{this.props.house.countAccident}</span></p>
+                            <p className="detail-item">Управляющая компания <br/><span>{this.props.house.uk && this.props.house.uk.name}</span></p>
+                            <p className="detail-item">Год постройки <span  className="float-right">{this.props.house.buildYear}</span></p>
 
-                            <p>Сравнить стоимость обслуживания</p>
+                            {/* <p className="detail-caption">Сравнить стоимость обслуживания</p>
                             <Link to={`/House/${this.props.house.houseId}`}>
                                 <Button color="info">Понизить цену</Button>
-                            </Link>
+                            </Link> */}
                             <Link to={`/House/${this.props.house.houseId}`}>
-                                <Button color="primary">Повысить качество</Button>
+                                <Button color="primary" className="detail-button">Подробнее</Button>
                             </Link>
                         </div>}
 
