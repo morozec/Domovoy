@@ -10,7 +10,7 @@ namespace DBRepository.Repositories
     {
         Task<List<House>> GetHouses();
 
-        Task<List<House>> GetHousesByAddress(string address);
+        Task<List<House>> GetHousesByAddress(string address, int count);
 
         Task<House> GetHousesById(int id);
 

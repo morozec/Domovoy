@@ -24,11 +24,11 @@ namespace DBRepository.Repositories
             }
         }
 
-        public async Task<List<House>> GetHousesByAddress(string address)
+        public async Task<List<House>> GetHousesByAddress(string address, int count)
         {
             using (var context = DomovoyContextFactory.CreateDbContext(ConnectionString))
             {
-                return await context.Houses.Where(h => h.Address.Contains(address)).ToListAsync();
+                return await context.Houses.Where(h => h.Address.Contains(address)).Take(count).ToListAsync();
             }
         }
 

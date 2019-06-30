@@ -38,11 +38,12 @@ namespace Domovoy.Controllers
             return house;
         }
 
-        [HttpGet("[action]/{address}")]
-        public async Task<House> GetFirstHouseByAddress(string address)
+        [HttpGet("[action]/{address}/{count}")]
+        public async Task<List<House>> GetFirstHousesByAddress(string address, int count)
         {
-            var houses = await _houseRepository.GetHousesByAddress(address);
-            return houses.FirstOrDefault();
+            if (address == "") return new List<House>();
+            var houses = await _houseRepository.GetHousesByAddress(address,count);
+            return houses;
         }
         
 

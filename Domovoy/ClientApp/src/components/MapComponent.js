@@ -10,9 +10,11 @@ import Point from 'ol/geom/Point';
 import { Circle as CircleStyle, Fill, Stroke, Style, Text } from 'ol/style';
 import { transform, get, transformExtent } from 'ol/proj.js'
 import { ZoomToExtent } from 'ol/control.js';
-import {  Form, Button, Input } from 'reactstrap';
+import { Form, Button, Input } from 'reactstrap';
+import { Dropdown } from 'react-bootstrap'
 
 import { EPSG3857_X_MIN, EPSG3857_Y_MIN, EPSG3857_X_MAX, EPSG3857_Y_MAX } from '../constants/constants'
+import { CustomToggle, CustomMenu } from './CustomToggle'
 
 import 'ol/ol.css';
 import './MapComponent.css'
@@ -31,13 +33,16 @@ export class MapComponent extends React.Component {
             X: 0,
             Y: 0,
             geoData: {},
-            searchAddress:'',
-            house:{}
+            searchAddress: '',
+            house: {},
+            houses: [],
+            isDropDownVisible:true
         }
 
         this.toggle = this.toggle.bind(this)
-        this.fetchData = this.fetchData.bind(this)
+        this.fetchData = this.fetchData.bind(this)       
         this.handleSearchAddressChange = this.handleSearchAddressChange.bind(this)
+        this.handleMenuSelected = this.handleMenuSelected.bind(this)
     }
 
 
@@ -69,9 +74,9 @@ export class MapComponent extends React.Component {
         }))
     }
 
-    fetchData(address) {
+    fetchData() {
 
-        fetch(`api/GeoData/GetGeoData/${address}`)
+        fetch(`api/GeoData/GetGeoData/${this.state.house.address}`)
             .then(response =>
                 response.json())
             .then(data => {
@@ -218,60 +223,105 @@ export class MapComponent extends React.Component {
         fetch(`api/GeoData/GetHouse/${id}`)
             .then(response => response.json())
             .then(data => {
-                
-                this.setState({house:data})
+                this.setState({ house: data }, ()=> this.fetchData())
             })
     }
-    
 
-    handleSearchAddressChange(e){
-        this.setState({searchAddress:e.target.value})
+
+    handleSearchAddressChange(value) {
+        console.log(value)
+        this.setState({ searchAddress: value, isDropDownVisible:true }, () => {
+            if (this.state.searchAddress===''){
+                this.setState({isDropDownVisible:false, houses:[]})
+            }else{
+                fetch(`api/GeoData/GetFirstHousesByAddress/${this.state.searchAddress}/10`)
+                    .then(response => response.json())
+                    .then(data => {                    
+                        this.setState({ houses: data })
+                    })
+            }
+
+        })
     }
 
-    handleSearchButtonClick(){
-        
-        
-        fetch(`api/GeoData/GetFirstHouseByAddress/${this.state.searchAddress}`)
-            .then(response => response.json())
-            .then(data =>{
-                console.log('house', data)
-                this.setState({house:data})
-            })
-            .then(()=>this.fetchData(this.state.house.address))
-            .catch(ex =>{
-                console.log(ex)
-            })
-        
+    handleMenuSelected(){
+        this.setState({isDropDownVisible:true})
     }
 
-    render() {
-        return (
+// handleSearchButtonClick() {
 
-            <div id='component-root'>
 
-                <div className='container'>
-                    <div className='row'>
-                        <div className='col-lg-5'>
-                            <Form inline onSubmit={e => { e.preventDefault(); this.handleSearchButtonClick() }}>
+//     fetch(`api/GeoData/GetFirstHouseByAddress/${this.state.searchAddress}`)
+//         .then(response => response.json())
+//         .then(data => {
+//             console.log('house', data)
+//             this.setState({ house: data })
+//         })
+//         .then(() => this.fetchData(this.state.house.address))
+//         .catch(ex => {
+//             console.log(ex)
+//         })
+
+// }
+
+
+
+renderHouses() {
+    return (
+
+        <CustomMenu handleSearchAddressChange={this.handleSearchAddressChange} handleMenuSelected={this.handleMenuSelected} >
+            {this.state.isDropDownVisible && this.state.houses.map(h => <Dropdown.Item 
+                    key={h.houseId}                     
+                    onClick={(e) => {this.showHouseInfo(h.houseId); this.setState({isDropDownVisible:false})}}
+                >
+                    {h.address}
+                </Dropdown.Item>)}
+        </CustomMenu>
+
+        // <Dropdown>
+        //     <Dropdown.Menu as={CustomMenu} show={true} handleSearchAddressChange={this.handleSearchAddressChange}>
+        //         {this.state.houses.map(h => <Dropdown.Item 
+        //             key={h.houseId}                     
+        //             onClick={(e) => {this.showHouseInfo(h.houseId)}}
+        //         >
+        //             {h.address}
+        //         </Dropdown.Item>)}
+        //     </Dropdown.Menu>
+        // </Dropdown>
+
+    )
+}
+
+render() {
+    return (
+
+        <div id='component-root'>
+
+            <div className='container'>
+                <div className='row'>
+                    <div className='col-lg-5'>
+                        {/* <Form inline onSubmit={e => { e.preventDefault(); this.handleSearchButtonClick() }}>
                                 <Input type="text" placeholder="Введите адрес для поиска" className=" mr-sm-2" value={this.state.searchAddress}
                                     onChange={this.handleSearchAddressChange}
                                 />
                                 <Button type="submit">Поиск</Button>
-                            </Form>
+                            </Form> */}
 
-                            <div>{this.state.house.address}</div>
-                        </div>
-                        <div className='col-lg-7'>
-                            <div id='map-container'></div>
-                            <div id="popup" className="ol-popup">
-                                <a href="#" id="popup-closer" className="ol-popup-closer"></a>
-                                <div id="popup-content"></div>
-                            </div>
+                        {this.renderHouses()}
+
+                        <div>{this.state.house.address}</div>
+                    </div>
+                    <div className='col-lg-7'>
+                        <div id='map-container'></div>
+                        <div id="popup" className="ol-popup">
+                            <a href="#" id="popup-closer" className="ol-popup-closer"></a>
+                            <div id="popup-content"></div>
                         </div>
                     </div>
-
                 </div>
+
             </div>
-        )
-    }
+        </div>
+    )
+}
 }
