@@ -17,6 +17,7 @@ export class Layout extends Component {
   }
   
   handleMenuSelected(value){    
+    console.log('house',value)
     this.setState({house:value})
   }
 
