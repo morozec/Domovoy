@@ -46,6 +46,18 @@ namespace Domovoy.Controllers
             return violations;
         }
 
+        [HttpGet("[action]/{id}")]
+        public async Task<Auction> GetAuction(int id)
+        {
+            return await _houseRepository.GetAuction(id);
+        }
+
+        [HttpGet("[action]/{id}")]
+        public async Task<List<AuctionBid>> GetAuctionBids(int id)
+        {
+            return await _houseRepository.GetAuctionBids(id);
+        }
+
 
     }
 }

@@ -50,5 +50,24 @@ namespace DBRepository.Repositories
                     .Where(e => e.HouseId == id).ToListAsync();
             }
         }
+
+        public async Task<Auction> GetAuction(int id)
+        {
+            using (var context = DomovoyContextFactory.CreateDbContext(ConnectionString))
+            {
+                return await context.Auctions
+                    .SingleOrDefaultAsync(e => e.HouseId == id);
+            }
+        }
+
+        public async Task<List<AuctionBid>> GetAuctionBids (int id)
+        {
+            using (var context = DomovoyContextFactory.CreateDbContext(ConnectionString))
+            {
+                return await context.AuctionBids
+                    .Include(e => e.Organization)
+                    .Where(e => e.AuctionId == id).ToListAsync();
+            }
+        }
     }
 }

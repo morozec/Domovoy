@@ -24,6 +24,11 @@ namespace Models
         /// </summary>
         public int? OrganizationTypeId { get; set; }
 
+        /// <summary>
+        /// Рейтинг организации
+        /// </summary>
+        public double Rank { get; set; }
+
         [ForeignKey("OrganizationTypeId")]
         public OrganizationType OrganizationType { get; set; }
 

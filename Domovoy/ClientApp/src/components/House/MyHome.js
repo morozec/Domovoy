@@ -25,7 +25,6 @@ export class MyHome extends Component {
             .then(response =>
                 response.json())
             .then(data => {
-                //console.log(data)
                 this.setState({ houseData: data });
             })
     }
@@ -40,24 +39,13 @@ export class MyHome extends Component {
             })
     }
 
-    // handleButtonClick(e, buttonTag){
-
-    //     e.preventDefault();
-
-    //     this.props.handleChange(false);
-        
-    //     console.log(buttonTag);
-    // }
-
     render() {
 
-        console.log(this.state.houseData);
-        console.log(this.state.violationsData);
+        //console.log(this.state.houseData);
+        //console.log(this.state.violationsData);
 
         return (
             <div>
-                {/* <h1>Мой дом</h1> */}
-
                 <div className="house-block">
                     <p className="house-block-caption">{this.state.houseData ? this.state.houseData.address : "..."}</p>
                     <p className="house-block-uk">{this.state.houseData && this.state.houseData.uk ? this.state.houseData.uk.name : "..."}</p>

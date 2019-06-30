@@ -4,14 +4,16 @@ using DBRepository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DBRepository.Migrations
 {
     [DbContext(typeof(DomovoyContext))]
-    partial class DomovoyContextModelSnapshot : ModelSnapshot
+    [Migration("20190630034723_AddAuction")]
+    partial class AddAuction
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -31,6 +33,8 @@ namespace DBRepository.Migrations
 
                     b.Property<int>("HouseId");
 
+                    b.Property<int>("NeedCountVotes");
+
                     b.Property<string>("Status");
 
                     b.HasKey("AuctionId");
@@ -47,8 +51,6 @@ namespace DBRepository.Migrations
                     b.Property<int>("AuctionId");
 
                     b.Property<double>("Cost");
-
-                    b.Property<DateTime>("DateAdd");
 
                     b.Property<int>("OrganizationId");
 

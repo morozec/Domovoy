@@ -68,6 +68,7 @@ namespace Models
         /// Износ
         /// </summary>
         public double? PhysicalWear { get; set; }
+
         /// <summary>
         /// Рейтинг дома
         /// </summary>
@@ -82,6 +83,7 @@ namespace Models
         /// Стоимость обслуживания
         /// </summary>
         public double MaintenanceCost { get; set; }
+
 
         [ForeignKey("UkId")]
         public Organization UK { get; set; }
