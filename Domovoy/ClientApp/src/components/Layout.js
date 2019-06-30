@@ -33,7 +33,9 @@ export class Layout extends Component {
             <Route exact path='/' render={(props)=> (
               <MapComponent {...props} house={this.state.house}  />
             )} />
-            <Route exact path='/House/:id' component={HouseComponent} />  
+                <Route exact path='/House/:id' component={HouseComponent} />  
+
+                <Route exact path='/img/test' component={HouseComponent} />  
         </Container>
         
 

@@ -8,20 +8,43 @@
     font-size: 2rem;
 } */
 
+.house-main-house {
+    width:100%;
+    margin-left:1.5rem;
+}
+
+.house-main-img {
+    width: 207px;
+    /* height: 125px; */
+    background: #eee;
+}
+
+.house-main-caption {
+    color: #62C9E4;
+    font-size: 18px;
+    margin-top: 1rem !important;
+}
 
 .house-block {
     padding: .5rem 1rem;
     margin-bottom: 1rem;
     margin-left:1rem;
     margin-right:1rem;
-    background-color: #eee;
+    background-color: #fff;
     border-radius: 4px;
+    box-shadow: -1px 1px 4px rgba(0,0,0,0.2);
 }
 
 .house-block p {
     padding: 0;
     margin: 0;
     margin-bottom: .5rem;
+    
+}
+
+.house-main {
+    height: 176px;
+    padding-top: 2rem;
 }
 
 .house-block-caption {
@@ -49,7 +72,8 @@
 }
 
 .house-block-info {
-    padding: 1rem;
+    padding: .3rem;
+    font-size: 13px;
 }
 
 .house-info-caption {
@@ -61,7 +85,7 @@
 
 .house-info-item {
     padding: 0 .5rem;
-    margin: 0 1rem;
+    /* margin: 0 1rem; */
     align-content: center;
     display: block;
 }

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import testImg from '../../img/test.jpg';
 
 export class MyHome extends Component {
 
@@ -33,42 +34,52 @@ export class MyHome extends Component {
 
         return (
             <div>
-                <div className="house-block">
-                    <p className="house-block-caption">{this.state.houseData ? this.state.houseData.address : "..."}</p>
-                    <p className="house-block-uk">{this.state.houseData && this.state.houseData.uk ? this.state.houseData.uk.name : "..."}</p>
+                <div className="d-flex justify-content-center house-block house-main">
+                    <div className="house-main-img">
+                        <img src={testImg} />
+                    </div>
+                    <div className="house-main-house">
+                        <p className="house-main-caption">{this.state.houseData ? this.state.houseData.address : "..."}</p>
+
+                        <div className="house-block-info">
+                            
+                            <div className="d-flex justify-content-around house-info-items">
+                            
+                                <div className="house-info-item">
+                                    <span className="house-info-item-title">Построен </span>
+                                    <span className="house-info-item-data">{this.state.houseData ? this.state.houseData.buildYear : "-"}</span>
+                                </div>
+
+                                <div className="house-info-item">
+                                    <span className="house-info-item-title">Этажей </span>
+                                    <span className="house-info-item-data">{this.state.houseData ? this.state.houseData.maxFloor : "-"}</span>
+                                </div>
+
+                                <div className="house-info-item">
+                                    <span className="house-info-item-title">Квартир </span>
+                                    <span className="house-info-item-data">{this.state.houseData ? this.state.houseData.numberApartments : "-"}</span>
+                                </div>
+
+                                <div className="house-info-item">
+                                    <span className="house-info-item-title">Жилая площадь </span>
+                                    <span className="house-info-item-data">{this.state.houseData ? this.state.houseData.areaLiving + " кв.м" : "-"}</span>
+                                </div>
+
+                                <div className="house-info-item">
+                                    <span className="house-info-item-title">Износ </span>
+                                    <span className="house-info-item-data">{this.state.houseData ? this.state.houseData.physicalWear + "%" : "-"}</span>
+                                </div>                    
+
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* <p className="house-block-caption">{this.state.houseData ? this.state.houseData.address : "..."}</p>
+                    <p className="house-block-uk">{this.state.houseData && this.state.houseData.uk ? this.state.houseData.uk.name : "..."}</p> */}
+
                 </div>
 
-                <div className="house-block house-block-info">
-                    <p className="house-block-caption">Информация по дому:</p>
-                    <div className="d-flex justify-content-center house-info-items">
-                    
-                    <div className="house-info-item">
-                        <span className="house-info-item-title">Построен </span>
-                        <span className="house-info-item-data">{this.state.houseData ? this.state.houseData.buildYear : "-"}</span>
-                    </div>
-
-                    <div className="house-info-item">
-                        <span className="house-info-item-title">Этажей </span>
-                        <span className="house-info-item-data">{this.state.houseData ? this.state.houseData.maxFloor : "-"}</span>
-                    </div>
-
-                    <div className="house-info-item">
-                        <span className="house-info-item-title">Квартир </span>
-                        <span className="house-info-item-data">{this.state.houseData ? this.state.houseData.numberApartments : "-"}</span>
-                    </div>
-
-                    <div className="house-info-item">
-                        <span className="house-info-item-title">Жилая площадь </span>
-                        <span className="house-info-item-data">{this.state.houseData ? this.state.houseData.areaLiving + " кв.м" : "-"}</span>
-                    </div>
-
-                    <div className="house-info-item">
-                        <span className="house-info-item-title">Износ </span>
-                        <span className="house-info-item-data">{this.state.houseData ? this.state.houseData.physicalWear + "%" : "-"}</span>
-                    </div>                    
-
-                    </div>
-                </div>
+               
 
                 <div className="house-block">
                     <p className="house-block-caption">Выполненные работы</p>
