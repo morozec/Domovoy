@@ -10,6 +10,7 @@ body {
 header {
     background-color: #fff;
     height: 224px;
+    /* background: url(./img/header.jpg) no-repeat; */
 }
 
 /* PAGE-MENU */

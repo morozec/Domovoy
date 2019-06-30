@@ -1,7 +1,7 @@
 ﻿import React from 'react';
 import {HouseMenu} from './HouseMenu';
 import {MyHome} from './MyHome';
-import {ChangeUK} from './ChangeUK';
+import {MyUK} from './MyUK';
 import {ChangeTariff} from './ChangeTariff';
 import './House.css';
 
@@ -11,47 +11,48 @@ export class HouseComponent extends React.Component {
         super(props)
         this.state = {
             activeButton:"MyHome",
-            id: this.props.match.params.id
+            id: this.props.match.params.id,
+            houseData: null
         }
 
         this.handleChange = this.handleChange.bind(this)
 
-        //console.log(this.props.match.params.id);
+        this.fetchDataHouse = this.fetchDataHouse.bind(this)
+        
+        this.fetchDataHouse(this.state.id)
+    }
+
+
+    fetchDataHouse(id) {
+        fetch(`api/GeoData/GetHouse/${id}`)
+            .then(response =>
+                response.json())
+            .then(data => {
+                this.setState({ houseData: data });
+            })
     }
 
     handleChange(newValue){
         this.setState({activeButton:newValue})
     }
 
-    // fetchData(id) {
-
-    //     console.log(id)
-
-    //     fetch(`api/GeoData/GetGeoData/${id}`)
-    //         .then(response =>
-    //             response.json())
-    //         .then(data => {
-    //             console.log(data)
-    //             this.setState({ geoData: data }, () => { this.showPopup() });
-    //         })
-    // }
-
-
+ 
     render() {
+        
 
-        //let div = this.state.activeButton ? <div>1</div> :<div>2</div>
         let pageDiv = "";
 
-        switch(this.state.activeButton) {
-            case "ChangeTariff":
-                pageDiv = <ChangeTariff id={this.state.id}/>
-                break;
-            case "ChangeUK":
-                pageDiv = <ChangeUK id={this.state.id}/>
-                break;
-            default:
-                pageDiv = <MyHome id={this.state.id}/>;
-        }
+        if (this.state.houseData)
+            switch(this.state.activeButton) {
+                case "ChangeTariff":
+                    pageDiv = <ChangeTariff houseData={this.state.houseData}/>
+                    break;
+                case "MyUK":
+                    pageDiv = <MyUK houseData={this.state.houseData}/>
+                    break;
+                default:
+                    pageDiv = <MyHome houseData={this.state.houseData}/>;
+            }
 
         return (
             <div id='component-root' className="house">

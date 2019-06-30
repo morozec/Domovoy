@@ -6,30 +6,17 @@ export class MyHome extends Component {
         super(props)
         
         this.state = {
-            houseData: null,
+            houseData: this.props.houseData,
             violationsData: null
         }
 
-        this.fetchDataHouse = this.fetchDataHouse.bind(this)
         this.fetchDataViolations = this.fetchDataViolations.bind(this)
 
-        this.fetchDataHouse(this.props.id)
-        this.fetchDataViolations(this.props.id)
-
+        if (this.state.houseData != null)
+            this.fetchDataViolations(this.state.houseData.houseId)
         
     }
-    
 
-    fetchDataHouse(id) {
-        fetch(`api/GeoData/GetHouse/${id}`)
-            .then(response =>
-                response.json())
-            .then(data => {
-                this.setState({ houseData: data });
-            })
-    }
-
-    
     fetchDataViolations(id) {
         fetch(`api/GeoData/GetHouseViolations/${id}`)
             .then(response =>
@@ -42,7 +29,7 @@ export class MyHome extends Component {
     render() {
 
         //console.log(this.state.houseData);
-        //console.log(this.state.violationsData);
+        console.log(this.state.violationsData);
 
         return (
             <div>
@@ -98,7 +85,7 @@ export class MyHome extends Component {
                                 </tr>
                             </thead>
                             <tbody>
-                                {this.state.violationsData ? this.state.violationsData.map(v => <tr><td>{v.violationDate}</td><td>{v.violationDescriptions}</td></tr>) : <tr></tr>}
+                                {this.state.violationsData != null ? this.state.violationsData.map(v => <tr key={v.houseViolationId}><td>{v.violationDate}</td><td>{v.violationDescriptions}</td></tr>) : <tr></tr>}
                             </tbody>
                         </table>
                     </div>
