@@ -33,7 +33,7 @@ export class CustomMenu extends React.Component {
     }
 
     handleChange(e) {
-        const eValue = e.target.value.toLowerCase().trim()
+        const eValue = e.target.value.toLowerCase()
         this.setState({ value: eValue });
         this.props.handleSearchAddressChange(eValue)
     }
