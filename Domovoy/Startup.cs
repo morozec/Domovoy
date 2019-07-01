@@ -33,65 +33,19 @@ namespace Domovoy
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddEntityFrameworkSqlServer().AddDbContext<DomovoyContext>(opt =>
-            {
-                opt.UseSqlServer(Configuration.GetConnectionString("domovoyConnection"),
-                b =>
-                {
-                    b.MigrationsAssembly("DBRepository");
-                    //b.UseNetTopologySuite();
-                });
-            });
-
-            //Identity
-            //services.AddIdentity<User, IdentityRole<long>>(o =>
-            //{
-            //    o.Password.RequireDigit = false;
-            //    o.Password.RequireLowercase = false;
-            //    o.Password.RequireUppercase = false;
-            //    o.Password.RequireNonAlphanumeric = false;
-            //    o.Password.RequiredLength = 6;
-            //})
-            //.AddDefaultUI(UIFramework.Bootstrap4)
-            //.AddSignInManager<SignInManager<User>>()
-            //.AddEntityFrameworkStores<DomovoyContext>()
-            //.AddDefaultTokenProviders();
-
-            //Authentication
-            //services.AddAuthentication(options =>
-            //{
-            //    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-            //    options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
-            //})
-            //.AddCookie(options =>
-            //{
-            //    options.LoginPath = new PathString("/auth/login");
-            //    options.LogoutPath = new PathString("/home/index");
-            //});
-
-            //Mapper
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddAutoMapper();
-
-            //Validation
-            services
-                .AddMvc()
-                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<Startup>());
-
-            //Policy
-            //services.AddAuthorization(options =>
-            //{
-            //    options.AddPolicy("SuperAdmin", policy => policy.RequireRole("super_admin"));
-            //    options.AddPolicy("Administration", policy => policy.RequireRole("admin"));
-            //    options.AddPolicy("All", policy => policy.RequireRole(new string[] { "admin", "manager", "super_user", "user" }));
-            //    options.AddPolicy("Management", policy => policy.RequireRole(new string[] { "admin", "manager" }));
-            //    options.AddPolicy("SuperRight", policy => policy.RequireRole(new string[] { "admin", "super_user" }));
-            //});
-
-
+            
             services.AddScoped<IDomovoyContextFactory, DomovoyContextFactory>();
             services.AddScoped<IHouseRepository>(provider => new HouseRepository(
                 Configuration.GetConnectionString("domovoyConnection"),
                 provider.GetService<IDomovoyContextFactory>()));
+
+            // In production, the React files will be served from this directory
+            services.AddSpaStaticFiles(configuration =>
+            {
+                configuration.RootPath = "ClientApp/build";
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -101,20 +55,22 @@ namespace Domovoy
             {
                 app.UseDeveloperExceptionPage();
             }
+            else
+            {
+                app.UseExceptionHandler("/Error");
+                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                app.UseHsts();
+            }
 
-            app.UseExceptionHandler("/Home/Error");
-            app.UseStatusCodePagesWithReExecute("/Error/{0}");
-
-            app.UseDefaultFiles();
+            app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseCookiePolicy();
-            app.UseAuthentication();
+            app.UseSpaStaticFiles();
 
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller}/{action=Index}/{id?}");
             });
 
             app.UseSpa(spa =>
