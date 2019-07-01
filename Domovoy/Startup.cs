@@ -10,6 +10,7 @@ using AutoMapper;
 using DBRepository;
 using DBRepository.Factories;
 using DBRepository.Repositories;
+using Domovoy.Services;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -40,6 +41,7 @@ namespace Domovoy
             services.AddScoped<IHouseRepository>(provider => new HouseRepository(
                 Configuration.GetConnectionString("domovoyConnection"),
                 provider.GetService<IDomovoyContextFactory>()));
+            services.AddScoped<IHouseService, HouseService>();
 
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>

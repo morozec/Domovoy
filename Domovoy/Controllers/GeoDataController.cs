@@ -4,6 +4,8 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using DBRepository.Repositories;
+using Domovoy.Services;
+using Domovoy.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 
@@ -12,14 +14,19 @@ namespace Domovoy.Controllers
     [Route("api/[controller]")]
     public class GeoDataController : Controller
     {
-        private readonly IHouseRepository _houseRepository;
+        private const string API_KEY = "0f21bfb6-f5c3-4931-a9ee-244137ca2c46";
 
-        public GeoDataController(IHouseRepository houseRepository)
+        private readonly IHouseRepository _houseRepository;
+        private readonly IHouseService _houseService;
+
+        public GeoDataController(IHouseRepository houseRepository, IHouseService houseService)
         {
             _houseRepository = houseRepository;
+            _houseService = houseService;
         }
 
-        public const string API_KEY = "0f21bfb6-f5c3-4931-a9ee-244137ca2c46";
+
+        
         [HttpGet("[action]/{address}")]
         public string GetGeoData(string address)
         {
@@ -27,8 +34,16 @@ namespace Domovoy.Controllers
             {
                 var url = $"https://geocode-maps.yandex.ru/1.x/?format=json&apikey={API_KEY}&geocode={address}";
                 var json = wc.DownloadString(url);
-                return json;
+                
+                return json;    
             }
+        }
+
+        [HttpGet("[action]")]
+        public async Task<List<HouseViewModel>> GetHouses()
+        {
+            var houses = await _houseService.GetHouses();
+            return houses;
         }
 
         [HttpGet("[action]/{id}")]
