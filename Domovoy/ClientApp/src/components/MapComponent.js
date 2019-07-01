@@ -36,7 +36,6 @@ export class MapComponent extends React.Component {
             Y: 0,
             geoData: {},
             searchAddress: '',
-            house: {},
             isDropDownVisible: true,
             houses: []
         }
@@ -120,7 +119,7 @@ export class MapComponent extends React.Component {
             var styles = {
                 'icon': new Style({
                     image: new Icon({
-                        anchor: [0.5, 1],
+                        anchor: [0.5, 1.1],
                         src: 'img/Sloy_x0020_1.png'
                     })
                 }),
@@ -164,8 +163,9 @@ export class MapComponent extends React.Component {
         this.zoomToExtent = new ZoomToExtent({ extent: ext })
         this.map.addControl(this.zoomToExtent)
 
-        //console.log(ext)
-        this.map.getView().fit(ext, this.map.getSize());
+        if (this.props.isSearched) {
+            this.map.getView().fit(ext, this.map.getSize());
+        }
     }
 
     showHousesMarkers() {
@@ -179,7 +179,12 @@ export class MapComponent extends React.Component {
                     const projectionTo = 'EPSG:3857';
 
                     const source = new VectorSource({
-                        features: this.state.houses.map(h => new Feature(new Point(transform([h.posX, h.posY], projectionFrom, projectionTo))))
+                        features: this.state.houses.map(h => {
+                            const feature = new Feature(
+                                new Point(transform([h.posX, h.posY], projectionFrom, projectionTo)))
+                            feature.setId(h.houseId)
+                            return feature
+                        })
                     })
                     const clusterSource = new Cluster({
                         distance: 40,
@@ -193,23 +198,34 @@ export class MapComponent extends React.Component {
                             var size = feature.get('features').length;
                             var style = styleCache[size];
                             if (!style) {
-                                style = new Style({
-                                    image: new CircleStyle({
-                                        radius: 10,
-                                        stroke: new Stroke({
-                                            color: '#fff'
+                                if (size > 1) {
+
+                                    style = new Style({
+                                        image: new CircleStyle({
+                                            radius: 10,
+                                            stroke: new Stroke({
+                                                color: '#fff'
+                                            }),
+                                            fill: new Fill({
+                                                color: '#3399CC'
+                                            })
                                         }),
-                                        fill: new Fill({
-                                            color: '#3399CC'
+                                        text: new Text({
+                                            text: size.toString(),
+                                            fill: new Fill({
+                                                color: '#fff'
+                                            })
                                         })
-                                    }),
-                                    text: new Text({
-                                        text: size.toString(),
-                                        fill: new Fill({
-                                            color: '#fff'
+                                    });
+                                }
+                                else {
+                                    style = new Style({
+                                        image: new Icon({
+                                            anchor: [0.5, 1],
+                                            src: 'img/house_small.png'
                                         })
                                     })
-                                });
+                                }
                                 styleCache[size] = style;
                             }
                             return style;
@@ -225,7 +241,7 @@ export class MapComponent extends React.Component {
 
     componentDidMount() {
 
-        this.map = new Map({
+        let map = new Map({
             layers: [
                 new TileLayer({
                     source: new OSM()
@@ -237,6 +253,28 @@ export class MapComponent extends React.Component {
                 zoom: 2
             })
         });
+
+        const context = this
+        map.on('click', function (evt) {
+            let coordinate = evt.coordinate
+            let featuresCount = 0
+            map.forEachFeatureAtPixel(evt.pixel, function (feature, layer) {
+
+                featuresCount++
+                console.log(feature.getProperties().features[0])
+                const innerFeatures = feature.getProperties().features
+
+                const id = innerFeatures[0].getId()
+                fetch(`api/GeoData/GetHouse/${id}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        context.props.updateHouse(data)
+                    });
+
+            })
+        })
+
+        this.map = map
         this.showHousesMarkers();
     }
 

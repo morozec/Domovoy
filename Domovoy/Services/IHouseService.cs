@@ -6,6 +6,6 @@ namespace Domovoy.Services
 {
     public interface IHouseService
     {
-        Task<List<HouseViewModel>> GetHouses();
+        Task<List<HouseGeoViewModel>> GetHouses();
     }
 }

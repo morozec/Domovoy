@@ -40,7 +40,7 @@ namespace Domovoy.Controllers
         }
 
         [HttpGet("[action]")]
-        public async Task<List<HouseViewModel>> GetHouses()
+        public async Task<List<HouseGeoViewModel>> GetHouses()
         {
             var houses = await _houseService.GetHouses();
             return houses;
