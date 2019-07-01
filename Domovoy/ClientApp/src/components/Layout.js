@@ -29,9 +29,11 @@ export class Layout extends Component {
     
     
     return (
-      <div>
+      <div className="wrapper">
+
         <NavMenu handleMenuSelected = {this.handleMenuSelected} />
-        <Container>
+
+        <Container >
             <Route exact path='/' render={(props)=> (
               <MapComponent {...props} house={this.state.house}  />
             )} />
@@ -41,34 +43,23 @@ export class Layout extends Component {
         </Container>
 
 
-        <Navbar sticky="bottom" className="navbar navbar-expand-md navbar-dark bg-dark">
+        <Navbar className="navbar navbar-dark bg-dark footer">
           <Container>
           <div className="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
-              <ul className="navbar-nav mr-auto">                 
-                  {/* <li className="nav-item">
-                      <a className="nav-link" href="#">О ПРОЕКТЕ</a>
-                  </li>
-                  <li className="nav-item">
-                      <a className="nav-link" href="#">РЕЙТИНГ ДОМОВ</a>
-                  </li>
-                  <li className="nav-item">
-                      <a className="nav-link" href="#">ЗАДАТЬ ВОПРОС</a>
-                  </li> */}
+              <ul className="navbar-nav mr-auto">
                   <li className="nav-item">
                       <a className="nav-link" href="http://eias.fstrf.ru/jkh_calc/#63" target="_blank">КАЛЬКУЛЯТОР КОММУНАЛЬНЫХ ПЛАТЕЖЕЙ</a>
                   </li>
                               
               </ul>
-          </div>
-          
-          
-          <div className="navbar-collapse collapse w-100 order-3 dual-collapse2">
+
               <ul className="navbar-nav ml-auto">
                   <li className="nav-item">
-                      <a className="nav-link" href="#">2019</a>
+                      <a className="nav-link">2019</a>
                   </li>                  
               </ul>
           </div>
+          
           </Container>
       </Navbar>
 

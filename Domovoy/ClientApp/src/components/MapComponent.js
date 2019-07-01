@@ -46,6 +46,13 @@ export class MapComponent extends React.Component {
         
     }
 
+    /**
+     * Calculate & Update state of new dimensions
+     */
+    updateDimensions() {
+        this.map.updateSize();
+    }
+
 
     handleChange(event) {
         const { name, value } = event.target
@@ -213,6 +220,8 @@ export class MapComponent extends React.Component {
         });
         this.overlay = overlay        
 
+        this.updateDimensions();
+        window.addEventListener("resize", this.updateDimensions.bind(this));
     }
 
     componentDidUpdate(prevProps,prevState){
@@ -220,16 +229,13 @@ export class MapComponent extends React.Component {
             this.fetchData()
         }
     }
-
-    
-
     
 
 render() {
 
     let divDetails = <div className="details">
         
-        <h3>Немного статистики</h3>
+        <h3>Имеющиеся данные</h3>
 
         <p className="detail-item">
             Управляющих организаций
@@ -242,7 +248,7 @@ render() {
         </p>
 
         <p className="detail-item">
-            Работ по домам за 2018 год
+            Работ по домам за 2018-2019 год
             <span className="float-right">18 316</span>
         </p>
 
