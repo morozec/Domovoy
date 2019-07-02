@@ -23,14 +23,14 @@ export class MapComponent extends React.Component {
 
     getCoordinates(coordinates) {
         const projectionFrom = 'EPSG:4326';
-        const projectionTo = 'EPSG:3857'; 
-        let convertedCoordinates = transform(coordinates, projectionFrom, projectionTo)        
+        const projectionTo = 'EPSG:3857';
+        let convertedCoordinates = transform(coordinates, projectionFrom, projectionTo)
         return convertedCoordinates
 
     }
 
-    showPopup() {      
-        
+    showPopup() {
+
         let coordinates = this.getCoordinates([this.props.house.posX, this.props.house.posY])
         if (!this.marker) {
             let marker = new Feature({
@@ -99,6 +99,12 @@ export class MapComponent extends React.Component {
                 const projectionFrom = 'EPSG:4326';
                 const projectionTo = 'EPSG:3857';
 
+                let minX = Math.min.apply(Math, houses.map(h => h.posX))
+                let minY = Math.min.apply(Math, houses.map(h => h.posY))
+                let maxX = Math.max.apply(Math, houses.map(h => h.posX))
+                let maxY = Math.max.apply(Math, houses.map(h => h.posY))
+               
+
                 const source = new VectorSource({
                     features: houses.map(h => {
                         const feature = new Feature(
@@ -152,8 +158,20 @@ export class MapComponent extends React.Component {
                         return style;
                     }
                 });
-
                 this.map.addLayer(clustersLayer)
+
+
+              
+                const minPoint = transform([minX, minY], projectionFrom, projectionTo)
+                const maxPoint = transform([maxX, maxY], projectionFrom, projectionTo)
+                const ext = [minPoint[0], minPoint[1], maxPoint[0], maxPoint[1]]
+
+                if (this.zoomToExtent)
+                    this.map.removeControl(this.zoomToExtent)
+                this.zoomToExtent = new ZoomToExtent({ extent: ext })
+                this.map.addControl(this.zoomToExtent)
+                
+                this.map.getView().fit(ext, this.map.getSize());                
 
             })
 
@@ -180,22 +198,22 @@ export class MapComponent extends React.Component {
 
 
             let needClear = true
-            map.forEachFeatureAtPixel(evt.pixel, function (feature, layer) {                
+            map.forEachFeatureAtPixel(evt.pixel, function (feature, layer) {
                 const innerFeatures = feature.getProperties().features
 
-                if (!innerFeatures || innerFeatures.length !== 1) {                    
+                if (!innerFeatures || innerFeatures.length !== 1) {
                     return
                 }
                 needClear = false
                 const id = innerFeatures[0].getId()
-                console.log('id',id)
-                context.props.updateHouse(id, false)        
+                console.log('id', id)
+                context.props.updateHouse(id, false)
             })
 
-            if (needClear){  //0 || > 1    
-                context.props.clearHouse()     
-                
-                if(context.markerLayer){
+            if (needClear) {  //0 || > 1    
+                context.props.clearHouse()
+
+                if (context.markerLayer) {
                     context.markerLayer.setVisible(false)
                 }
             }
@@ -269,7 +287,7 @@ export class MapComponent extends React.Component {
                 <Link to={`/House/${this.props.house.houseId}`}>
                     <Button color="primary" className="detail-button">Подробнее</Button>
                 </Link>
-            </div>;            
+            </div>;
         }
 
         return (
