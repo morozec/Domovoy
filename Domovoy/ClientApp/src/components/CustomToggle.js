@@ -51,7 +51,7 @@ export class CustomMenu extends React.Component {
                     placeholder="Найти свой дом"
                     onChange={this.handleChange}                    
                     value={this.props.searchAddress}
-                    onSelect={this.props.onSelected}
+                    onClick={this.props.handleFormControlClick}
                 />
                 <ul className="list-unstyled block-holder bg-white">
                     {React.Children.toArray(children)}

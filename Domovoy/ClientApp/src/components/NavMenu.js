@@ -5,57 +5,69 @@ import './NavMenu.css';
 
 import logo from '../img/logo_domovoy.svg';
 
-import { CustomToggle, CustomMenu } from './CustomToggle'
+import { CustomMenu } from './CustomToggle'
 import { Dropdown } from 'react-bootstrap'
 
 export class NavMenu extends Component {
-  
-  constructor(){
+
+  constructor() {
     super()
     this.state = {
-      searchAddress:'',
-      isDropDownVisible:false,
-      houses:[]
+      searchAddress: '',
+      isDropDownVisible: false,
+      houses: []
     }
     this.handleSearchAddressChange = this.handleSearchAddressChange.bind(this)
     this.renderHouses = this.renderHouses.bind(this)
-    this.handleSelected = this.handleSelected.bind(this)
+    this.handleFormControlClick = this.handleFormControlClick.bind(this)
+    this.handleDropdownItemClick = this.handleDropdownItemClick.bind(this)
+    this.updateHouses = this.updateHouses.bind(this)
   }
 
   handleSearchAddressChange(value) {
-    console.log(value)
-    this.setState({ searchAddress: value, isDropDownVisible:true }, () => {
-        if (this.state.searchAddress===''){
-            this.setState({isDropDownVisible:false, houses:[]})
-        }else{
-            fetch(`api/GeoData/GetFirstHousesByAddress/${this.state.searchAddress}/100`)
-                .then(response => response.json())
-                .then(data => {                    
-                    this.setState({ houses: data })
-                })
-        }
-
+    this.setState({ searchAddress: value, isDropDownVisible: true }, () => {
+      if (this.state.searchAddress === '') {
+        this.setState({ isDropDownVisible: false, houses: [] })
+      } else {
+        this.updateHouses()
+      }
     })
-}
+  }
 
-handleSelected(){  
-  this.setState({isDropDownVisible:true})
-}
+  updateHouses() {
+    fetch(`api/GeoData/GetFirstHousesByAddress/${this.state.searchAddress}/100`)
+      .then(response => response.json())
+      .then(data => {
+        this.setState({ houses: data })
+      })
+  }
+
+  handleFormControlClick() {
+    console.log(this.state.searchAddress)
+    this.setState({ isDropDownVisible: true })
+  }
+
+  handleDropdownItemClick(e, house) {
+    this.setState({ isDropDownVisible: false, searchAddress: house.address }, () => {this.updateHouses()})
+    this.props.handleMenuSelected(house.houseId, true)
+  }
 
 
-renderHouses(){
-  const context = this
-  return(
-    <CustomMenu searchAddress={this.state.searchAddress} handleSearchAddressChange={this.handleSearchAddressChange} onSelected = {this.handleSelected} className='block-search'>
-          {this.state.isDropDownVisible && this.state.houses.map(h => <Dropdown.Item 
-                  key={h.houseId}                     
-                  onClick={(e) => {context.setState({isDropDownVisible:false, searchAddress:h.address}); this.props.handleMenuSelected(h.houseId, true)}}
-              >
-                  {h.address}
-              </Dropdown.Item>)}
-      </CustomMenu>    
-  )
-}
+  renderHouses() {
+    return (
+      <CustomMenu className='block-search'
+        searchAddress={this.state.searchAddress}
+        handleSearchAddressChange={this.handleSearchAddressChange}
+        handleFormControlClick={this.handleFormControlClick}>
+        {this.state.isDropDownVisible && this.state.houses.map(h => <Dropdown.Item
+          key={h.houseId}
+          onClick={(e) => { this.handleDropdownItemClick(e, h) }}
+        >
+          {h.address}
+        </Dropdown.Item>)}
+      </CustomMenu>
+    )
+  }
 
 
   render() {
@@ -67,8 +79,8 @@ renderHouses(){
               <div className="col-lg-5">
                 <NavbarBrand tag={Link} to="/">
                   <img src={logo} />
-                </NavbarBrand>  
-                {window.location.pathname==="/" && this.renderHouses()}
+                </NavbarBrand>
+                {window.location.pathname === "/" && this.renderHouses()}
               </div>
               <div className="col-lg-7">
                 <div className="header-menu">
@@ -77,9 +89,9 @@ renderHouses(){
                   <a href="#" className="header-menu-item">ЗАДАТЬ ВОПРОС</a>
                 </div>
 
-                
+
               </div>
-              </div>
+            </div>
           </Container>
         </Navbar>
       </header>
