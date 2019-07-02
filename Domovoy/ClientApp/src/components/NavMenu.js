@@ -49,7 +49,7 @@ renderHouses(){
     <CustomMenu searchAddress={this.state.searchAddress} handleSearchAddressChange={this.handleSearchAddressChange} onSelected = {this.handleSelected} className='block-search'>
           {this.state.isDropDownVisible && this.state.houses.map(h => <Dropdown.Item 
                   key={h.houseId}                     
-                  onClick={(e) => {context.setState({isDropDownVisible:false, searchAddress:h.address}); this.props.handleMenuSelected(h)}}
+                  onClick={(e) => {context.setState({isDropDownVisible:false, searchAddress:h.address}); this.props.handleMenuSelected(h.houseId, true)}}
               >
                   {h.address}
               </Dropdown.Item>)}

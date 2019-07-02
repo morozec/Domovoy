@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
-
-namespace Models
+﻿namespace Domovoy.ViewModels
 {
-    [Table("Houses")]
-    public class House
+    /// <summary>
+    /// Вся информация о доме - данные и координаты
+    /// </summary>
+    public class HouseViewModel
     {
         public int HouseId { get; set; }
 
@@ -83,10 +80,8 @@ namespace Models
         /// Стоимость обслуживания
         /// </summary>
         public double MaintenanceCost { get; set; }
-
-
-        [ForeignKey("UkId")]
-        public Organization UK { get; set; }
+        
+        public OrganizationViewModel UK { get; set; }
 
         public double PosX { get; set; }
         public double PosY { get; set; }
@@ -96,6 +91,5 @@ namespace Models
 
         public double UpperCornerX { get; set; }
         public double UpperCornerY { get; set; }
-
     }
 }

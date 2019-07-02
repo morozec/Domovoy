@@ -4,6 +4,8 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using DBRepository.Repositories;
+using Domovoy.Services;
+using Domovoy.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 
@@ -12,37 +14,35 @@ namespace Domovoy.Controllers
     [Route("api/[controller]")]
     public class GeoDataController : Controller
     {
-        private readonly IHouseRepository _houseRepository;
+        private readonly IHouseRepository _houseRepository;//TODO: удалить
+        private readonly IHouseService _houseService;
 
-        public GeoDataController(IHouseRepository houseRepository)
+        public GeoDataController(IHouseRepository houseRepository, IHouseService houseService)
         {
             _houseRepository = houseRepository;
+            _houseService = houseService;
         }
+        
 
-        public const string API_KEY = "0f21bfb6-f5c3-4931-a9ee-244137ca2c46";
-        [HttpGet("[action]/{address}")]
-        public string GetGeoData(string address)
+
+        [HttpGet("[action]")]
+        public async Task<List<HouseGeoViewModel>> GetHouses()
         {
-            using (WebClient wc = new WebClient())
-            {
-                var url = $"https://geocode-maps.yandex.ru/1.x/?format=json&apikey={API_KEY}&geocode={address}";
-                var json = wc.DownloadString(url);
-                return json;
-            }
+            var houses = await _houseService.GetHouses();
+            return houses;
         }
 
         [HttpGet("[action]/{id}")]
-        public async Task<House> GetHouse(int id)
+        public async Task<HouseViewModel> GetHouse(int id)
         {
-            var house = await _houseRepository.GetHousesById(id);
+            var house = await _houseService.GetHouse(id);
             return house;
         }
 
         [HttpGet("[action]/{address}/{count}")]
-        public async Task<List<House>> GetFirstHousesByAddress(string address, int count)
+        public async Task<List<HouseAddressViewModel>> GetFirstHousesByAddress(string address, int count)
         {
-            if (address == "") return new List<House>();
-            var houses = await _houseRepository.GetHousesByAddress(address,count);
+            var houses = await _houseService.GetHousesByAddress(address,count);
             return houses;
         }
         
