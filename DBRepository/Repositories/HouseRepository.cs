@@ -28,7 +28,9 @@ namespace DBRepository.Repositories
         {
             using (var context = DomovoyContextFactory.CreateDbContext(ConnectionString))
             {
-                var list = await context.Houses.Where(h => h.Address.Contains(address)).Take(count).Include(h => h.UK)
+                var splitAddresses = address.ToLower().Split(" ");
+                var list = await context.Houses.Where(h => splitAddresses.All(sa => h.Address.ToLower().Contains(sa)))
+                    .Take(count)
                     .ToListAsync();
                 return list;
             }
