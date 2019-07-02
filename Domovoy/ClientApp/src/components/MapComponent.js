@@ -175,6 +175,7 @@ export class MapComponent extends React.Component {
                 this.setState({
                     houses: data
                 }, () => {
+                   
                     const projectionFrom = 'EPSG:4326';
                     const projectionTo = 'EPSG:3857';
 
@@ -232,7 +233,7 @@ export class MapComponent extends React.Component {
                         }
                     });
 
-                    this.map.addLayer(clustersLayer)
+                    this.map.addLayer(clustersLayer)                    
 
                 })
             })
@@ -255,14 +256,15 @@ export class MapComponent extends React.Component {
         });
 
         const context = this
-        map.on('click', function (evt) {
-            let coordinate = evt.coordinate
-            let featuresCount = 0
-            map.forEachFeatureAtPixel(evt.pixel, function (feature, layer) {
-
-                featuresCount++
-                console.log(feature.getProperties().features[0])
+        map.on('click', function (evt) {            
+            
+            map.forEachFeatureAtPixel(evt.pixel, function (feature, layer) {                    
+                
                 const innerFeatures = feature.getProperties().features
+                
+                if (!innerFeatures || innerFeatures.length !== 1) {
+                    return
+                }
 
                 const id = innerFeatures[0].getId()
                 fetch(`api/GeoData/GetHouse/${id}`)
@@ -272,6 +274,22 @@ export class MapComponent extends React.Component {
                     });
 
             })
+        })        
+
+
+        map.on("pointermove", function (evt) {
+            var isSingleFeature = this.forEachFeatureAtPixel(evt.pixel, function(feature, layer) {
+                const innerFeatures = feature.getProperties().features
+                if (!innerFeatures){
+                    return false //в случае, если навели на маркер, отображающий не дом
+                }
+                return innerFeatures.length === 1
+            }); 
+            if (isSingleFeature) {
+                this.getTargetElement().style.cursor = 'pointer';
+            } else {
+                this.getTargetElement().style.cursor = '';
+            }
         })
 
         this.map = map
