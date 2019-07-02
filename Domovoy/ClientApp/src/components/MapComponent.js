@@ -188,6 +188,7 @@ export class MapComponent extends React.Component {
                 }
                 needClear = false
                 const id = innerFeatures[0].getId()
+                console.log('id',id)
                 context.props.updateHouse(id, false)        
             })
 
@@ -268,8 +269,7 @@ export class MapComponent extends React.Component {
                 <Link to={`/House/${this.props.house.houseId}`}>
                     <Button color="primary" className="detail-button">Подробнее</Button>
                 </Link>
-            </div>;
-            console.log(divDetails);
+            </div>;            
         }
 
         return (

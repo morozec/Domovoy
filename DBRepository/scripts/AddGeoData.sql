@@ -22570,4 +22570,8 @@ UPDATE Houses SET PosX = 49.351762, PosY = 53.541127, LowerCornerX = 49.347657, 
 UPDATE Houses SET PosX = 49.336104, PosY = 53.524643, LowerCornerX = 49.331999, LowerCornerY = 53.522196, UpperCornerX = 49.34021, UpperCornerY = 53.527089 WHERE HouseId = 57450
 UPDATE Houses SET PosX = 49.356595, PosY = 53.539559, LowerCornerX = 49.352489, LowerCornerY = 53.537113, UpperCornerX = 49.3607, UpperCornerY = 53.542004 WHERE HouseId = 57451
 UPDATE Houses SET PosX = 49.29268, PosY = 53.517806, LowerCornerX = 49.288574, LowerCornerY = 53.515359, UpperCornerX = 49.296785, UpperCornerY = 53.520253 WHERE HouseId = 57472
-DELETE from Houses WHERE HouseId IN (37115, 37116, 41040, 41041, 42453, 54176,55153)
+
+DELETE from Houses WHERE HouseId IN (37115, 37116, 41040, 41041, 42453, 54176,55153,37515)
+
+UPDATE Houses SET PosX = 49.368039, PosY = 53.748177, LowerCornerX = 49.363934, LowerCornerY = 53.745744, UpperCornerX = 49.372145, UpperCornerY = 53.750611 WHERE HouseId = 35549
+UPDATE Houses SET PosX = 50.126056, PosY = 53.207006, LowerCornerX = 50.12195, LowerCornerY = 53.204541, UpperCornerX = 50.130161, UpperCornerY = 53.20947" WHERE HouseId = 39080
