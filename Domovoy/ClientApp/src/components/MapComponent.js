@@ -3,20 +3,13 @@ import { Tile as TileLayer, Vector as VectorLayer } from 'ol/layer.js';
 import { Cluster, OSM, Vector as VectorSource } from 'ol/source.js';
 import Map from 'ol/Map.js';
 import View from 'ol/View.js';
-import OrderComponent from './OrderComponent'
-import Overlay from 'ol/Overlay.js';
 import Feature from 'ol/Feature';
 import Point from 'ol/geom/Point';
 import { Circle as CircleStyle, Fill, Stroke, Style, Text, Icon } from 'ol/style';
-import { transform, get, transformExtent } from 'ol/proj.js'
+import { transform } from 'ol/proj.js'
 import { ZoomToExtent } from 'ol/control.js';
-import { Form, Button, Input } from 'reactstrap';
-import Polyline from 'ol/format/Polyline.js';
+import { Button } from 'reactstrap';
 import { Link } from 'react-router-dom';
-
-
-import { EPSG3857_X_MIN, EPSG3857_Y_MIN, EPSG3857_X_MAX, EPSG3857_Y_MAX } from '../constants/constants'
-
 
 import 'ol/ol.css';
 import './MapComponent.css'
@@ -25,91 +18,20 @@ export class MapComponent extends React.Component {
 
     constructor(props) {
         super(props)
-        this.state = {
-            isUserRequestFromShown: false,
-            isNewUserRequest: true,
-            userName: '',
-            userTel: '',
-            requestHeader: '',
-            requestBody: '',
-            X: 0,
-            Y: 0,
-            geoData: {},
-            searchAddress: '',
-            isDropDownVisible: true,
-            houses: []
-        }
-
-        this.toggle = this.toggle.bind(this)
-        this.getHouseGetDataAndShowPopup = this.getHouseGetDataAndShowPopup.bind(this)
         this.showHousesMarkers = this.showHousesMarkers.bind(this)
     }
 
-
-    handleChange(event) {
-        const { name, value } = event.target
-        this.setState({ [name]: value })
-    }
-
-    handleSubmit() {
-        console.log(this.state.userName, this.state.userTel, this.state.requestHeader, this.state.requestBody, this.state.X, this.state.Y)
-    }
-
-    handleMapClick(coordinate) {
-        this.setState({
-            isUserRequestFromShown: true,
-            userName: '',
-            userTel: '',
-            requestHeader: '',
-            requestBody: '',
-            X: coordinate[0],
-            Y: coordinate[1],
-            isNewUserRequest: true,
-        })
-    }
-
-    toggle() {
-        this.setState(prevState => ({
-            isUserRequestFromShown: !prevState.isUserRequestFromShown
-        }))
-    }
-
-    getHouseGetDataAndShowPopup() {
-
-        fetch(`api/GeoData/GetGeoData/${this.props.house.address}`)
-            .then(response =>
-                response.json())
-            .then(data => {
-                console.log(data)
-                this.setState({ geoData: data }, () => {
-                    this.showPopup()
-
-                });
-            })
-
-    }
-
-    getCoordinates(str, needConvert = true) {
+    getCoordinates(coordinates) {
         const projectionFrom = 'EPSG:4326';
-        const projectionTo = 'EPSG:3857';
-        let coordinates = str.split(" ").map(s => +s)
-        if (needConvert) {
-            coordinates = transform(coordinates, projectionFrom, projectionTo)
-        }
-        return coordinates
+        const projectionTo = 'EPSG:3857'; 
+        let convertedCoordinates = transform(coordinates, projectionFrom, projectionTo)        
+        return convertedCoordinates
 
     }
 
-    showPopup() {
-
-        let fm = this.state.geoData.response.GeoObjectCollection.featureMember[0]
-
-        if (!fm) {
-            return
-        }
-
-        const geoObject = fm.GeoObject
-        let coordinates = this.getCoordinates(geoObject.Point.pos)
+    showPopup() {      
+        
+        let coordinates = this.getCoordinates([this.props.house.posX, this.props.house.posY])
         if (!this.marker) {
             let marker = new Feature({
                 type: 'icon',
@@ -154,8 +76,8 @@ export class MapComponent extends React.Component {
 
 
 
-        let lowerCorner = this.getCoordinates(geoObject.boundedBy.Envelope.lowerCorner, true)
-        let upperCorner = this.getCoordinates(geoObject.boundedBy.Envelope.upperCorner, true)
+        let lowerCorner = this.getCoordinates([this.props.house.lowerCornerX, this.props.house.lowerCornerY])
+        let upperCorner = this.getCoordinates([this.props.house.upperCornerX, this.props.house.upperCornerY])
 
         const ext = [lowerCorner[0], lowerCorner[1], upperCorner[0], upperCorner[1]]
         if (this.zoomToExtent)
@@ -171,72 +93,69 @@ export class MapComponent extends React.Component {
     showHousesMarkers() {
         fetch(`api/GeoData/GetHouses`)
             .then(response => response.json())
-            .then(data => {
-                this.setState({
-                    houses: data
-                }, () => {
-                   
-                    const projectionFrom = 'EPSG:4326';
-                    const projectionTo = 'EPSG:3857';
+            .then(houses => {
 
-                    const source = new VectorSource({
-                        features: this.state.houses.map(h => {
-                            const feature = new Feature(
-                                new Point(transform([h.posX, h.posY], projectionFrom, projectionTo)))
-                            feature.setId(h.houseId)
-                            return feature
-                        })
+                const projectionFrom = 'EPSG:4326';
+                const projectionTo = 'EPSG:3857';
+
+                const source = new VectorSource({
+                    features: houses.map(h => {
+                        const feature = new Feature(
+                            new Point(transform([h.posX, h.posY], projectionFrom, projectionTo)))
+                        feature.setId(h.houseId)
+                        return feature
                     })
-                    const clusterSource = new Cluster({
-                        distance: 40,
-                        source: source
-                    })
+                })
+                const clusterSource = new Cluster({
+                    distance: 40,
+                    source: source
+                })
 
-                    var styleCache = {};
-                    const clustersLayer = new VectorLayer({
-                        source: clusterSource,
-                        style: function (feature) {
-                            var size = feature.get('features').length;
-                            var style = styleCache[size];
-                            if (!style) {
-                                if (size > 1) {
+                var styleCache = {};
+                const clustersLayer = new VectorLayer({
+                    source: clusterSource,
+                    style: function (feature) {
+                        var size = feature.get('features').length;
+                        var style = styleCache[size];
+                        if (!style) {
+                            if (size > 1) {
 
-                                    style = new Style({
-                                        image: new CircleStyle({
-                                            radius: 10,
-                                            stroke: new Stroke({
-                                                color: '#fff'
-                                            }),
-                                            fill: new Fill({
-                                                color: '#3399CC'
-                                            })
+                                style = new Style({
+                                    image: new CircleStyle({
+                                        radius: 10,
+                                        stroke: new Stroke({
+                                            color: '#fff'
                                         }),
-                                        text: new Text({
-                                            text: size.toString(),
-                                            fill: new Fill({
-                                                color: '#fff'
-                                            })
+                                        fill: new Fill({
+                                            color: '#3399CC'
                                         })
-                                    });
-                                }
-                                else {
-                                    style = new Style({
-                                        image: new Icon({
-                                            anchor: [0.5, 1],
-                                            src: 'img/house_small.png'
+                                    }),
+                                    text: new Text({
+                                        text: size.toString(),
+                                        fill: new Fill({
+                                            color: '#fff'
                                         })
                                     })
-                                }
-                                styleCache[size] = style;
+                                });
                             }
-                            return style;
+                            else {
+                                style = new Style({
+                                    image: new Icon({
+                                        anchor: [0.5, 1],
+                                        src: 'img/house_small.png'
+                                    })
+                                })
+                            }
+                            styleCache[size] = style;
                         }
-                    });
+                        return style;
+                    }
+                });
 
-                    this.map.addLayer(clustersLayer)                    
+                this.map.addLayer(clustersLayer)
 
-                })
             })
+
     }
 
 
@@ -256,35 +175,31 @@ export class MapComponent extends React.Component {
         });
 
         const context = this
-        map.on('click', function (evt) {            
-            
-            map.forEachFeatureAtPixel(evt.pixel, function (feature, layer) {                    
-                
+        map.on('click', function (evt) {
+
+            map.forEachFeatureAtPixel(evt.pixel, function (feature, layer) {
+
                 const innerFeatures = feature.getProperties().features
-                
+
                 if (!innerFeatures || innerFeatures.length !== 1) {
                     return
                 }
 
                 const id = innerFeatures[0].getId()
-                fetch(`api/GeoData/GetHouse/${id}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        context.props.updateHouse(data)
-                    });
+                context.props.updateHouse(id, false)              
 
             })
-        })        
+        })
 
 
         map.on("pointermove", function (evt) {
-            var isSingleFeature = this.forEachFeatureAtPixel(evt.pixel, function(feature, layer) {
+            var isSingleFeature = this.forEachFeatureAtPixel(evt.pixel, function (feature, layer) {
                 const innerFeatures = feature.getProperties().features
-                if (!innerFeatures){
+                if (!innerFeatures) {
                     return false //в случае, если навели на маркер, отображающий не дом
                 }
                 return innerFeatures.length === 1
-            }); 
+            });
             if (isSingleFeature) {
                 this.getTargetElement().style.cursor = 'pointer';
             } else {
@@ -298,7 +213,7 @@ export class MapComponent extends React.Component {
 
     componentDidUpdate(prevProps, prevState) {
         if (this.props.house.houseId !== prevProps.house.houseId) {
-            this.getHouseGetDataAndShowPopup()
+            this.showPopup()
         }
     }
 

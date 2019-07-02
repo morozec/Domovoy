@@ -9,10 +9,9 @@ namespace Domovoy.Helpers
     {
         public MappingProfile()
         {
+            CreateMap<House, HouseViewModel>();
+            CreateMap<House, HouseAddressViewModel>();
             CreateMap<House, HouseGeoViewModel>();
-                //.ForMember(dest => dest.GeoData,
-                //    opt => opt.MapFrom(source => GeoManager.GetGeoData(source.Address)));
-            CreateMap<HouseGeoViewModel, House>();
 
             CreateMap<Organization, OrganizationViewModel>();
             CreateMap<OrganizationViewModel, Organization>();

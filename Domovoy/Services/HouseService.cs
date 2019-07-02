@@ -28,5 +28,20 @@ namespace Domovoy.Services
             var houses = await _houseRepository.GetHouses();
             return houses.Select(h => _mapper.Map<House, HouseGeoViewModel>(h)).ToList();
         }
+
+        public async Task<List<HouseAddressViewModel>> GetHousesByAddress(string address, int count)
+        {
+            if (address == "" || count == 0)
+                return new List<HouseAddressViewModel>();
+            var houses = await _houseRepository.GetHousesByAddress(address, count);
+            return houses.Select(h => _mapper.Map<House, HouseAddressViewModel>(h)).ToList();
+        }
+
+        public async Task<HouseViewModel> GetHouse(int id)
+        {
+            var house = await _houseRepository.GetHousesById(id);
+            return _mapper.Map<House, HouseViewModel>(house);
+        }
+       
     }
 }

@@ -15,30 +15,27 @@ export class Layout extends Component {
       house: {}
     }
 
-    this.updateHouseSearch = this.updateHouseSearch.bind(this)
-    this.updateHouseClick = this.updateHouseClick.bind(this)
+    this.updateHouse = this.updateHouse.bind(this)    
   }
 
-  updateHouseSearch(value) {
-    this.setState({ isSearched: true, house: value })
+  updateHouse(houseId, isSearched) {
+    fetch(`api/GeoData/GetHouse/${houseId}`)
+      .then(response => response.json())
+      .then(data => {
+          this.setState({isSearched: isSearched, house: data})
+      });    
   }
-
-  updateHouseClick(value) {
-    this.setState({ isSearched: false, house: value })
-  }
+ 
 
   render() {
-
-
-
     return (
       <div>
-        <NavMenu handleMenuSelected={this.updateHouseSearch} />
+        <NavMenu handleMenuSelected={this.updateHouse} />
         <Container>
           <Route exact path='/' render={(props) => (
             <MapComponent {...props}
               house={this.state.house}
-              updateHouse={this.updateHouseClick}
+              updateHouse={this.updateHouse}
               isSearched={this.state.isSearched}
             />
           )} />
