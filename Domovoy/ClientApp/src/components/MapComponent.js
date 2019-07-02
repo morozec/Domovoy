@@ -57,7 +57,7 @@ export class MapComponent extends React.Component {
                 })
             }
 
-            var vectorLayer = new VectorLayer({
+            let markerLayer = new VectorLayer({
                 source: new VectorSource({
                     features: [marker]
                 }),
@@ -68,12 +68,13 @@ export class MapComponent extends React.Component {
             });
 
             this.marker = marker
-            this.map.addLayer(vectorLayer)
+            this.markerLayer = markerLayer
+            this.map.addLayer(markerLayer)
         }
         else {
             this.marker.getGeometry().setCoordinates(coordinates)
         }
-
+        this.markerLayer.setVisible(true)
 
 
         let lowerCorner = this.getCoordinates([this.props.house.lowerCornerX, this.props.house.lowerCornerY])
@@ -177,18 +178,26 @@ export class MapComponent extends React.Component {
         const context = this
         map.on('click', function (evt) {
 
-            map.forEachFeatureAtPixel(evt.pixel, function (feature, layer) {
 
+            let needClear = true
+            map.forEachFeatureAtPixel(evt.pixel, function (feature, layer) {                
                 const innerFeatures = feature.getProperties().features
 
-                if (!innerFeatures || innerFeatures.length !== 1) {
+                if (!innerFeatures || innerFeatures.length !== 1) {                    
                     return
                 }
-
+                needClear = false
                 const id = innerFeatures[0].getId()
-                context.props.updateHouse(id, false)              
-
+                context.props.updateHouse(id, false)        
             })
+
+            if (needClear){  //0 || > 1    
+                context.props.clearHouse()     
+                
+                if(context.markerLayer){
+                    context.markerLayer.setVisible(false)
+                }
+            }
         })
 
 
@@ -246,7 +255,7 @@ export class MapComponent extends React.Component {
 
         </div>;
 
-        if (this.props.house.address != null) {
+        if (this.props.house.address) {
 
             divDetails = <div className="details">
                 <h3>{this.props.house.address}</h3>

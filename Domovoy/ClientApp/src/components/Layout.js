@@ -15,7 +15,8 @@ export class Layout extends Component {
       house: {}
     }
 
-    this.updateHouse = this.updateHouse.bind(this)    
+    this.updateHouse = this.updateHouse.bind(this)   
+    this.clearHouse = this.clearHouse.bind(this) 
   }
 
   updateHouse(houseId, isSearched) {
@@ -24,6 +25,10 @@ export class Layout extends Component {
       .then(data => {
           this.setState({isSearched: isSearched, house: data})
       });    
+  }
+
+  clearHouse(){
+    this.setState({isSearched:false, house:{}})
   }
  
 
@@ -37,6 +42,7 @@ export class Layout extends Component {
               house={this.state.house}
               updateHouse={this.updateHouse}
               isSearched={this.state.isSearched}
+              clearHouse = {this.clearHouse}
             />
           )} />
           <Route exact path='/House/:id' component={HouseComponent} />
