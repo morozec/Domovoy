@@ -12,7 +12,7 @@ export class Layout extends Component {
     super()
     this.state = {
       isSearched: true,
-      house: {}
+      house: undefined
     }
 
     this.updateHouse = this.updateHouse.bind(this)   
@@ -28,7 +28,7 @@ export class Layout extends Component {
   }
 
   clearHouse(){
-    this.setState({isSearched:false, house:{}})
+    this.setState({isSearched:false, house:undefined})
   }
  
 

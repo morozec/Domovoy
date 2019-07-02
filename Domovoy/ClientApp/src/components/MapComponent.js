@@ -221,7 +221,7 @@ export class MapComponent extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (this.props.house.houseId !== prevProps.house.houseId) {
+        if (this.props.house && (!prevProps.house || this.props.house.houseId !== prevProps.house.houseId)) {
             this.showPopup()
         }
     }
@@ -255,7 +255,7 @@ export class MapComponent extends React.Component {
 
         </div>;
 
-        if (this.props.house.address) {
+        if (this.props.house) {
 
             divDetails = <div className="details">
                 <h3>{this.props.house.address}</h3>
