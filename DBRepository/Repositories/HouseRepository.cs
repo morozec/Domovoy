@@ -28,8 +28,8 @@ namespace DBRepository.Repositories
         {
             using (var context = DomovoyContextFactory.CreateDbContext(ConnectionString))
             {
-                var splitAddresses = address.ToLower().Split(" ");
-                var list = await context.Houses.Where(h => splitAddresses.All(sa => h.Address.ToLower().Contains(sa)))
+                //var splitAddresses = address.ToLower().Split(" ");
+                var list = await context.Houses.Where(h => h.Address.ToLower().Contains(address))
                     .Take(count)
                     .ToListAsync();
                 return list;

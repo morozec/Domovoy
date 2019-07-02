@@ -1,4 +1,35 @@
 use Domovoy
+
+ALTER TABLE [Houses] ADD [LowerCornerX] float NOT NULL DEFAULT 0.0E0;
+
+GO
+
+ALTER TABLE [Houses] ADD [LowerCornerY] float NOT NULL DEFAULT 0.0E0;
+
+GO
+
+ALTER TABLE [Houses] ADD [PosX] float NOT NULL DEFAULT 0.0E0;
+
+GO
+
+ALTER TABLE [Houses] ADD [PosY] float NOT NULL DEFAULT 0.0E0;
+
+GO
+
+ALTER TABLE [Houses] ADD [UpperCornerX] float NOT NULL DEFAULT 0.0E0;
+
+GO
+
+ALTER TABLE [Houses] ADD [UpperCornerY] float NOT NULL DEFAULT 0.0E0;
+
+GO
+
+INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+VALUES (N'20190701113658_AddHousesCoordinates', N'2.2.4-servicing-10062');
+
+GO
+
+
 UPDATE Houses SET PosX = 51.26282, PosY = 52.579324, LowerCornerX = 51.258715, LowerCornerY = 52.576823, UpperCornerX = 51.266925, UpperCornerY = 52.581824 WHERE HouseId = 34966
 UPDATE Houses SET PosX = 51.263332, PosY = 52.5787, LowerCornerX = 51.259227, LowerCornerY = 52.576199, UpperCornerX = 51.267437, UpperCornerY = 52.581201 WHERE HouseId = 34967
 UPDATE Houses SET PosX = 51.265443, PosY = 52.576516, LowerCornerX = 51.261338, LowerCornerY = 52.574015, UpperCornerX = 51.269548, UpperCornerY = 52.579017 WHERE HouseId = 34968
