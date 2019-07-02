@@ -107,7 +107,7 @@ export class MapComponent extends React.Component {
                     })
                 })
                 const clusterSource = new Cluster({
-                    distance: 40,
+                    distance: 25,
                     source: source
                 })
 
