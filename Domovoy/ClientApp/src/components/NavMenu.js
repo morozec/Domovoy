@@ -24,9 +24,9 @@ export class NavMenu extends Component {
     this.updateHouses = this.updateHouses.bind(this)
   }
 
-  handleSearchAddressChange(value) {
+  handleSearchAddressChange(value) {   
     this.setState({ searchAddress: value, isDropDownVisible: true }, () => {
-      if (this.state.searchAddress === '') {
+      if (value === '') {
         this.setState({ isDropDownVisible: false, houses: [] })
       } else {
         this.updateHouses()
@@ -34,16 +34,20 @@ export class NavMenu extends Component {
     })
   }
 
-  updateHouses() {
-    fetch(`api/GeoData/GetFirstHousesByAddress/${this.state.searchAddress}/100`)
+  updateHouses() {   
+    const searchAddress = this.state.searchAddress 
+    fetch(`api/GeoData/GetFirstHousesByAddress/${searchAddress}/100`)
       .then(response => response.json())
-      .then(data => {
+      .then(data => {       
+        if (this.state.searchAddress !== searchAddress){  //пользователь уже ввел новый адрес       
+          return
+        }        
         this.setState({ houses: data })
       })
+      .catch(ex => console.log(ex))
   }
 
-  handleFormControlClick() {
-    console.log(this.state.searchAddress)
+  handleFormControlClick() {    
     this.setState({ isDropDownVisible: true })
   }
 

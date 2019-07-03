@@ -11,11 +11,6 @@ namespace Domovoy.ViewModels
         
         public double PosX { get; set; }
         public double PosY { get; set; }
-
-        public double LowerCornerX { get; set; }
-        public double LowerCornerY { get; set; }
-
-        public double UpperCornerX { get; set; }
-        public double UpperCornerY { get; set; }
+        
     }
 }

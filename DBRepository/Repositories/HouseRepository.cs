@@ -24,15 +24,22 @@ namespace DBRepository.Repositories
             }
         }
 
-        public async Task<List<House>> GetHousesByAddress(string address, int count)
+        public List<House> GetHousesByAddress(string address, int count)
         {
             using (var context = DomovoyContextFactory.CreateDbContext(ConnectionString))
             {
-                //var splitAddresses = address.ToLower().Split(" ");
-                var list = await context.Houses.Where(h => h.Address.ToLower().Contains(address))
-                    .Take(count)
-                    .ToListAsync();
-                return list;
+                var splitAddresses = address.ToLower().Split(" ");
+
+                var housesList = new List<House>();
+                foreach (var h in context.Houses)
+                {
+                    var hAddress = h.Address.ToLower();
+                    if (splitAddresses.All(sa => hAddress.Contains(sa)))
+                        housesList.Add(h);
+                    if (housesList.Count >= count) break;
+                }
+               
+                return housesList;
             }
         }
 

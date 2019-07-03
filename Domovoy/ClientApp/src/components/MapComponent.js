@@ -79,8 +79,7 @@ export class MapComponent extends React.Component {
         this.markerLayer.setVisible(true)
 
         if (this.props.isSearched) {           
-            const ext = [coordinates[0] - EXTENT_SIDE, coordinates[1] - EXTENT_SIDE, coordinates[0] + EXTENT_SIDE, coordinates[1] + EXTENT_SIDE]
-            console.log(ext)
+            const ext = [coordinates[0] - EXTENT_SIDE, coordinates[1] - EXTENT_SIDE, coordinates[0] + EXTENT_SIDE, coordinates[1] + EXTENT_SIDE]            
             this.setMapView(ext)
         }
     }

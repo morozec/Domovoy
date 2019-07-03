@@ -40,9 +40,9 @@ namespace Domovoy.Controllers
         }
 
         [HttpGet("[action]/{address}/{count}")]
-        public async Task<List<HouseAddressViewModel>> GetFirstHousesByAddress(string address, int count)
+        public List<HouseAddressViewModel> GetFirstHousesByAddress(string address, int count)
         {
-            var houses = await _houseService.GetHousesByAddress(address,count);
+            var houses = _houseService.GetHousesByAddress(address,count);
             return houses;
         }
         

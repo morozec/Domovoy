@@ -29,11 +29,11 @@ namespace Domovoy.Services
             return houses.Select(h => _mapper.Map<House, HouseGeoViewModel>(h)).ToList();
         }
 
-        public async Task<List<HouseAddressViewModel>> GetHousesByAddress(string address, int count)
+        public List<HouseAddressViewModel> GetHousesByAddress(string address, int count)
         {
             if (address == "" || count == 0)
                 return new List<HouseAddressViewModel>();
-            var houses = await _houseRepository.GetHousesByAddress(address, count);
+            var houses = _houseRepository.GetHousesByAddress(address, count);
             return houses.Select(h => _mapper.Map<House, HouseAddressViewModel>(h)).ToList();
         }
 
