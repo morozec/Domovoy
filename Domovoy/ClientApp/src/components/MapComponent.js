@@ -14,6 +14,9 @@ import { Link } from 'react-router-dom';
 import 'ol/ol.css';
 import './MapComponent.css'
 
+const projectionFrom = 'EPSG:4326';
+const projectionTo = 'EPSG:3857';
+
 export class MapComponent extends React.Component {
 
     constructor(props) {
@@ -92,89 +95,71 @@ export class MapComponent extends React.Component {
     }
 
     showHousesMarkers() {
-        fetch(`api/GeoData/GetHouses`)
-            .then(response => response.json())
-            .then(houses => {
+        
 
-                const projectionFrom = 'EPSG:4326';
-                const projectionTo = 'EPSG:3857';
-
-                let minX = Math.min.apply(Math, houses.map(h => h.posX))
-                let minY = Math.min.apply(Math, houses.map(h => h.posY))
-                let maxX = Math.max.apply(Math, houses.map(h => h.posX))
-                let maxY = Math.max.apply(Math, houses.map(h => h.posY))
-               
-
-                const source = new VectorSource({
-                    features: houses.map(h => {
-                        const feature = new Feature(
-                            new Point(transform([h.posX, h.posY], projectionFrom, projectionTo)))
-                        feature.setId(h.houseId)
-                        return feature
-                    })
-                })
-                const clusterSource = new Cluster({
-                    distance: 25,
-                    source: source
-                })
-
-                var styleCache = {};
-                const clustersLayer = new VectorLayer({
-                    source: clusterSource,
-                    style: function (feature) {
-                        var size = feature.get('features').length;
-                        var style = styleCache[size];
-                        if (!style) {
-                            if (size > 1) {
-
-                                style = new Style({
-                                    image: new CircleStyle({
-                                        radius: 10,
-                                        stroke: new Stroke({
-                                            color: '#fff'
-                                        }),
-                                        fill: new Fill({
-                                            color: '#3399CC'
-                                        })
-                                    }),
-                                    text: new Text({
-                                        text: size.toString(),
-                                        fill: new Fill({
-                                            color: '#fff'
-                                        })
-                                    })
-                                });
-                            }
-                            else {
-                                style = new Style({
-                                    image: new Icon({
-                                        anchor: [0.5, 0.5],
-                                        src: 'img/house_small.png'
-                                    })
-                                })
-                            }
-                            styleCache[size] = style;
-                        }
-                        return style;
-                    }
-                });
-                this.map.addLayer(clustersLayer)
-
-
-              
-                const minPoint = transform([minX, minY], projectionFrom, projectionTo)
-                const maxPoint = transform([maxX, maxY], projectionFrom, projectionTo)
-                const ext = [minPoint[0], minPoint[1], maxPoint[0], maxPoint[1]]
-
-                if (this.zoomToExtent)
-                    this.map.removeControl(this.zoomToExtent)
-                this.zoomToExtent = new ZoomToExtent({ extent: ext })
-                this.map.addControl(this.zoomToExtent)
-                
-                this.map.getView().fit(ext, this.map.getSize());                
-
+        const source = new VectorSource({
+            features: this.props.houses.map(h => {
+                const feature = new Feature(
+                    new Point(transform([h.posX, h.posY], projectionFrom, projectionTo)))
+                feature.setId(h.houseId)
+                return feature
             })
+        })
+        const clusterSource = new Cluster({
+            distance: 25,
+            source: source
+        })
 
+        var styleCache = {};
+        const clustersLayer = new VectorLayer({
+            source: clusterSource,
+            style: function (feature) {
+                var size = feature.get('features').length;
+                var style = styleCache[size];
+                if (!style) {
+                    if (size > 1) {
+
+                        style = new Style({
+                            image: new CircleStyle({
+                                radius: 10,
+                                stroke: new Stroke({
+                                    color: '#fff'
+                                }),
+                                fill: new Fill({
+                                    color: '#3399CC'
+                                })
+                            }),
+                            text: new Text({
+                                text: size.toString(),
+                                fill: new Fill({
+                                    color: '#fff'
+                                })
+                            })
+                        });
+                    }
+                    else {
+                        style = new Style({
+                            image: new Icon({
+                                anchor: [0.5, 0.5],
+                                src: 'img/house_small.png'
+                            })
+                        })
+                    }
+                    styleCache[size] = style;
+                }
+                return style;
+            }
+        });
+        this.map.addLayer(clustersLayer)
+    }
+
+    setExtent(extent) {
+        if (this.zoomToExtent) {
+            this.map.removeControl(this.zoomToExtent)
+        }
+        this.zoomToExtent = new ZoomToExtent({ extent: extent })
+        this.map.addControl(this.zoomToExtent)
+        this.map.getView().fit(extent, this.map.getSize());
     }
 
 
@@ -235,13 +220,47 @@ export class MapComponent extends React.Component {
             }
         })
 
+        map.on("moveend", () => {
+            console.log('moveend')
+            this.props.updateMapExtent(map.getView().calculateExtent())
+        })
+
+
         this.map = map
-        this.showHousesMarkers();
+
+        if (this.props.houses) {            
+            this.showHousesMarkers();
+        }
+        if (this.props.house) {
+            //this.showPopup()
+        }
+
+        if (this.props.mapExtent) {
+            console.log(this.props.mapExtent)
+            this.setExtent(this.props.mapExtent)
+        }
+
+        
     }
 
-    componentDidUpdate(prevProps, prevState) {
+    componentDidUpdate(prevProps, prevState) {       
+        if (this.props.houses && !prevProps.houses) {  
+            //console.log('update ext')         
+            this.showHousesMarkers();
+            
+            let minX = Math.min.apply(Math, this.props.houses.map(h => h.posX))
+            let minY = Math.min.apply(Math, this.props.houses.map(h => h.posY))
+            let maxX = Math.max.apply(Math, this.props.houses.map(h => h.posX))
+            let maxY = Math.max.apply(Math, this.props.houses.map(h => h.posY))
+
+            const minPoint = transform([minX, minY], projectionFrom, projectionTo)
+            const maxPoint = transform([maxX, maxY], projectionFrom, projectionTo)
+            const extent = [minPoint[0], minPoint[1], maxPoint[0], maxPoint[1]]
+            this.setExtent(extent)
+            
+        }
         if (this.props.house && (!prevProps.house || this.props.house.houseId !== prevProps.house.houseId)) {
-            this.showPopup()
+            //this.showPopup()
         }
     }
 

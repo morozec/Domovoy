@@ -12,25 +12,42 @@ export class Layout extends Component {
     super()
     this.state = {
       isSearched: true,
-      house: undefined
+      house: undefined,
+      houses: undefined,
+      mapExtent:undefined
     }
 
-    this.updateHouse = this.updateHouse.bind(this)   
-    this.clearHouse = this.clearHouse.bind(this) 
+    this.updateHouse = this.updateHouse.bind(this)
+    this.clearHouse = this.clearHouse.bind(this)
+    this.updateMapExtent = this.updateMapExtent.bind(this)
   }
 
   updateHouse(houseId, isSearched) {
     fetch(`api/GeoData/GetHouse/${houseId}`)
       .then(response => response.json())
       .then(data => {
-          this.setState({isSearched: isSearched, house: data})
-      });    
+        this.setState({ isSearched: isSearched, house: data })
+      });
   }
 
-  clearHouse(){
-    this.setState({isSearched:false, house:undefined})
+  clearHouse() {
+    this.setState({ isSearched: false, house: undefined })
   }
- 
+
+  updateMapExtent(mapExtent){
+    console.log('layout', mapExtent)
+    this.setState({mapExtent:mapExtent})
+  }
+
+  componentDidMount() {
+    fetch(`api/GeoData/GetHouses`)
+      .then(response => response.json())
+      .then(houses => {
+        this.setState({houses:houses})
+      })
+
+  }
+
 
   render() {
     return (
@@ -42,7 +59,10 @@ export class Layout extends Component {
               house={this.state.house}
               updateHouse={this.updateHouse}
               isSearched={this.state.isSearched}
-              clearHouse = {this.clearHouse}
+              clearHouse={this.clearHouse}
+              houses={this.state.houses}
+              mapExtent = {this.state.mapExtent}
+              updateMapExtent = {this.updateMapExtent}
             />
           )} />
           <Route exact path='/House/:id' component={HouseComponent} />
