@@ -9,6 +9,7 @@ import { Circle as CircleStyle, Fill, Stroke, Style, Text, Icon } from 'ol/style
 import { transform } from 'ol/proj.js'
 import { Button } from 'reactstrap';
 import { Link } from 'react-router-dom';
+import {CLUSTER_DISTANCE, EXTENT_SIDE} from './../constants/constants'
 
 import 'ol/ol.css';
 import './MapComponent.css'
@@ -77,11 +78,9 @@ export class MapComponent extends React.Component {
         }
         this.markerLayer.setVisible(true)
 
-        if (this.props.isSearched) {
-
-            let lowerCorner = this.getCoordinates([this.props.house.lowerCornerX, this.props.house.lowerCornerY])
-            let upperCorner = this.getCoordinates([this.props.house.upperCornerX, this.props.house.upperCornerY])
-            const ext = [lowerCorner[0], lowerCorner[1], upperCorner[0], upperCorner[1]]
+        if (this.props.isSearched) {           
+            const ext = [coordinates[0] - EXTENT_SIDE, coordinates[1] - EXTENT_SIDE, coordinates[0] + EXTENT_SIDE, coordinates[1] + EXTENT_SIDE]
+            console.log(ext)
             this.setMapView(ext)
         }
     }
@@ -98,17 +97,21 @@ export class MapComponent extends React.Component {
             })
         })
         const clusterSource = new Cluster({
-            distance: 25,
+            distance: CLUSTER_DISTANCE,
             source: source
         })
 
+        
         var styleCache = {};
         const clustersLayer = new VectorLayer({
             source: clusterSource,
             style: function (feature) {
-                var size = feature.get('features').length;
+                const innerFeatures = feature.get('features')
+              
+                var size = innerFeatures.length;
                 var style = styleCache[size];
-                if (!style) {
+                if (!style) {                    
+                    
                     if (size > 1) {
 
                         style = new Style({
