@@ -14,12 +14,12 @@ export class Layout extends Component {
       isSearched: true,
       house: undefined,
       houses: undefined,
-      mapExtent:undefined
+      map:undefined
     }
 
     this.updateHouse = this.updateHouse.bind(this)
     this.clearHouse = this.clearHouse.bind(this)
-    this.updateMapExtent = this.updateMapExtent.bind(this)
+    this.updateMap = this.updateMap.bind(this)
   }
 
   updateHouse(houseId, isSearched) {
@@ -34,9 +34,9 @@ export class Layout extends Component {
     this.setState({ isSearched: false, house: undefined })
   }
 
-  updateMapExtent(mapExtent){
-    console.log('layout', mapExtent)
-    this.setState({mapExtent:mapExtent})
+  updateMap(map){
+    //console.log('layout', mapExtent)
+    this.setState({map:map})
   }
 
   componentDidMount() {
@@ -61,8 +61,8 @@ export class Layout extends Component {
               isSearched={this.state.isSearched}
               clearHouse={this.clearHouse}
               houses={this.state.houses}
-              mapExtent = {this.state.mapExtent}
-              updateMapExtent = {this.updateMapExtent}
+              map = {this.state.map}
+              updateMap = {this.updateMap}
             />
           )} />
           <Route exact path='/House/:id' component={HouseComponent} />

@@ -7,7 +7,6 @@ import Feature from 'ol/Feature';
 import Point from 'ol/geom/Point';
 import { Circle as CircleStyle, Fill, Stroke, Style, Text, Icon } from 'ol/style';
 import { transform } from 'ol/proj.js'
-import { ZoomToExtent } from 'ol/control.js';
 import { Button } from 'reactstrap';
 import { Link } from 'react-router-dom';
 
@@ -29,7 +28,6 @@ export class MapComponent extends React.Component {
         const projectionTo = 'EPSG:3857';
         let convertedCoordinates = transform(coordinates, projectionFrom, projectionTo)
         return convertedCoordinates
-
     }
 
     showPopup() {
@@ -79,23 +77,17 @@ export class MapComponent extends React.Component {
         }
         this.markerLayer.setVisible(true)
 
-
-        let lowerCorner = this.getCoordinates([this.props.house.lowerCornerX, this.props.house.lowerCornerY])
-        let upperCorner = this.getCoordinates([this.props.house.upperCornerX, this.props.house.upperCornerY])
-
-        const ext = [lowerCorner[0], lowerCorner[1], upperCorner[0], upperCorner[1]]
-        if (this.zoomToExtent)
-            this.map.removeControl(this.zoomToExtent)
-        this.zoomToExtent = new ZoomToExtent({ extent: ext })
-        this.map.addControl(this.zoomToExtent)
-
         if (this.props.isSearched) {
-            this.map.getView().fit(ext, this.map.getSize());
+
+            let lowerCorner = this.getCoordinates([this.props.house.lowerCornerX, this.props.house.lowerCornerY])
+            let upperCorner = this.getCoordinates([this.props.house.upperCornerX, this.props.house.upperCornerY])
+            const ext = [lowerCorner[0], lowerCorner[1], upperCorner[0], upperCorner[1]]
+            this.setMapView(ext)
         }
     }
 
     showHousesMarkers() {
-        
+
 
         const source = new VectorSource({
             features: this.props.houses.map(h => {
@@ -153,30 +145,38 @@ export class MapComponent extends React.Component {
         this.map.addLayer(clustersLayer)
     }
 
-    setExtent(extent) {
-        if (this.zoomToExtent) {
-            this.map.removeControl(this.zoomToExtent)
-        }
-        this.zoomToExtent = new ZoomToExtent({ extent: extent })
-        this.map.addControl(this.zoomToExtent)
-        this.map.getView().fit(extent, this.map.getSize());
+    setMapView(extent) {
+        this.map.getView().fit(extent, this.map.getSize())
     }
 
 
     componentDidMount() {
 
-        let map = new Map({
-            layers: [
-                new TileLayer({
-                    source: new OSM()
-                }),
-            ],
-            target: 'map-container',
-            view: new View({
-                center: [0, 0],
-                zoom: 2
-            })
-        });
+        let map
+        if (this.props.map) {
+
+            map = new Map({
+                layers: this.props.map.getLayers(),
+                target: 'map-container',
+                view: this.props.map.getView()
+            });
+        }
+        else {
+
+            map = new Map({
+                layers: [
+                    new TileLayer({
+                        source: new OSM()
+                    }),
+                ],
+                target: 'map-container',
+                view: new View({
+                    center: [0, 0],
+                    zoom: 1
+                })
+            });
+        }
+
 
         const context = this
         map.on('click', function (evt) {
@@ -220,34 +220,17 @@ export class MapComponent extends React.Component {
             }
         })
 
-        map.on("moveend", () => {
-            console.log('moveend')
-            this.props.updateMapExtent(map.getView().calculateExtent())
-        })
-
-
         this.map = map
 
-        if (this.props.houses) {            
-            this.showHousesMarkers();
-        }
         if (this.props.house) {
-            //this.showPopup()
+            this.showPopup()
         }
-
-        if (this.props.mapExtent) {
-            console.log(this.props.mapExtent)
-            this.setExtent(this.props.mapExtent)
-        }
-
-        
     }
 
-    componentDidUpdate(prevProps, prevState) {       
-        if (this.props.houses && !prevProps.houses) {  
-            //console.log('update ext')         
+    componentDidUpdate(prevProps, prevState) {
+        if (this.props.houses && !prevProps.houses) {
             this.showHousesMarkers();
-            
+
             let minX = Math.min.apply(Math, this.props.houses.map(h => h.posX))
             let minY = Math.min.apply(Math, this.props.houses.map(h => h.posY))
             let maxX = Math.max.apply(Math, this.props.houses.map(h => h.posX))
@@ -256,12 +239,17 @@ export class MapComponent extends React.Component {
             const minPoint = transform([minX, minY], projectionFrom, projectionTo)
             const maxPoint = transform([maxX, maxY], projectionFrom, projectionTo)
             const extent = [minPoint[0], minPoint[1], maxPoint[0], maxPoint[1]]
-            this.setExtent(extent)
-            
+            this.setMapView(extent)
         }
         if (this.props.house && (!prevProps.house || this.props.house.houseId !== prevProps.house.houseId)) {
-            //this.showPopup()
+            this.showPopup()
         }
+    }
+
+    componentWillUnmount() {
+        if (this.markerLayer)
+            this.map.removeLayer(this.markerLayer)
+        this.props.updateMap(this.map)
     }
 
 
