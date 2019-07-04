@@ -17,62 +17,74 @@ export class NavMenu extends Component {
       searchAddress: '',
       housesSearchAddress: '',//адрес, на который были выцеплены дома из базы
       isDropDownVisible: false,
-      houses: []
+      houses: [],
+      isUpdating: false
     }
     this.handleSearchAddressChange = this.handleSearchAddressChange.bind(this)
     this.renderHouses = this.renderHouses.bind(this)
     this.handleFormControlClick = this.handleFormControlClick.bind(this)
-    this.handleDropdownItemClick = this.handleDropdownItemClick.bind(this)
+    this.handleDropdownItemClick = this.handleDropdownItemClick.bind(this)    
     this.updateHouses = this.updateHouses.bind(this)
-    this.updateHousesLocally = this.updateHousesLocally.bind(this)
   }
 
   handleSearchAddressChange(value) {    
-    const isIncludingPrev = this.state.housesSearchAddress !== '' && value.startsWith(this.state.housesSearchAddress) && this.state.houses.length < SEARCH_ADDRESS_COUNT
 
     this.setState({ searchAddress: value, isDropDownVisible: true }, () => {
-      if (value === '') {
+      if (this.state.searchAddress === '') {
         this.setState({ isDropDownVisible: false, houses: [], housesSearchAddress: '' })
-      } else if (isIncludingPrev) {        
-        this.updateHousesLocally(value)
-      } else {
-        this.updateHouses()
+      }
+      else if (!this.state.isUpdating) {
+        this.setState({ isUpdating: true }, () => this.updateHouses())
       }
     })
   }
 
-  updateHousesLocally(value) {
-    const splitAddresses = value.toLowerCase().split(' ')
-    const resHouses = []
-    for (let i = 0; i < this.state.houses.length; ++i) {
-      let houseAddress = this.state.houses[i].address.toLowerCase()
-      let includesAll = true
-      for (let j = 0; j < splitAddresses.length; ++j) {
-        if (!houseAddress.includes(splitAddresses[j])) {
-          includesAll = false
-          break
-        }
-      }
-
-      if (includesAll) {
-        resHouses.push(this.state.houses[i])
-      }
-    }
-    this.setState({ houses: resHouses, housesSearchAddress:value })
-  }
-
   updateHouses() {
-    const searchAddress = this.state.searchAddress
-    fetch(`api/GeoData/GetFirstHousesByAddress/${searchAddress}/${SEARCH_ADDRESS_COUNT}`)
-      .then(response => response.json())
-      .then(data => {       
-        if (this.state.searchAddress !== searchAddress) {  //пользователь уже ввел новый адрес       
-          return
+
+    const isIncludingPrev =
+      this.state.housesSearchAddress !== '' &&
+      this.state.searchAddress.startsWith(this.state.housesSearchAddress) &&
+      this.state.houses.length < SEARCH_ADDRESS_COUNT
+
+    if (isIncludingPrev) {
+      console.log('update localy')
+      const splitAddresses = this.state.searchAddress.toLowerCase().split(' ')
+      const resHouses = []
+      for (let i = 0; i < this.state.houses.length; ++i) {
+        let houseAddress = this.state.houses[i].address.toLowerCase()
+        let includesAll = true
+        for (let j = 0; j < splitAddresses.length; ++j) {
+          if (!houseAddress.includes(splitAddresses[j])) {
+            includesAll = false
+            break
+          }
         }
-        this.setState({ houses: data, housesSearchAddress:this.state.searchAddress })
-      })
-      .catch(ex => console.log(ex))
+
+        if (includesAll) {
+          resHouses.push(this.state.houses[i])
+        }
+      }
+      this.setState({ houses: resHouses, housesSearchAddress: this.state.searchAddress, isUpdating:false })
+    }
+    else {
+      console.log('update remotely')
+      const searchAddress = this.state.searchAddress
+      fetch(`api/GeoData/GetFirstHousesByAddress/${searchAddress}/${SEARCH_ADDRESS_COUNT}`)
+        .then(response => response.json())
+        .then(data => {
+          this.setState({ houses: data, housesSearchAddress: searchAddress, isUpdating: true }, () => {
+            if (this.state.housesSearchAddress !== this.state.searchAddress) {
+              this.updateHouses()
+            }
+            else {
+              this.setState({ isUpdating: false })
+            }
+          })
+        })
+        .catch(ex => console.log(ex))
+    }
   }
+  
 
   handleFormControlClick() {
     this.setState({ isDropDownVisible: true })
