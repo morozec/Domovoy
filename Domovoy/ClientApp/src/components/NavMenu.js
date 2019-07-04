@@ -6,6 +6,7 @@ import './NavMenu.css';
 import logo from '../img/logo_domovoy.svg';
 
 import { CustomMenu } from './CustomToggle'
+import { SEARCH_ADDRESS_COUNT } from './../constants/constants'
 import { Dropdown } from 'react-bootstrap'
 
 export class NavMenu extends Component {
@@ -14,6 +15,7 @@ export class NavMenu extends Component {
     super()
     this.state = {
       searchAddress: '',
+      housesSearchAddress: '',//адрес, на который были выцеплены дома из базы
       isDropDownVisible: false,
       houses: []
     }
@@ -22,37 +24,62 @@ export class NavMenu extends Component {
     this.handleFormControlClick = this.handleFormControlClick.bind(this)
     this.handleDropdownItemClick = this.handleDropdownItemClick.bind(this)
     this.updateHouses = this.updateHouses.bind(this)
+    this.updateHousesLocally = this.updateHousesLocally.bind(this)
   }
 
-  handleSearchAddressChange(value) {   
+  handleSearchAddressChange(value) {    
+    const isIncludingPrev = this.state.housesSearchAddress !== '' && value.startsWith(this.state.housesSearchAddress) && this.state.houses.length < SEARCH_ADDRESS_COUNT
+
     this.setState({ searchAddress: value, isDropDownVisible: true }, () => {
       if (value === '') {
-        this.setState({ isDropDownVisible: false, houses: [] })
+        this.setState({ isDropDownVisible: false, houses: [], housesSearchAddress: '' })
+      } else if (isIncludingPrev) {        
+        this.updateHousesLocally(value)
       } else {
         this.updateHouses()
       }
     })
   }
 
-  updateHouses() {   
-    const searchAddress = this.state.searchAddress 
-    fetch(`api/GeoData/GetFirstHousesByAddress/${searchAddress}/100`)
+  updateHousesLocally(value) {
+    const splitAddresses = value.toLowerCase().split(' ')
+    const resHouses = []
+    for (let i = 0; i < this.state.houses.length; ++i) {
+      let houseAddress = this.state.houses[i].address.toLowerCase()
+      let includesAll = true
+      for (let j = 0; j < splitAddresses.length; ++j) {
+        if (!houseAddress.includes(splitAddresses[j])) {
+          includesAll = false
+          break
+        }
+      }
+
+      if (includesAll) {
+        resHouses.push(this.state.houses[i])
+      }
+    }
+    this.setState({ houses: resHouses, housesSearchAddress:value })
+  }
+
+  updateHouses() {
+    const searchAddress = this.state.searchAddress
+    fetch(`api/GeoData/GetFirstHousesByAddress/${searchAddress}/${SEARCH_ADDRESS_COUNT}`)
       .then(response => response.json())
       .then(data => {       
-        if (this.state.searchAddress !== searchAddress){  //пользователь уже ввел новый адрес       
+        if (this.state.searchAddress !== searchAddress) {  //пользователь уже ввел новый адрес       
           return
-        }        
-        this.setState({ houses: data })
+        }
+        this.setState({ houses: data, housesSearchAddress:this.state.searchAddress })
       })
       .catch(ex => console.log(ex))
   }
 
-  handleFormControlClick() {    
+  handleFormControlClick() {
     this.setState({ isDropDownVisible: true })
   }
 
   handleDropdownItemClick(e, house) {
-    this.setState({ isDropDownVisible: false, searchAddress: house.address }, () => {this.updateHouses()})
+    this.setState({ isDropDownVisible: false, searchAddress: house.address }, () => { this.updateHouses() })
     this.props.handleMenuSelected(house.houseId, true)
   }
 
