@@ -100,8 +100,9 @@ export class NavMenu extends Component {
   componentDidMount() {
     const context = this
     const searchDiv = $('#search-div')
-    $(document).mouseup(function (e) {      
-      if (!searchDiv.is(e.target) && searchDiv.has(e.target).length === 0) {
+    
+    $(document).mouseup(function (e) {       
+      if (!searchDiv.is(e.target) && $(e.target).parents('#search-div').length === 0) {     
         context.setState({ isDropDownVisible: false })
       }
     })
