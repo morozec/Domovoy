@@ -30,29 +30,44 @@ namespace Domovoy.Services
             using (WebClient wc = new WebClient())
             {
                 using (System.IO.StreamWriter file =
-                    new System.IO.StreamWriter(@"D:\6.txt"))
+                    new System.IO.StreamWriter(@"C:\Users\andre\Documents\6.txt"))
                 {
                     var c = 0;
                     foreach (var h in houses)
                     {
-                        if (!h.Address.StartsWith("г. Самара, Кировский")) continue;
-
-                        var url = $"https://geocode-maps.yandex.ru/1.x/?format=json&apikey=0f21bfb6-f5c3-4931-a9ee-244137ca2c46&geocode={h.Address}";
-                        var json = wc.DownloadString(url);
-                        try
+                        if (h.Address.StartsWith("г. Самара, Кировский") ||
+                            h.Address.StartsWith("г. Самара, Ленинский") ||
+                            h.Address.StartsWith("ж/д_ст. Клявлино") ||
+                            h.Address.StartsWith("ж/д_ст. Шентала"))
                         {
-                            var geoData = GeoManager.GetJsonGeoData(json);
-                            file.WriteLine(
-                                $"UPDATE Houses SET PosX = {geoData.Pos[0]}, PosY = {geoData.Pos[1]}, LowerCornerX = {geoData.LowerCorner[0]}, LowerCornerY = {geoData.LowerCorner[1]}, UpperCornerX = {geoData.UpperCorner[0]}, UpperCornerY = {geoData.UpperCorner[1]} WHERE HouseId = {h.HouseId}");
+                            var address = h.Address;
+                            if (address.StartsWith("ж/д_ст. Клявлино"))
+                            {
+                                address = "Клявлинский р-н" + address.Remove(0, 16);
+                            }
+                            else if (address.StartsWith("ж/д_ст. Шентала"))
+                            {
+                                address = "Шенталинский р-н" + address.Remove(0, 15);
+                            }
 
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.Error.WriteLine($"EXCEPTION {ex.Message} {h.HouseId}");
-                        }
+                            var url =
+                                $"https://geocode-maps.yandex.ru/1.x/?format=json&apikey=0f21bfb6-f5c3-4931-a9ee-244137ca2c46&geocode={address}";
+                            var json = wc.DownloadString(url);
+                            try
+                            {
+                                var geoData = GeoManager.GetJsonGeoData(json);
+                                file.WriteLine(
+                                    $"UPDATE Houses SET PosX = {geoData.Pos[0]}, PosY = {geoData.Pos[1]}, LowerCornerX = {geoData.LowerCorner[0]}, LowerCornerY = {geoData.LowerCorner[1]}, UpperCornerX = {geoData.UpperCorner[0]}, UpperCornerY = {geoData.UpperCorner[1]} WHERE HouseId = {h.HouseId}");
 
-                        
-                        c++;
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.Error.WriteLine($"EXCEPTION {ex.Message} {h.HouseId}");
+                            }
+
+
+                            c++;
+                        }
                     }
 
                 }
