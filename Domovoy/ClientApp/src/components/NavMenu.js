@@ -9,6 +9,8 @@ import { CustomMenu } from './CustomToggle'
 import { SEARCH_ADDRESS_COUNT } from './../constants/constants'
 import { Dropdown } from 'react-bootstrap'
 
+import $ from 'jquery'
+
 export class NavMenu extends Component {
 
   constructor() {
@@ -23,11 +25,11 @@ export class NavMenu extends Component {
     this.handleSearchAddressChange = this.handleSearchAddressChange.bind(this)
     this.renderHouses = this.renderHouses.bind(this)
     this.handleFormControlClick = this.handleFormControlClick.bind(this)
-    this.handleDropdownItemClick = this.handleDropdownItemClick.bind(this)    
-    this.updateHouses = this.updateHouses.bind(this)
+    this.handleDropdownItemClick = this.handleDropdownItemClick.bind(this)
+    this.updateHouses = this.updateHouses.bind(this)    
   }
 
-  handleSearchAddressChange(value) {    
+  handleSearchAddressChange(value) {
 
     this.setState({ searchAddress: value, isDropDownVisible: true }, () => {
       if (this.state.searchAddress === '') {
@@ -64,7 +66,7 @@ export class NavMenu extends Component {
           resHouses.push(this.state.houses[i])
         }
       }
-      this.setState({ houses: resHouses, housesSearchAddress: this.state.searchAddress, isUpdating:false })
+      this.setState({ houses: resHouses, housesSearchAddress: this.state.searchAddress, isUpdating: false })
     }
     else {
       console.log('update remotely')
@@ -84,7 +86,7 @@ export class NavMenu extends Component {
         .catch(ex => console.log(ex))
     }
   }
-  
+
 
   handleFormControlClick() {
     this.setState({ isDropDownVisible: true })
@@ -93,6 +95,22 @@ export class NavMenu extends Component {
   handleDropdownItemClick(e, house) {
     this.setState({ isDropDownVisible: false, searchAddress: house.address }, () => { this.updateHouses() })
     this.props.handleMenuSelected(house.houseId, true)
+  }  
+
+  componentDidMount() {
+    const context = this
+    const searchDiv = $('#search-div')
+    $(document).mouseup(function (e) {      
+      if (!searchDiv.is(e.target) && searchDiv.has(e.target).length === 0) {
+        context.setState({ isDropDownVisible: false })
+      }
+    })
+
+    document.body.addEventListener('keydown', (e) => {     
+      if (e.key === 'Escape'){
+        context.setState({ isDropDownVisible: false })       
+      }
+    })
   }
 
 
@@ -101,7 +119,8 @@ export class NavMenu extends Component {
       <CustomMenu className='block-search'
         searchAddress={this.state.searchAddress}
         handleSearchAddressChange={this.handleSearchAddressChange}
-        handleFormControlClick={this.handleFormControlClick}>
+        handleFormControlClick={this.handleFormControlClick}
+      >
         {this.state.isDropDownVisible && this.state.houses.map(h => <Dropdown.Item
           key={h.houseId}
           onClick={(e) => { this.handleDropdownItemClick(e, h) }}

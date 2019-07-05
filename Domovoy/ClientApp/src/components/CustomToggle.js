@@ -5,7 +5,7 @@ export class CustomToggle extends React.Component {
     constructor(props, context) {
         super(props, context);
 
-        this.handleClick = this.handleClick.bind(this);
+        this.handleClick = this.handleClick.bind(this);       
     }
 
     handleClick(e) {
@@ -43,7 +43,7 @@ export class CustomMenu extends React.Component {
         } = this.props;        
 
         return (
-            <div style={style} className={className} aria-labelledby={labeledBy}>
+            <div id='search-div' style={style} className={className} aria-labelledby={labeledBy}>
                 <FormControl
                     autoFocus
                     className="mb-1"
