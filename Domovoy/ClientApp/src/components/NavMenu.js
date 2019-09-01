@@ -1,5 +1,5 @@
 import React, { Component, useState, useEffect } from 'react';
-import { Container, Navbar, NavbarBrand } from 'reactstrap';
+import { Container, Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem, NavLink, Button } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import './NavMenu.css';
 
@@ -20,6 +20,7 @@ const NavMenu = (props) => {
   const [isDropDownVisible, setIsDropDownVisible] = useState(false)
   const [houses, setHouses] = useState([])
   const [isUpdating, setIsUpdating] = useState(false)
+  const [isOpen, setIsOpen] = useState(false)
 
 
   const { isAuthenticated, loginWithRedirect, logout } = useAuth0()
@@ -143,13 +144,62 @@ const NavMenu = (props) => {
     )
   }
 
-
+  const toggle = () => {
+    setIsOpen(!isOpen)
+  }
 
   return (
     <header>
-      <Navbar className="navbar-expand-sm navbar-toggleable-sm ng-white">
+      <Navbar className="navbar-expand-sm navbar-toggleable-sm">
         <Container>
           <div className="row w-100">
+            <div className="col-lg-5">
+              <NavbarBrand tag={Link} to="/">
+                <img src={logo} />
+              </NavbarBrand>
+              {window.location.pathname === "/" && renderHouses()}
+            </div>
+            <div className="col-lg-7">
+            
+
+            <div className="header-menu">
+                <a href="#" className="header-menu-item">О ПРОЕКТЕ</a>
+                <a href="#" className="header-menu-item">РЕЙТИНГ ДОМОВ</a>
+                <a href="#" className="header-menu-item">ЗАДАТЬ ВОПРОС</a>
+                <a href="#" className="header-menu-item">ЗАДАТЬ ВОПРОС</a>
+                
+              </div>
+            
+            {/* <Nav navbar>
+              <NavItem>
+                <NavLink tag={Link} to="#" className="header-menu-item">О ПРОЕКТЕ</NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink tag={Link} to="#" className="header-menu-item">РЕЙТИНГ ДОМОВ</NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink tag={Link} to="#" className="header-menu-item">ЗАДАТЬ ВОПРОС</NavLink>
+              </NavItem>
+
+
+              {!isAuthenticated && (
+                <NavItem>
+                  <NavLink tag={Link} to="#" onClick={() => loginWithRedirect()} className="header-menu-item">ВОЙТИ</NavLink>
+                </NavItem>
+              )}
+
+              {isAuthenticated && (
+                <NavItem>
+                  <NavLink tag={Link} to="#" onClick={() => logout()} className="header-menu-item">ВЫЙТИ</NavLink>
+                </NavItem>
+              )}
+            </Nav> */}
+            </div>
+
+          </div>
+
+
+          {/* <div className="row w-100">
             <div className="col-lg-5">
               <NavbarBrand tag={Link} to="/">
                 <img src={logo} />
@@ -161,25 +211,15 @@ const NavMenu = (props) => {
                 <a href="#" className="header-menu-item">О ПРОЕКТЕ</a>
                 <a href="#" className="header-menu-item">РЕЙТИНГ ДОМОВ</a>
                 <a href="#" className="header-menu-item">ЗАДАТЬ ВОПРОС</a>
-
-                {!isAuthenticated && (
-                  <button
-                    onClick={() =>
-                      loginWithRedirect({})
-                    }
-                  >
-                    Log in
-                  </button>
-                )}
-
-                {isAuthenticated && <button onClick={() => logout()}>Log out</button>}
+                <a href="#" className="header-menu-item">ЗАДАТЬ ВОПРОС</a>
+                
               </div>
 
             </div>
-          </div>
+          </div> */}
         </Container>
       </Navbar>
-    </header>
+    </header >
   );
 }
 
