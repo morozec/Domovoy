@@ -20,7 +20,10 @@ const NavMenu = (props) => {
   const [isDropDownVisible, setIsDropDownVisible] = useState(false)
   const [houses, setHouses] = useState([])
   const [isUpdating, setIsUpdating] = useState(false)
- 
+
+
+  const { isAuthenticated, loginWithRedirect, logout } = useAuth0()
+
 
   const handleSearchAddressChange = (value) => {
     setSearchAddress(value)
@@ -28,21 +31,21 @@ const NavMenu = (props) => {
   }
 
   useEffect(() => {
-    if (searchAddress === ''){
+    if (searchAddress === '') {
       setIsDropDownVisible(false)
       setHouses([])
       setHousesSearchAddress('')
     }
-    else if (!isUpdating){
-      setIsUpdating(true)      
+    else if (!isUpdating) {
+      setIsUpdating(true)
     }
   }, [searchAddress])
 
   useEffect(() => {
-    if (isUpdating){
+    if (isUpdating) {
       updateHouses()
     }
-  },[isUpdating])
+  }, [isUpdating])
 
   const updateHouses = () => {
 
@@ -71,7 +74,7 @@ const NavMenu = (props) => {
       }
       setHouses(resHouses)
       setHousesSearchAddress(searchAddress)
-      setIsUpdating(false)      
+      setIsUpdating(false)
     }
     else {
       console.log('update remotely')
@@ -92,36 +95,36 @@ const NavMenu = (props) => {
       updateHouses()
     }
     else {
-      setIsUpdating(false)      
+      setIsUpdating(false)
     }
   }, [housesSearchAddress])
 
 
   const handleFormControlClick = () => {
-    setIsDropDownVisible(true)    
+    setIsDropDownVisible(true)
   }
 
   const handleDropdownItemClick = (e, house) => {
     setIsDropDownVisible(false)
     setSearchAddress(house.address)
     props.handleMenuSelected(house.houseId, true)
-  }    
+  }
 
   useEffect(() => { //component did mount    
     const searchDiv = $('#search-div')
-    
-    $(document).mouseup(function (e) {       
-      if (!searchDiv.is(e.target) && $(e.target).parents('#search-div').length === 0) {     
-        setIsDropDownVisible(false)       
+
+    $(document).mouseup(function (e) {
+      if (!searchDiv.is(e.target) && $(e.target).parents('#search-div').length === 0) {
+        setIsDropDownVisible(false)
       }
     })
 
-    document.body.addEventListener('keydown', (e) => {     
-      if (e.key === 'Escape'){
-        setIsDropDownVisible(false)        
+    document.body.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        setIsDropDownVisible(false)
       }
     })
-  }) 
+  })
 
   const renderHouses = () => {
     return (
@@ -141,34 +144,45 @@ const NavMenu = (props) => {
   }
 
 
- 
-    return (
-      <header>
-        <Navbar className="navbar-expand-sm navbar-toggleable-sm ng-white">
-          <Container>
-            <div className="row w-100">
-              <div className="col-lg-5">
-                <NavbarBrand tag={Link} to="/">
-                  <img src={logo} />
-                </NavbarBrand>
-                {window.location.pathname === "/" && renderHouses()}
-              </div>
-              <div className="col-lg-7">
-                <div className="header-menu">
-                  <a href="#" className="header-menu-item">О ПРОЕКТЕ</a>
-                  <a href="#" className="header-menu-item">РЕЙТИНГ ДОМОВ</a>
-                  <a href="#" className="header-menu-item">ЗАДАТЬ ВОПРОС</a>
-                </div>
 
-
-              </div>
+  return (
+    <header>
+      <Navbar className="navbar-expand-sm navbar-toggleable-sm ng-white">
+        <Container>
+          <div className="row w-100">
+            <div className="col-lg-5">
+              <NavbarBrand tag={Link} to="/">
+                <img src={logo} />
+              </NavbarBrand>
+              {window.location.pathname === "/" && renderHouses()}
             </div>
-          </Container>
-        </Navbar>
-      </header>
-    );
-  }
+            <div className="col-lg-7">
+              <div className="header-menu">
+                <a href="#" className="header-menu-item">О ПРОЕКТЕ</a>
+                <a href="#" className="header-menu-item">РЕЙТИНГ ДОМОВ</a>
+                <a href="#" className="header-menu-item">ЗАДАТЬ ВОПРОС</a>
+
+                {!isAuthenticated && (
+                  <button
+                    onClick={() =>
+                      loginWithRedirect({})
+                    }
+                  >
+                    Log in
+                  </button>
+                )}
+
+                {isAuthenticated && <button onClick={() => logout()}>Log out</button>}
+              </div>
+
+            </div>
+          </div>
+        </Container>
+      </Navbar>
+    </header>
+  );
+}
 
 
 
-export {NavMenu}
+export { NavMenu }
