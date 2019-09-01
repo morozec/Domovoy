@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useState, useEffect } from 'react';
 import { Container, Navbar, NavbarBrand } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import './NavMenu.css';
@@ -11,49 +11,52 @@ import { Dropdown } from 'react-bootstrap'
 
 import $ from 'jquery'
 
-export class NavMenu extends Component {
+import { useAuth0 } from "../react-auth0-wrapper";
 
-  constructor() {
-    super()
-    this.state = {
-      searchAddress: '',
-      housesSearchAddress: '',//адрес, на который были выцеплены дома из базы
-      isDropDownVisible: false,
-      houses: [],
-      isUpdating: false
+const NavMenu = (props) => {
+
+  const [searchAddress, setSearchAddress] = useState('')
+  const [housesSearchAddress, setHousesSearchAddress] = useState('')//адрес, на который были выцеплены дома из базы
+  const [isDropDownVisible, setIsDropDownVisible] = useState(false)
+  const [houses, setHouses] = useState([])
+  const [isUpdating, setIsUpdating] = useState(false)
+ 
+
+  const handleSearchAddressChange = (value) => {
+    setSearchAddress(value)
+    setIsDropDownVisible(true)
+  }
+
+  useEffect(() => {
+    if (searchAddress === ''){
+      setIsDropDownVisible(false)
+      setHouses([])
+      setHousesSearchAddress('')
     }
-    this.handleSearchAddressChange = this.handleSearchAddressChange.bind(this)
-    this.renderHouses = this.renderHouses.bind(this)
-    this.handleFormControlClick = this.handleFormControlClick.bind(this)
-    this.handleDropdownItemClick = this.handleDropdownItemClick.bind(this)
-    this.updateHouses = this.updateHouses.bind(this)    
-  }
+    else if (!isUpdating){
+      setIsUpdating(true)      
+    }
+  }, [searchAddress])
 
-  handleSearchAddressChange(value) {
+  useEffect(() => {
+    if (isUpdating){
+      updateHouses()
+    }
+  },[isUpdating])
 
-    this.setState({ searchAddress: value, isDropDownVisible: true }, () => {
-      if (this.state.searchAddress === '') {
-        this.setState({ isDropDownVisible: false, houses: [], housesSearchAddress: '' })
-      }
-      else if (!this.state.isUpdating) {
-        this.setState({ isUpdating: true }, () => this.updateHouses())
-      }
-    })
-  }
-
-  updateHouses() {
+  const updateHouses = () => {
 
     const isIncludingPrev =
-      this.state.housesSearchAddress !== '' &&
-      this.state.searchAddress.startsWith(this.state.housesSearchAddress) &&
-      this.state.houses.length < SEARCH_ADDRESS_COUNT
+      housesSearchAddress !== '' &&
+      searchAddress.startsWith(housesSearchAddress) &&
+      houses.length < SEARCH_ADDRESS_COUNT
 
     if (isIncludingPrev) {
       console.log('update localy')
-      const splitAddresses = this.state.searchAddress.toLowerCase().split(' ')
+      const splitAddresses = searchAddress.toLowerCase().split(' ')
       const resHouses = []
-      for (let i = 0; i < this.state.houses.length; ++i) {
-        let houseAddress = this.state.houses[i].address.toLowerCase()
+      for (let i = 0; i < houses.length; ++i) {
+        let houseAddress = houses[i].address.toLowerCase()
         let includesAll = true
         for (let j = 0; j < splitAddresses.length; ++j) {
           if (!houseAddress.includes(splitAddresses[j])) {
@@ -63,68 +66,73 @@ export class NavMenu extends Component {
         }
 
         if (includesAll) {
-          resHouses.push(this.state.houses[i])
+          resHouses.push(houses[i])
         }
       }
-      this.setState({ houses: resHouses, housesSearchAddress: this.state.searchAddress, isUpdating: false })
+      setHouses(resHouses)
+      setHousesSearchAddress(searchAddress)
+      setIsUpdating(false)      
     }
     else {
       console.log('update remotely')
-      const searchAddress = this.state.searchAddress
-      fetch(`api/GeoData/GetFirstHousesByAddress/${searchAddress}/${SEARCH_ADDRESS_COUNT}`)
+      const curSearchAddress = searchAddress
+      fetch(`api/GeoData/GetFirstHousesByAddress/${curSearchAddress}/${SEARCH_ADDRESS_COUNT}`)
         .then(response => response.json())
         .then(data => {
-          this.setState({ houses: data, housesSearchAddress: searchAddress, isUpdating: true }, () => {
-            if (this.state.housesSearchAddress !== this.state.searchAddress) {
-              this.updateHouses()
-            }
-            else {
-              this.setState({ isUpdating: false })
-            }
-          })
+          setHouses(data)
+          setHousesSearchAddress(curSearchAddress)
+          setIsUpdating(true)
         })
         .catch(ex => console.log(ex))
     }
   }
 
+  useEffect(() => {
+    if (housesSearchAddress !== searchAddress) {
+      updateHouses()
+    }
+    else {
+      setIsUpdating(false)      
+    }
+  }, [housesSearchAddress])
 
-  handleFormControlClick() {
-    this.setState({ isDropDownVisible: true })
+
+  const handleFormControlClick = () => {
+    setIsDropDownVisible(true)    
   }
 
-  handleDropdownItemClick(e, house) {
-    this.setState({ isDropDownVisible: false, searchAddress: house.address }, () => { this.updateHouses() })
-    this.props.handleMenuSelected(house.houseId, true)
-  }  
+  const handleDropdownItemClick = (e, house) => {
+    setIsDropDownVisible(false)
+    setSearchAddress(house.address)
+    props.handleMenuSelected(house.houseId, true)
+  }    
 
-  componentDidMount() {
-    const context = this
+  useEffect(() => { //component did mount    
     const searchDiv = $('#search-div')
     
     $(document).mouseup(function (e) {       
       if (!searchDiv.is(e.target) && $(e.target).parents('#search-div').length === 0) {     
-        context.setState({ isDropDownVisible: false })
+        setIsDropDownVisible(false)       
       }
     })
 
     document.body.addEventListener('keydown', (e) => {     
       if (e.key === 'Escape'){
-        context.setState({ isDropDownVisible: false })       
+        setIsDropDownVisible(false)        
       }
     })
-  }
+  }) 
 
-
-  renderHouses() {
+  const renderHouses = () => {
     return (
       <CustomMenu className='block-search'
-        searchAddress={this.state.searchAddress}
-        handleSearchAddressChange={this.handleSearchAddressChange}
-        handleFormControlClick={this.handleFormControlClick}
+        searchAddress={searchAddress}
+        handleSearchAddressChange={handleSearchAddressChange}
+        handleFormControlClick={handleFormControlClick}
       >
-        {this.state.isDropDownVisible && this.state.houses.map(h => <Dropdown.Item
+        {isDropDownVisible && houses.map(h => <Dropdown.Item
           key={h.houseId}
-          onClick={(e) => { this.handleDropdownItemClick(e, h) }}
+          onClick={(e) => { handleDropdownItemClick(e, h) }}
         >
           {h.address}
         </Dropdown.Item>)}
@@ -133,7 +141,7 @@ export class NavMenu extends Component {
   }
 
 
-  render() {
+ 
     return (
       <header>
         <Navbar className="navbar-expand-sm navbar-toggleable-sm ng-white">
@@ -143,7 +151,7 @@ export class NavMenu extends Component {
                 <NavbarBrand tag={Link} to="/">
                   <img src={logo} />
                 </NavbarBrand>
-                {window.location.pathname === "/" && this.renderHouses()}
+                {window.location.pathname === "/" && renderHouses()}
               </div>
               <div className="col-lg-7">
                 <div className="header-menu">
@@ -160,4 +168,7 @@ export class NavMenu extends Component {
       </header>
     );
   }
-}
+
+
+
+export {NavMenu}
