@@ -1,19 +1,13 @@
-import React, { Component } from 'react';
-import { Route } from 'react-router';
+import React from 'react';
 import { Layout } from './components/Layout';
-import { MapComponent } from './components/MapComponent';
-import { HouseComponent } from './components/House/HouseComponent';
 import './components/Main.css';
 
 import { useAuth0 } from "./react-auth0-wrapper";
+import Loading from "./components/Loading";
 
 const App = () => {
-  const { loading, user } = useAuth0();
-  if (loading){
-    return <div>Loading...</div>
-  }
-  console.log(user)
-  return <Layout></Layout>
+  const { loading } = useAuth0();
+  return loading ? <Loading /> : <Layout />
 }
 
 export default App

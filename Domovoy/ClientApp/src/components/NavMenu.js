@@ -155,11 +155,11 @@ const NavMenu = (props) => {
           <div className="row w-100">
             <div className="col-lg-5">
               <NavbarBrand tag={Link} to="/">
-                <img src={logo} />
+                <img src={logo} alt="Логотип Домового"/>
               </NavbarBrand>
               {window.location.pathname === "/" && renderHouses()}
             </div>
-            <div className="col-lg-7">
+            {/* <div className="col-lg-7">
             
 
             <div className="header-menu">
@@ -168,9 +168,9 @@ const NavMenu = (props) => {
                 <a href="#" className="header-menu-item">ЗАДАТЬ ВОПРОС</a>
                 <a href="#" className="header-menu-item">ЗАДАТЬ ВОПРОС</a>
                 
-              </div>
+              </div> */}
             
-            {/* <Nav navbar>
+            <Nav navbar>
               <NavItem>
                 <NavLink tag={Link} to="#" className="header-menu-item">О ПРОЕКТЕ</NavLink>
               </NavItem>
@@ -193,10 +193,10 @@ const NavMenu = (props) => {
                   <NavLink tag={Link} to="#" onClick={() => logout()} className="header-menu-item">ВЫЙТИ</NavLink>
                 </NavItem>
               )}
-            </Nav> */}
-            </div>
+            </Nav>
+             {/* </div> */}
 
-          </div>
+          </div> 
 
 
           {/* <div className="row w-100">

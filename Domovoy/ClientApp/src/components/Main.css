@@ -127,3 +127,11 @@ p.detail-item {
 .detail-button {
     width: 100%;
 }
+
+.loading{
+    position: absolute;
+    left: 50%;    
+    top:50%;
+    margin-left: -60px;
+    margin-top: -60px;
+}
