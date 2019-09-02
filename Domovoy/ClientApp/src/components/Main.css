@@ -16,10 +16,6 @@ body {
     font-family: 'Roboto', sans-serif;
 }
 
-.container {
-    
-}
-
 header {
     height: 174px;
     background: url(../img/header.jpg) no-repeat;
@@ -135,3 +131,13 @@ p.detail-item {
     margin-left: -60px;
     margin-top: -60px;
 }
+
+.media img{
+    width: 25vmin;
+    border-radius: 50px;
+}
+
+.navLink {
+    cursor: pointer;
+  }
+  
