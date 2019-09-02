@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { Container } from 'reactstrap';
-import { NavMenu } from './NavMenu';
+import  NavMenu  from './NavMenu';
 import { MapComponent } from './MapComponent'
 import { HouseComponent } from './House/HouseComponent'
 import { Route } from 'react-router';
-import { Navbar, Nav } from 'react-bootstrap'
+import { Navbar } from 'react-bootstrap'
+import Profile from './Profile'
 
 export class Layout extends Component {
   static displayName = Layout.name;
@@ -66,8 +67,8 @@ export class Layout extends Component {
             />
           )} />
           <Route exact path='/House/:id' component={HouseComponent} />
-
           <Route exact path='/img/test' component={HouseComponent} />
+          <Route exact path='/profile' component={Profile} />
         </Container>
 
 

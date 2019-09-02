@@ -1,7 +1,8 @@
 import React, { Component, useState, useEffect } from 'react';
-import { Container, Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem, NavLink, Button } from 'reactstrap';
+import { Container, Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem, NavLink, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem, Button } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import './NavMenu.css';
+import {withRouter} from 'react-router-dom'
 
 import logo from '../img/logo_domovoy.svg';
 
@@ -23,7 +24,7 @@ const NavMenu = (props) => {
   const [isOpen, setIsOpen] = useState(false)
 
 
-  const { isAuthenticated, loginWithRedirect, logout } = useAuth0()
+  const { isAuthenticated, loginWithRedirect, user, logout } = useAuth0()
 
 
   const handleSearchAddressChange = (value) => {
@@ -148,6 +149,10 @@ const NavMenu = (props) => {
     setIsOpen(!isOpen)
   }
 
+  const routeToProfile = () => {
+    props.history.push('/profile')
+  }
+
   return (
     <header>
       <Navbar className="navbar-expand-sm navbar-toggleable-sm">
@@ -155,7 +160,7 @@ const NavMenu = (props) => {
           <div className="row w-100">
             <div className="col-lg-5">
               <NavbarBrand tag={Link} to="/">
-                <img src={logo} alt="Логотип Домового"/>
+                <img src={logo} alt="Логотип Домового" />
               </NavbarBrand>
               {window.location.pathname === "/" && renderHouses()}
             </div>
@@ -169,7 +174,7 @@ const NavMenu = (props) => {
                 <a href="#" className="header-menu-item">ЗАДАТЬ ВОПРОС</a>
                 
               </div> */}
-            
+
             <Nav navbar>
               <NavItem>
                 <NavLink tag={Link} to="#" className="header-menu-item">О ПРОЕКТЕ</NavLink>
@@ -189,14 +194,31 @@ const NavMenu = (props) => {
               )}
 
               {isAuthenticated && (
-                <NavItem>
-                  <NavLink tag={Link} to="#" onClick={() => logout()} className="header-menu-item">ВЫЙТИ</NavLink>
-                </NavItem>
+
+                <UncontrolledDropdown nav inNavbar>
+                  <DropdownToggle nav caret className="header-menu-item">
+                    {user.name}
+                  </DropdownToggle>
+                  <DropdownMenu right>
+                    <DropdownItem onClick={routeToProfile}>
+                      {/* <NavLink tag={Link} to="/profile">ЛИЧНЫЙ КАБИНЕТ</NavLink>                      */}
+                      Личный кабинет
+                    </DropdownItem>  
+                    <DropdownItem divider />
+                    <DropdownItem onClick = {() => logout()}>
+                      Выйти                
+                    </DropdownItem>
+                  </DropdownMenu>
+                </UncontrolledDropdown>
+
+                // <NavItem>
+                //   <NavLink tag={Link} to="#" onClick={() => logout()} className="header-menu-item">ВЫЙТИ</NavLink>
+                // </NavItem>
               )}
             </Nav>
-             {/* </div> */}
+            {/* </div> */}
 
-          </div> 
+          </div>
 
 
           {/* <div className="row w-100">
@@ -225,4 +247,4 @@ const NavMenu = (props) => {
 
 
 
-export { NavMenu }
+export default withRouter(NavMenu) 
