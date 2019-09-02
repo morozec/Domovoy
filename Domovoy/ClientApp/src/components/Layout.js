@@ -45,8 +45,11 @@ const Layout = () => {
     <div>
       <NavMenu handleMenuSelected={this.updateHouse} />
       <Container>
-        <Switch>
-          <Route exact path='/' render={(props) => (
+        <Switch>       
+          <Route exact path='/House/:id' component={HouseComponent} />
+          <Route exact path='/img/test' component={HouseComponent} />
+          <PrivateRoute exact path='/profile' component={Profile} />
+          <Route path='/' render={(props) => (
             <MapComponent {...props}
               house={house}
               updateHouse={updateHouse}
@@ -57,9 +60,6 @@ const Layout = () => {
               updateMap={updateMap}
             />
           )} />
-          <Route exact path='/House/:id' component={HouseComponent} />
-          <Route exact path='/img/test' component={HouseComponent} />
-          <PrivateRoute exact path='/profile' component={Profile} />
         </Switch>
       </Container>
 
