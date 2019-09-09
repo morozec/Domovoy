@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useAuth0 } from '../react-auth0-wrapper'
 import Loading from './Loading'
 
-import { Container, Row, Col, Media, Nav, NavItem, NavLink, TabContent, TabPane, Button } from 'reactstrap'
+import { Container, Row, Col, Media, Nav, NavItem, NavLink, TabContent, TabPane, Button, Form, Input, FormGroup, Label } from 'reactstrap'
 
 
 import classnames from 'classnames';
@@ -10,6 +10,7 @@ import classnames from 'classnames';
 const Profile = () => {
     const { user, loading, getTokenSilently } = useAuth0();
     const [activeTab, setActiveTab] = useState('myData')
+    const [isAddressDisabled] = useState(true)
 
     if (loading || !user) {
         return <Loading />
@@ -69,9 +70,32 @@ const Profile = () => {
                                         {user.name}
                                     </Media>
 
-                                    <p>{user.email}</p>
 
-                                    <Button onClick={() => addAddress()}>Add address</Button>
+                                    <Form>
+
+                                        <FormGroup row className='mr-2'>
+                                            <Label for="email" sm={2}>Email</Label>
+                                            <Col sm={10}>
+                                                <Input id="email" readOnly className='form-control-plaintext' value={user.email} />
+                                            </Col>
+                                        </FormGroup>
+
+
+                                        <FormGroup row className='mr-2'>
+                                            <Label for="address" sm={2}>Адрес</Label>
+                                            <Col sm={10}>
+                                                <Input id="address" placeholder="with a placeholder" />
+                                            </Col>
+                                        </FormGroup>
+
+                                        <div class="row">
+                                            <div class="col-sm-10 offset-sm-2">
+                                                <Button type='button' color='primary'>Сохранить</Button>
+                                            </div>
+                                        </div>
+
+                                       
+                                    </Form>
                                 </Media>
 
                                 <Media right top>
@@ -92,24 +116,6 @@ const Profile = () => {
             </TabContent>
 
         </div>
-
-        // <Row className='mt-2 mb-2'>
-        //     <Col>
-        //         <Media>
-        //             <Media body>
-        //                 <Media heading>
-        //                     {user.name}
-        //                 </Media>
-
-        //                 <p>{user.email}</p>
-        //             </Media>
-
-        //             <Media right top>
-        //                 <Media object src={user.picture} alt="Profile" />
-        //             </Media>
-        //         </Media>
-        //     </Col>
-        // </Row>
 
 
 
