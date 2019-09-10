@@ -7,6 +7,10 @@ body , #root, #root > div, .container, #component-root, #component-root > .row, 
     height: 100%;
 } */
 
+html, body, #root{
+    height: 100%;
+}
+
 #map-container {
     height: 68vh;
 }
@@ -126,4 +130,15 @@ p.detail-item {
 
 .detail-button {
     width: 100%;
+}
+
+.layout{
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+   
+}
+
+.layout-content{
+    flex:1;     
 }
