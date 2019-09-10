@@ -16,12 +16,7 @@ body {
     font-family: 'Roboto', sans-serif;
 }
 
-.container {
-    
-}
-
-header {
-    height: 174px;
+header {   
     background: url(../img/header.jpg) no-repeat;
     background-color: #fff;
 }
@@ -30,9 +25,6 @@ header .navbar {
     padding-top:40px;
 }
 
-header .navbar-brand {
-
-}
 
 /* PAGE-MENU */
 .page-menu {
@@ -92,7 +84,7 @@ p.block-link {
     padding-top:.6rem;
 }
 
-a.header-menu-item {
+.header-menu-item {
     color: #fff;
     font-size:12px;
     margin: 0 1rem;
@@ -154,9 +146,3 @@ p.detail-item {
     flex: 7;
     padding: 0;  
 }
-
-
-
-
-
-

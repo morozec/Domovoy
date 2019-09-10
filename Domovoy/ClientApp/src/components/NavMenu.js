@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Navbar, NavbarBrand } from 'reactstrap';
+import { Navbar, NavbarBrand, NavbarToggler, Nav, NavItem, NavLink, Collapse } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import './NavMenu.css';
 
@@ -20,13 +20,15 @@ export class NavMenu extends Component {
       housesSearchAddress: '',//адрес, на который были выцеплены дома из базы
       isDropDownVisible: false,
       houses: [],
-      isUpdating: false
+      isUpdating: false,
+      isOpen: false
     }
     this.handleSearchAddressChange = this.handleSearchAddressChange.bind(this)
     this.renderHouses = this.renderHouses.bind(this)
     this.handleFormControlClick = this.handleFormControlClick.bind(this)
     this.handleDropdownItemClick = this.handleDropdownItemClick.bind(this)
-    this.updateHouses = this.updateHouses.bind(this)    
+    this.updateHouses = this.updateHouses.bind(this)
+    this.toggle = this.toggle.bind(this);
   }
 
   handleSearchAddressChange(value) {
@@ -95,21 +97,21 @@ export class NavMenu extends Component {
   handleDropdownItemClick(e, house) {
     this.setState({ isDropDownVisible: false, searchAddress: house.address }, () => { this.updateHouses() })
     this.props.handleMenuSelected(house.houseId, true)
-  }  
+  }
 
   componentDidMount() {
     const context = this
     const searchDiv = $('#search-div')
-    
-    $(document).mouseup(function (e) {       
-      if (!searchDiv.is(e.target) && $(e.target).parents('#search-div').length === 0) {     
+
+    $(document).mouseup(function (e) {
+      if (!searchDiv.is(e.target) && $(e.target).parents('#search-div').length === 0) {
         context.setState({ isDropDownVisible: false })
       }
     })
 
-    document.body.addEventListener('keydown', (e) => {     
-      if (e.key === 'Escape'){
-        context.setState({ isDropDownVisible: false })       
+    document.body.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        context.setState({ isDropDownVisible: false })
       }
     })
   }
@@ -132,32 +134,66 @@ export class NavMenu extends Component {
     )
   }
 
+  toggle() {
+    this.setState({
+      isOpen: !this.state.isOpen
+    })
+  }
+
 
   render() {
     return (
       <header>
-        <Navbar className="navbar-expand-sm navbar-toggleable-sm ng-white">
-          <Container>
-            <div className="row w-100">
-              <div className="col-lg-5">
-                <NavbarBrand tag={Link} to="/">
-                  <img src={logo} />
-                </NavbarBrand>
-                {window.location.pathname === "/" && this.renderHouses()}
-              </div>
-              <div className="col-lg-7">
-                <div className="header-menu">
-                  <a href="#" className="header-menu-item">О ПРОЕКТЕ</a>
-                  <a href="#" className="header-menu-item">РЕЙТИНГ ДОМОВ</a>
-                  <a href="#" className="header-menu-item">ЗАДАТЬ ВОПРОС</a>
-                </div>
+        <Navbar expand="sm">
+          <NavbarBrand tag={Link} to="/">
+            <img src={logo} alt="Домовой" />
+          </NavbarBrand>
+          <NavbarToggler onClick={this.toggle} className='navbar-dark'></NavbarToggler>
 
+          <Collapse isOpen={this.state.isOpen} navbar>
+            <Nav className='ml-auto' navbar>
+              <NavItem>
+                <NavLink tag={Link} to="/" className="header-menu-item">О ПРОЕКТЕ</NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink tag={Link} to="/" className="header-menu-item">РЕЙТИНГ ДОМОВ</NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink tag={Link} to="/" className="header-menu-item">ЗАДАТЬ ВОПРОС</NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink tag={Link} to="/" className="header-menu-item">ВОЙТИ</NavLink>
+              </NavItem>
+            </Nav>
+          </Collapse>
 
-              </div>
-            </div>
-          </Container>
         </Navbar>
       </header>
+
+      // <header>
+      //   <Navbar className="navbar-expand-sm navbar-toggleable-sm ng-white">
+      //     <Container>
+      //       <div className="row w-100">
+      //         <div className="col-lg-5">
+      //           <NavbarBrand tag={Link} to="/">
+      //             <img src={logo} />
+      //           </NavbarBrand>
+      //           {window.location.pathname === "/" && this.renderHouses()}
+      //         </div>
+      //         <div className="col-lg-7">
+      //           <div className="header-menu">
+      //             <a href="#" className="header-menu-item">О ПРОЕКТЕ</a>
+      //             <a href="#" className="header-menu-item">РЕЙТИНГ ДОМОВ</a>
+      //             <a href="#" className="header-menu-item">ЗАДАТЬ ВОПРОС</a>
+      //             <a href="#" className="header-menu-item">ВОЙТИ</a>
+      //           </div>
+
+
+      //         </div>
+      //       </div>
+      //     </Container>
+      //   </Navbar>
+      // </header>
     );
   }
 }
