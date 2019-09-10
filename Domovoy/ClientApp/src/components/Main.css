@@ -11,10 +11,6 @@ html, body, #root{
     height: 100%;
 }
 
-#map-container {
-    height: 68vh;
-}
-
 body {
     background-color: #F6F6F6;
     font-family: 'Roboto', sans-serif;
@@ -71,9 +67,6 @@ header .navbar-brand {
     overflow-x: hidden;
 }
 
-.map-container {
-    z-index: 100;
-}
 
 .block-search {
     position: absolute;
@@ -141,4 +134,25 @@ p.detail-item {
 
 .layout-content{
     flex:1;     
+    display:flex;   
 }
+
+.content{    
+    flex:1;
+
+    display: flex;
+    flex-direction: row;    
+    align-items: stretch;
+}
+
+.statistics{
+    flex: 5;
+    background-color: white;    
+}
+
+#map-container {
+    flex: 7;
+    padding: 0;  
+}
+
+

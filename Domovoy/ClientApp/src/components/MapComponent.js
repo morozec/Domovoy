@@ -9,7 +9,7 @@ import { Circle as CircleStyle, Fill, Stroke, Style, Text, Icon } from 'ol/style
 import { transform } from 'ol/proj.js'
 import { Button } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import {CLUSTER_DISTANCE, EXTENT_SIDE} from './../constants/constants'
+import { CLUSTER_DISTANCE, EXTENT_SIDE } from './../constants/constants'
 
 import 'ol/ol.css';
 import './MapComponent.css'
@@ -78,8 +78,8 @@ export class MapComponent extends React.Component {
         }
         this.markerLayer.setVisible(true)
 
-        if (this.props.isSearched) {           
-            const ext = [coordinates[0] - EXTENT_SIDE, coordinates[1] - EXTENT_SIDE, coordinates[0] + EXTENT_SIDE, coordinates[1] + EXTENT_SIDE]            
+        if (this.props.isSearched) {
+            const ext = [coordinates[0] - EXTENT_SIDE, coordinates[1] - EXTENT_SIDE, coordinates[0] + EXTENT_SIDE, coordinates[1] + EXTENT_SIDE]
             this.setMapView(ext)
         }
     }
@@ -100,17 +100,17 @@ export class MapComponent extends React.Component {
             source: source
         })
 
-        
+
         var styleCache = {};
         const clustersLayer = new VectorLayer({
             source: clusterSource,
             style: function (feature) {
                 const innerFeatures = feature.get('features')
-              
+
                 var size = innerFeatures.length;
                 var style = styleCache[size];
-                if (!style) {                    
-                    
+                if (!style) {
+
                     if (size > 1) {
 
                         style = new Style({
@@ -301,15 +301,13 @@ export class MapComponent extends React.Component {
 
         return (
 
-            <div id='component-root'>
-                <div className='row'>
-                    <div className='col-lg-5 bg-white'>
-                        {divDetails}
-                    </div>
-                    <div className='col-lg-7 p-0'>
-                        <div id='map-container'></div>
-                    </div>
+            <div className='content'>
+                <div className='statistics'>
+                    {divDetails}
                 </div>
+               
+                    <div id='map-container'></div>
+               
             </div>
         )
     }
