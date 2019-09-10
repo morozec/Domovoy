@@ -55,15 +55,14 @@ export class HouseComponent extends React.Component {
             }
 
         return (
-            <div id='component-root' className="house">
-                <div className="row">
-                    <div className="col-lg-3 bg-white">
-                        <HouseMenu handleChange={this.handleChange} activeButton={this.state.activeButton} />
-                    </div>
-                    <div className="col-lg-9 house-page">
-                        {pageDiv}
-                    </div>
+            <div className='content'>
+                <div className="house-data">
+                    <HouseMenu handleChange={this.handleChange} activeButton={this.state.activeButton} />
                 </div>
+                <div className="house-page">
+                    {pageDiv}
+                </div>
+               
             </div>
         )
     }

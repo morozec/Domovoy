@@ -1,5 +1,11 @@
+.house-data{
+    flex:3;
+    background-color: white;
+}
+
 /* HOUSE - PAGE*/
 .house-page {
+    flex:9;
     min-height: 50vh;
     margin-top:1rem;
 }
