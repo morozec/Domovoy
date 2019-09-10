@@ -19,6 +19,7 @@ body {
 header {   
     background: url(../img/header.jpg) no-repeat;
     background-color: #fff;
+    min-height: 15vh;
 }
 
 header .navbar {
@@ -57,18 +58,6 @@ header .navbar {
     display: block;
     overflow-y: auto;
     overflow-x: hidden;
-}
-
-
-.block-search {
-    position: absolute;
-    top:80px;
-    /* left: 0; */
-    display: block;
-    z-index: 9999;
-    max-width: 100%;
-    width: 100%;
-    padding-right:15px;
 }
 
 .block-search input, .block-search ul {
