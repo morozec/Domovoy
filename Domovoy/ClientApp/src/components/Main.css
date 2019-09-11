@@ -135,3 +135,8 @@ p.detail-item {
     flex: 7;
     padding: 0;  
 }
+
+#search-div{
+    position: absolute;
+    z-index: 9999;
+}
