@@ -30,18 +30,13 @@ header .navbar {
 /* PAGE-MENU */
 .page-menu {
     /* border-right: solid 1px #eee; */
-    height: 100%;
-    padding: 1rem;
+    height: 100%;   
 }
 
 .page-menu-button {
     background-color: #F6F6F6 !important;
-    color: #5D5E6E !important;
-    margin-bottom: 23px;
-    border-radius: 0px !important;
-    line-height: 1rem;
-    font-size: 1rem;
-    padding: 22px;
+    color: #5D5E6E !important;    
+    border-radius: 0px !important;   
     font-weight: 600;
 }
 
@@ -143,6 +138,17 @@ p.detail-item {
         grid-template-areas: 
             "st mc";        
     }    
+
+    .page-menu{
+        padding: 1rem;
+    }
+
+    .page-menu-button {
+        margin-bottom: 23px;
+        line-height: 1rem;
+        font-size: 1rem;
+        padding: 22px;
+    }
 }
 
 

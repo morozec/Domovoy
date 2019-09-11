@@ -50,9 +50,7 @@ export class MyHome extends Component {
         return (
             <div>
                 <div className="d-flex justify-content-center house-block house-main">
-                    <div className="house-main-img">
-                        <img src={testImg} />
-                    </div>
+                    
                     <div className="house-main-house">
                         <p className="house-main-caption">{this.state.houseData ? this.state.houseData.address : "..."}</p>
 
@@ -87,6 +85,10 @@ export class MyHome extends Component {
 
                             </div>
                         </div>
+                    </div>
+
+                    <div className="house-main-img">
+                        <img src={testImg} alt="Мой дом"/>
                     </div>
 
                     {/* <p className="house-block-caption">{this.state.houseData ? this.state.houseData.address : "..."}</p>

@@ -55,8 +55,8 @@ export class HouseComponent extends React.Component {
             }
 
         return (
-            <div className='content'>
-                <div className="house-data">
+            <div className='house-content'>
+                <div className="house-menu">
                     <HouseMenu handleChange={this.handleChange} activeButton={this.state.activeButton} />
                 </div>
                 <div className="house-page">
