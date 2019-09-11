@@ -104,13 +104,12 @@ p.detail-item {
 .layout{
     min-height: 100%;
     display: flex;
-    flex-direction: column;
-   
+    flex-direction: column;    
 }
 
 .layout-content{
-    flex:1;     
-    display:flex;   
+    flex:1;       
+    display: flex;  
 }
 
 .content{    
@@ -163,4 +162,17 @@ p.detail-item {
     top:50%;
     margin-left: -60px;
     margin-top: -60px;
+}
+
+.media img{
+    width: 25vmin;
+    border-radius: 50px;
+}
+
+.navLink {
+    cursor: pointer;
+  }
+
+.profile{
+    flex:1;
 }

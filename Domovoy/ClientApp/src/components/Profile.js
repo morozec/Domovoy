@@ -144,7 +144,7 @@ const Profile = () => {
 
   return (
 
-    <div>
+    <div className='profile'>
       <Nav tabs className='mt-2'>
         <NavItem>
           <NavLink className={classnames({ active: activeTab === 'myData' }, { navLink: true })} onClick={() => toggle('myData')}>
