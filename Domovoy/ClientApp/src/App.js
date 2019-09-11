@@ -1,73 +1,74 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container } from 'reactstrap';
-import { NavMenu } from './components/NavMenu';
+import NavMenu from './components/NavMenu';
 import { MapComponent } from './components/MapComponent'
 import { HouseComponent } from './components/House/HouseComponent'
-import { Route } from 'react-router';
+import { Route, Switch } from 'react-router';
 import { Navbar } from 'react-bootstrap'
+import { useAuth0 } from './react-auth0-wrapper'
 import './components/Main.css';
+import Loading from './components/Loading';
+import Profile from './components/Profile'
+import PrivateRoute from './components/PrivateRoute'
 
-export default class App extends Component {
-  static displayName = App.name; 
-  constructor() {
-    super()
-    this.state = {
-      isSearched: true,
-      house: undefined,
-      houses: undefined,
-      map:undefined
-    }
+const App = () => {
 
-    this.updateHouse = this.updateHouse.bind(this)
-    this.clearHouse = this.clearHouse.bind(this)
-    this.updateMap = this.updateMap.bind(this)
-  }
+  const [isSearched, setIsSearched] = useState(true)
+  const [house, setHouse] = useState(undefined)
+  const [houses, setHouses] = useState(undefined)
+  const [map, setMap] = useState(undefined)
+  const { loading } = useAuth0()
 
-  updateHouse(houseId, isSearched) {
-    fetch(`api/GeoData/GetHouse/${houseId}`)
-      .then(response => response.json())
-      .then(data => {
-        this.setState({ isSearched: isSearched, house: data })
-      });
-  }
-
-  clearHouse() {
-    this.setState({ isSearched: false, house: undefined })
-  }
-
-  updateMap(map){
-    //console.log('layout', mapExtent)
-    this.setState({map:map})
-  }
-
-  componentDidMount() {
+  useEffect(() => { //componentDidMount      
     fetch(`api/GeoData/GetHouses`)
       .then(response => response.json())
       .then(houses => {
-        this.setState({houses:houses})
+        setHouses(houses)
       })
+  }, [])
 
+  if (loading) {
+    return <Loading />
   }
 
-  render () {
-    return (
-      <div className='layout'>
-      <NavMenu handleMenuSelected={this.updateHouse} />
-      <Container className='layout-content'>
-        <Route exact path='/' render={(props) => (
-          <MapComponent {...props}
-            house={this.state.house}
-            updateHouse={this.updateHouse}
-            isSearched={this.state.isSearched}
-            clearHouse={this.clearHouse}
-            houses={this.state.houses}
-            map = {this.state.map}
-            updateMap = {this.updateMap}
-          />
-        )} />
-        <Route exact path='/House/:id' component={HouseComponent} />
 
-        <Route exact path='/img/test' component={HouseComponent} />
+  const updateHouse = (houseId, isSearched) => {
+    fetch(`api/GeoData/GetHouse/${houseId}`)
+      .then(response => response.json())
+      .then(data => {
+        setIsSearched(isSearched)
+        setHouse(data)
+      });
+  }
+
+  const clearHouse = () => {
+    setIsSearched(false)
+    setHouse(undefined)
+  }
+
+  const updateMap = (map) => {
+    setMap(map)
+  }
+
+  return (
+    <div className='layout'>
+      <NavMenu handleMenuSelected={updateHouse} />
+      <Container className='layout-content'>
+        <Switch>
+          <Route exact path='/' render={(props) => (
+            <MapComponent {...props}
+              house={house}
+              updateHouse={updateHouse}
+              isSearched={isSearched}
+              clearHouse={clearHouse}
+              houses={houses}
+              map={map}
+              updateMap={updateMap}
+            />
+          )} />
+          <Route exact path='/House/:id' component={HouseComponent} />
+          <PrivateRoute exact path='/profile' component={Profile} />
+        </Switch>
       </Container>
 
 
@@ -86,7 +87,7 @@ export default class App extends Component {
           <div className="navbar-collapse collapse w-100 order-3 dual-collapse2">
             <ul className="navbar-nav ml-auto">
               <li className="nav-item">
-                <a className="nav-link" href="#">2019</a>
+                <a className="nav-link" href="/">2019</a>
               </li>
             </ul>
           </div>
@@ -94,6 +95,9 @@ export default class App extends Component {
       </Navbar>
 
     </div>
-    );
-  }
+  );
+
 }
+
+
+export default App
