@@ -118,7 +118,7 @@ export class NavMenu extends Component {
 
 
   renderHouses() {
-    return (
+    return (     
       <CustomMenu className='col-lg-5'
         searchAddress={this.state.searchAddress}
         handleSearchAddressChange={this.handleSearchAddressChange}
@@ -130,7 +130,7 @@ export class NavMenu extends Component {
         >
           {h.address}
         </Dropdown.Item>)}
-      </CustomMenu>
+      </CustomMenu>     
     )
   }
 

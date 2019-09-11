@@ -304,10 +304,8 @@ export class MapComponent extends React.Component {
             <div className='content'>
                 <div className='statistics'>
                     {divDetails}
-                </div>
-               
-                    <div id='map-container'></div>
-               
+                </div>               
+                <div id='map-container'></div>               
             </div>
         )
     }

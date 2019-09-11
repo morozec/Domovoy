@@ -52,7 +52,7 @@ export class CustomMenu extends React.Component {
                     value={this.props.searchAddress}
                     onClick={this.props.handleFormControlClick}
                 />
-                <ul className="list-unstyled block-holder bg-white">
+                <ul className="list-unstyled block-holder bg-white search-div-list">
                     {React.Children.toArray(children)}
                 </ul>
             </div>
