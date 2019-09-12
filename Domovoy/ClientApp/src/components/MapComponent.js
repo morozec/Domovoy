@@ -81,11 +81,11 @@ export class MapComponent extends React.Component {
         if (this.props.isSearched) {
             const ext = [coordinates[0] - EXTENT_SIDE, coordinates[1] - EXTENT_SIDE, coordinates[0] + EXTENT_SIDE, coordinates[1] + EXTENT_SIDE]
             this.setMapView(ext)
+            console.log('zoom to house')
         }
     }
 
     showHousesMarkers() {
-
 
         const source = new VectorSource({
             features: this.props.houses.map(h => {
@@ -145,6 +145,19 @@ export class MapComponent extends React.Component {
             }
         });
         this.map.addLayer(clustersLayer)
+
+        //extent
+        let minX = Math.min.apply(Math, this.props.houses.map(h => h.posX))
+        let minY = Math.min.apply(Math, this.props.houses.map(h => h.posY))
+        let maxX = Math.max.apply(Math, this.props.houses.map(h => h.posX))
+        let maxY = Math.max.apply(Math, this.props.houses.map(h => h.posY))
+
+        const minPoint = transform([minX, minY], projectionFrom, projectionTo)
+        const maxPoint = transform([maxX, maxY], projectionFrom, projectionTo)
+        const extent = [minPoint[0], minPoint[1], maxPoint[0], maxPoint[1]]
+        this.setMapView(extent)
+        console.log('zoom to map')
+
     }
 
     setMapView(extent) {
@@ -176,7 +189,7 @@ export class MapComponent extends React.Component {
                     center: [0, 0],
                     zoom: 1
                 })
-            });
+            });            
         }
 
 
@@ -224,6 +237,10 @@ export class MapComponent extends React.Component {
 
         this.map = map
 
+        if (!this.props.map && this.props.houses) { //пришли без карты, но с домамми
+            this.showHousesMarkers();
+        }
+
         if (this.props.house) {
             this.showPopup()
         }
@@ -232,16 +249,6 @@ export class MapComponent extends React.Component {
     componentDidUpdate(prevProps, prevState) {
         if (this.props.houses && !prevProps.houses) {
             this.showHousesMarkers();
-
-            let minX = Math.min.apply(Math, this.props.houses.map(h => h.posX))
-            let minY = Math.min.apply(Math, this.props.houses.map(h => h.posY))
-            let maxX = Math.max.apply(Math, this.props.houses.map(h => h.posX))
-            let maxY = Math.max.apply(Math, this.props.houses.map(h => h.posY))
-
-            const minPoint = transform([minX, minY], projectionFrom, projectionTo)
-            const maxPoint = transform([maxX, maxY], projectionFrom, projectionTo)
-            const extent = [minPoint[0], minPoint[1], maxPoint[0], maxPoint[1]]
-            this.setMapView(extent)
         }
         if (this.props.house && (!prevProps.house || this.props.house.houseId !== prevProps.house.houseId)) {
             this.showPopup()
@@ -304,8 +311,8 @@ export class MapComponent extends React.Component {
             <div className='content'>
                 <div className='statistics'>
                     {divDetails}
-                </div>               
-                <div id='map-container'></div>               
+                </div>
+                <div id='map-container'></div>
             </div>
         )
     }
