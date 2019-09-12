@@ -42,13 +42,7 @@ const NavMenu = (props) => {
       setIsUpdating(true)
     }
   }, [searchAddress])
-
-  useEffect(() => {
-    if (isUpdating) {
-      updateHouses()
-    }
-  }, [isUpdating])
-
+ 
   const updateHouses = () => {
 
     const isIncludingPrev =
@@ -99,7 +93,7 @@ const NavMenu = (props) => {
     else {
       setIsUpdating(false)
     }
-  }, [housesSearchAddress])
+  }, [housesSearchAddress, isUpdating])
 
 
   const handleFormControlClick = () => {
