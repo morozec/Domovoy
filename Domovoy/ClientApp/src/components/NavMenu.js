@@ -115,17 +115,25 @@ const NavMenu = (props) => {
   useEffect(() => { //component did mount    
     const searchDiv = $('#search-div')
 
-    $(document).mouseup(function (e) {
+    const onMouseup = (e) => {
       if (!searchDiv.is(e.target) && $(e.target).parents('#search-div').length === 0) {
         setIsDropDownVisible(false)
       }
-    })
+    }
 
-    document.body.addEventListener('keydown', (e) => {
+    const onKeyDown = (e) => {
       if (e.key === 'Escape') {
         setIsDropDownVisible(false)
       }
-    })
+    }    
+
+    document.addEventListener('mouseup', onMouseup)    
+    document.body.addEventListener('keydown', onKeyDown)
+
+    return () => {
+      document.removeEventListener('mouseup', onMouseup)
+      document.body.removeEventListener('keydown', onKeyDown)
+    }
   })
 
   const renderHouses = () => {
