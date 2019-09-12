@@ -152,6 +152,7 @@ const NavMenu = (props) => {
   }
 
   const routeToProfile = () => {
+    setIsOpen(false)
     props.history.push('/profile')
   }
 
