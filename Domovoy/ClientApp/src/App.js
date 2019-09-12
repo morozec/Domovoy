@@ -5,9 +5,9 @@ import { MapComponent } from './components/MapComponent'
 import { HouseComponent } from './components/House/HouseComponent'
 import { Route, Switch } from 'react-router';
 import { Navbar } from 'react-bootstrap'
-import { useAuth0 } from './react-auth0-wrapper'
+
 import './components/Main.css';
-import Loading from './components/Loading';
+
 import Profile from './components/Profile'
 import PrivateRoute from './components/PrivateRoute'
 
@@ -17,8 +17,7 @@ const App = () => {
   const [house, setHouse] = useState(undefined)
   const [houses, setHouses] = useState(undefined)
   const [map, setMap] = useState(undefined)
-  const { loading } = useAuth0()
-
+  
   useEffect(() => { //componentDidMount      
     fetch(`api/GeoData/GetHouses`)
       .then(response => response.json())
@@ -26,10 +25,6 @@ const App = () => {
         setHouses(houses)
       })
   }, [])
-
-  if (loading) {
-    return <Loading />
-  }
 
 
   const updateHouse = (houseId, isSearched) => {

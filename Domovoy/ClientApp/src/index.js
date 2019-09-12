@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 import { Auth0Provider } from "./react-auth0-wrapper";
 import config from "./auth_config.json";
-import App from './App';
+import AppLoadingWrapper from './AppLoadingWrapper';
 import registerServiceWorker from './registerServiceWorker';
 
 
@@ -33,7 +33,7 @@ ReactDOM.render(
     onRedirectCallback={onRedirectCallback}
   >
     <BrowserRouter basename={baseUrl}>
-      <App />
+      <AppLoadingWrapper />
     </BrowserRouter>
   </Auth0Provider>,
   rootElement);
