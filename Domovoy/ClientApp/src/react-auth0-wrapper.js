@@ -20,7 +20,7 @@ export const Auth0Provider = ({
 
   useEffect(() => {
     const initAuth0 = async () => {
-      const auth0FromHook = await createAuth0Client(initOptions);
+      const auth0FromHook = await createAuth0Client(initOptions);      
       setAuth0(auth0FromHook);
 
       if (window.location.search.includes("code=")) {
@@ -65,6 +65,9 @@ export const Auth0Provider = ({
     setIsAuthenticated(true);
     setUser(user);
   };
+
+  const updateUser = (user) => setUser(user)
+
   return (
     <Auth0Context.Provider
       value={{
@@ -74,6 +77,7 @@ export const Auth0Provider = ({
         popupOpen,
         loginWithPopup,
         handleRedirectCallback,
+        updateUser,       
         getIdTokenClaims: (...p) => auth0Client.getIdTokenClaims(...p),
         loginWithRedirect: (...p) => auth0Client.loginWithRedirect(...p),
         getTokenSilently: (...p) => auth0Client.getTokenSilently(...p),
