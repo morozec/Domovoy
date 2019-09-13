@@ -42,7 +42,7 @@ const NavMenu = (props) => {
       setIsUpdating(true)
     }
   }, [searchAddress])
- 
+
   const updateHouses = () => {
 
     const isIncludingPrev =
@@ -119,9 +119,9 @@ const NavMenu = (props) => {
       if (e.key === 'Escape') {
         setIsDropDownVisible(false)
       }
-    }    
+    }
 
-    document.addEventListener('mouseup', onMouseup)    
+    document.addEventListener('mouseup', onMouseup)
     document.body.addEventListener('keydown', onKeyDown)
 
     return () => {
@@ -194,7 +194,9 @@ const NavMenu = (props) => {
                       Личный кабинет
                       </DropdownItem>
                     <DropdownItem divider />
-                    <DropdownItem onClick={() => logout()}>
+                    <DropdownItem onClick={() => logout({
+                      returnTo: window.location.origin
+                    })}>
                       Выйти
                       </DropdownItem>
                   </DropdownMenu>
