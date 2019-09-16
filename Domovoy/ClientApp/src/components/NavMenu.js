@@ -179,7 +179,7 @@ const NavMenu = (props) => {
 
               {!isAuthenticated && (
                 <NavItem>
-                  <NavLink tag={Link} to="#" onClick={() => loginWithRedirect()} className="header-menu-item">ВОЙТИ</NavLink>
+                  <NavLink tag={Link} to="/login" className="header-menu-item">ВОЙТИ</NavLink>
                 </NavItem>
               )}
 

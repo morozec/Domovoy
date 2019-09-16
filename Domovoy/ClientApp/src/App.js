@@ -10,6 +10,7 @@ import './components/Main.css';
 
 import Profile from './components/Profile'
 import PrivateRoute from './components/PrivateRoute'
+import ValidatedLoginForm from './components/Login/ValidationLoginForm';
 
 const App = () => {
 
@@ -62,6 +63,7 @@ const App = () => {
             />
           )} />
           <Route exact path='/House/:id' component={HouseComponent} />
+          <Route exact path = '/login' component = {ValidatedLoginForm} />
           <PrivateRoute exact path='/profile' component={Profile} />
         </Switch>
       </Container>
