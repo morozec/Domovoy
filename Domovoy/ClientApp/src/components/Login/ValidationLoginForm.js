@@ -3,10 +3,11 @@ import { Formik } from "formik";
 import * as EmailValidator from 'email-validator'
 import * as Yup from 'yup'
 import { Form, Label, Input, FormGroup, Button } from 'reactstrap'
+import './ValidationLoginForm.css'
 
-const ValidatedLoginForm = () => (
+const ValidationLoginForm = () => (
     <Formik
-        initialValues={{ email: "", password: "" }}
+        initialValues={{ email: "", password: "" }}        
         onSubmit={(values, { setSubmitting }) => {
             setTimeout(() => {
                 console.log('logging in', values)
@@ -45,7 +46,7 @@ const ValidatedLoginForm = () => (
                 .matches(/(?=.*[0-9])/, 'Некорретный пароль. Пароль должен содержать хотя бы одну цифру')
         })}
     >
-        {props => {
+        {props => {          
             const {
                 values,
                 touched,
@@ -98,4 +99,4 @@ const ValidatedLoginForm = () => (
 
 )
 
-export default ValidatedLoginForm
+export default ValidationLoginForm
