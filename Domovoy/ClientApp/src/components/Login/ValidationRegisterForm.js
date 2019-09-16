@@ -1,19 +1,18 @@
 import React from 'react'
 import { Formik } from "formik";
-import * as EmailValidator from 'email-validator'
 import * as Yup from 'yup'
 import { Form, Label, Input, FormGroup, Button} from 'reactstrap'
 
 
-const ValidationLoginForm = () => {
-
+const ValidationRegisterForm = () => {
+    
     const handleSubmit = (values, setSubmitting) => {
         let data = {
             userName: values.email,
             password: values.password
         }
 
-        fetch('api/Identity/token', {
+        fetch('api/Identity/register', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json; charset=utf-8'
@@ -22,7 +21,7 @@ const ValidationLoginForm = () => {
         }).then(response => {
             setSubmitting(false)
             if (response.ok) {
-                let rJson = response.json()               
+                let rJson = response.json()                
                 return rJson
             } else {
                 throw 'Ошибка авторизации'
@@ -40,27 +39,7 @@ const ValidationLoginForm = () => {
         <Formik
             initialValues={{ email: "", password: "" }}
             onSubmit={(values, { setSubmitting }) => handleSubmit(values, setSubmitting)}
-            //********Handling validation messages yourself*******/
-            // validate={values => {
-            //     let errors = {}
-            //     if (!values.email) {
-            //         errors.email = "Обзательное поле"
-            //     } else if (!EmailValidator.validate(values.email)) {
-            //         errors.email = "Некорректный email"
-            //     }
-
-            //     const passwordRegex = /(?=.*[0-9])/;
-
-            //     if (!values.password) {
-            //         errors.password = "Обзательное поле"
-            //     } else if (values.password.length < 8) {
-            //         errors.password = "Длина пароля должна быть не менее 8 символов"
-            //     } else if (!passwordRegex.test(values.password)) {
-            //         errors.password = "Некорретный пароль. Пароль должен содержать хотя бы одну цифру"
-            //     }
-
-            //     return errors
-            // }}
+         
             validationSchema={Yup.object().shape({
                 email: Yup.string()
                     .email()
@@ -115,7 +94,7 @@ const ValidationLoginForm = () => {
                             )}
                         </FormGroup>
 
-                        <Button type='submit' disabled={isSubmitting}>Войти</Button>
+                        <Button type='submit' disabled={isSubmitting}>Зарегестрироваться</Button>
                     </Form>
 
                 )
@@ -125,4 +104,4 @@ const ValidationLoginForm = () => {
     )
 }
 
-export default ValidationLoginForm
+export default ValidationRegisterForm

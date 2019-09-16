@@ -10,7 +10,7 @@ import './components/Main.css';
 
 import Profile from './components/Profile'
 import PrivateRoute from './components/PrivateRoute'
-import ValidationLoginForm from './components/Login/ValidationLoginForm';
+import LoginRegister from './components/Login/LoginRegister';
 
 const App = () => {
 
@@ -63,7 +63,7 @@ const App = () => {
             />
           )} />
           <Route exact path='/House/:id' component={HouseComponent} />
-          <Route exact path = '/login' component = {ValidationLoginForm} />
+          <Route exact path = '/login' component = {LoginRegister} />
           <PrivateRoute exact path='/profile' component={Profile} />
         </Switch>
       </Container>

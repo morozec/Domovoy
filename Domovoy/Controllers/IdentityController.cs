@@ -52,6 +52,32 @@ namespace Domovoy.Controllers
 
             return Ok(response);
         }
+
+        [Route("register")]
+        [HttpPost]
+        public async Task<IActionResult> Register([FromBody]IdentityViewModel model)
+        {
+            var identity = await GetNewIdentity(model.Username, model.Password);
+
+            var now = DateTime.UtcNow;
+            var jwt = new JwtSecurityToken(
+                issuer: AuthOptions.ISSUER,
+                audience: AuthOptions.AUDIENCE,
+                notBefore: now,
+                claims: identity.Claims,
+                expires: now.Add(TimeSpan.FromMinutes(AuthOptions.LIFETIME)),
+                signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
+            var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
+
+            var response = new
+            {
+                access_token = encodedJwt,
+                user_name = identity.Name
+            };
+
+            return Ok(response);
+        }
+
         private async Task<ClaimsIdentity> GetIdentity(string userName, string password)
         {
             ClaimsIdentity identity = null;
@@ -74,5 +100,24 @@ namespace Domovoy.Controllers
             }
             return identity;
         }
+
+        private async Task<ClaimsIdentity> GetNewIdentity(string userName, string password)
+        {
+            var sha256 = new SHA256Managed();
+            var passwordHash = Convert.ToBase64String(sha256.ComputeHash(Encoding.UTF8.GetBytes(password)));
+            var user = await _identityService.CreateUser(userName, passwordHash);
+
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimsIdentity.DefaultNameClaimType, user.Login)
+            };
+            var identity = new ClaimsIdentity(claims,
+                "Token",
+                ClaimsIdentity.DefaultNameClaimType,
+                ClaimsIdentity.DefaultRoleClaimType);
+
+            return identity;
+        }
+
     }
 }
