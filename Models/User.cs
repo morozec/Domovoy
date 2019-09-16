@@ -8,25 +8,8 @@ namespace Models
     /// </summary>
     public class User
     {
-        #region Constructors
-        #endregion //Constructors
-
-        #region DataProperties
-
         public int UserId { get; set; }
-
-        /// <summary>
-        /// Имя.
-        /// </summary>
-        public string FirstName { get; set; }
-
-        /// <summary>
-        /// Фамилия.
-        /// </summary>
-        public string LastName { get; set; }
-
-        public string Phone { get; set; }
-
-        #endregion //DataProperties
+        public string Login { get; set; }
+        public string Password { get; set; }
     }
 }

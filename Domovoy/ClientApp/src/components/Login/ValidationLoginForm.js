@@ -9,10 +9,35 @@ const ValidationLoginForm = () => (
     <Formik
         initialValues={{ email: "", password: "" }}        
         onSubmit={(values, { setSubmitting }) => {
-            setTimeout(() => {
-                console.log('logging in', values)
+            // setTimeout(() => {
+            //     console.log('logging in', values)
+            //     setSubmitting(false)
+            // }, 500)
+            let data = {
+                userName:values.email,
+                password:values.password
+            }            
+            
+            fetch('api/Identity/token', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8'
+                },
+                body: JSON.stringify(data)
+            }).then(response => {
                 setSubmitting(false)
-            }, 500)
+                if (response.ok) {                
+                    let rJson = response.json()    
+                    console.log(rJson)
+                    return rJson
+                }else{
+                    throw 'Ошибка авторизации'
+                }
+            }).then(data => {
+                console.log(data)
+            }).catch(ex => {
+                alert(ex)
+            })
         }
         }
         //********Handling validation messages yourself*******/

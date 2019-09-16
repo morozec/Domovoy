@@ -1,3 +1,5 @@
+using System;
+using System.Text;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -10,14 +12,17 @@ using AutoMapper;
 using DBRepository;
 using DBRepository.Factories;
 using DBRepository.Repositories;
+using Domovoy.Helpers;
 using Domovoy.Services;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
+using Microsoft.IdentityModel.Tokens;
 using Models;
 
 namespace Domovoy
@@ -35,13 +40,35 @@ namespace Domovoy
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.RequireHttpsMetadata = false;
+                    options.SaveToken = true;
+                    options.TokenValidationParameters = new TokenValidationParameters()
+                    {
+                        ValidIssuer = AuthOptions.ISSUER,
+                        ValidAudience = AuthOptions.AUDIENCE,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("IssuerSigningSecretKey")),
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ClockSkew = TimeSpan.Zero
+                    };
+                });
+
             services.AddAutoMapper();
             
             services.AddScoped<IDomovoyContextFactory, DomovoyContextFactory>();
             services.AddScoped<IHouseRepository>(provider => new HouseRepository(
                 Configuration.GetConnectionString("domovoyConnection"),
                 provider.GetService<IDomovoyContextFactory>()));
+            services.AddScoped<IIdentityRepository>(provider => new IdentityRepository(
+                Configuration.GetConnectionString("domovoyConnection"),
+                provider.GetService<IDomovoyContextFactory>()));
+
             services.AddScoped<IHouseService, HouseService>();
+            services.AddScoped<IIdentityService, IdentityService>();
 
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
@@ -67,6 +94,7 @@ namespace Domovoy
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
+            app.UseAuthentication();
 
             app.UseMvc(routes =>
             {
@@ -74,6 +102,7 @@ namespace Domovoy
                     name: "default",
                     template: "{controller}/{action=Index}/{id?}");
             });
+
 
             app.UseSpa(spa =>
             {
