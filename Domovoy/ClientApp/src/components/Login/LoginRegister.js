@@ -5,7 +5,7 @@ import { TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap'
 import classnames from 'classnames'
 import './ValidationLoginForm.css'
 
-const LoginRegister = () => {
+const LoginRegister = (props) => {
     const [activeTab, setActiveTab] = useState('login')
 
     const toggle = (tab) => {
@@ -29,10 +29,10 @@ const LoginRegister = () => {
 
             <TabContent activeTab={activeTab} className='mt-2 mb-2' >
                 <TabPane tabId="login">
-                    <ValidationLoginForm/>
+                    <ValidationLoginForm {...props}/>
                 </TabPane>
                 <TabPane tabId="register">
-                    <ValidationRegisterForm/>
+                    <ValidationRegisterForm {...props}/>
                 </TabPane>
             </TabContent>
            

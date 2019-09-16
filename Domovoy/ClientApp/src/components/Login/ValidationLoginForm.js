@@ -3,9 +3,9 @@ import { Formik } from "formik";
 import * as EmailValidator from 'email-validator'
 import * as Yup from 'yup'
 import { Form, Label, Input, FormGroup, Button} from 'reactstrap'
+import AuthHelper from './AuthHelper'
 
-
-const ValidationLoginForm = () => {
+const ValidationLoginForm = (props) => {
 
     const handleSubmit = (values, setSubmitting) => {
         let data = {
@@ -27,8 +27,9 @@ const ValidationLoginForm = () => {
             } else {
                 throw 'Ошибка авторизации'
             }
-        }).then(data => {
-            console.log(data)
+        }).then(data => {    
+            AuthHelper.saveAuth(data.user_name, data.access_token)
+            props.handleLogin()
         }).catch(ex => {
             alert(ex)
         })

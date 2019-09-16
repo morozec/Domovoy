@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Navbar, NavbarBrand, NavbarToggler, Nav, NavItem, NavLink, Collapse, Container, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import { Navbar, NavbarBrand, NavbarToggler, Nav, NavItem, NavLink, Collapse, Container, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem, Modal, ModalBody } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import './NavMenu.css';
 
@@ -13,6 +13,9 @@ import $ from 'jquery'
 
 import { withRouter } from 'react-router-dom'
 import { useAuth0 } from "../react-auth0-wrapper";
+import LoginRegister from './Login/LoginRegister'
+import AuthHelper from './Login/AuthHelper'
+
 
 const NavMenu = (props) => {
 
@@ -22,9 +25,10 @@ const NavMenu = (props) => {
   const [houses, setHouses] = useState([])
   const [isUpdating, setIsUpdating] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
+  const [isLoginOpen, setIsLoginOpen] = useState(false)
+  const [isLogged, setIsLogged] = useState(AuthHelper.isLogged())
+  const [login, setLogin] = useState(AuthHelper.getLogin())
 
-
-  const { isAuthenticated, loginWithRedirect, user, logout } = useAuth0()
 
 
   const handleSearchAddressChange = (value) => {
@@ -151,9 +155,26 @@ const NavMenu = (props) => {
     setIsOpen(!isOpen)
   }
 
+  const toggleLogin = () => {
+    setIsLoginOpen(!isLoginOpen)
+  }
+
+
   const routeToProfile = () => {
     setIsOpen(false)
     props.history.push('/profile')
+  }
+
+  const handleLogin = () => {
+    setIsLoginOpen(false)
+    setIsLogged(AuthHelper.isLogged())
+    setLogin(AuthHelper.getLogin())
+  }
+
+  const handleLogout = () => {
+    AuthHelper.clearAuth()
+    setIsLogged(AuthHelper.isLogged())
+    setLogin(AuthHelper.getLogin())
   }
 
   return (
@@ -177,16 +198,16 @@ const NavMenu = (props) => {
                 <NavLink tag={Link} to="/" className="header-menu-item">ЗАДАТЬ ВОПРОС</NavLink>
               </NavItem>
 
-              {!isAuthenticated && (
+              {!isLogged && (
                 <NavItem>
-                  <NavLink tag={Link} to="/login" className="header-menu-item">ВОЙТИ</NavLink>
+                  <NavLink tag={Link} to='/' onClick={() => setIsLoginOpen(true)} className="header-menu-item">ВОЙТИ/РЕГИСТРАЦИЯ</NavLink>
                 </NavItem>
               )}
 
-              {isAuthenticated && (
+              {isLogged && (
                 <UncontrolledDropdown nav inNavbar>
                   <DropdownToggle nav caret className="header-menu-item">
-                    {user.name}
+                    {login}
                   </DropdownToggle>
                   <DropdownMenu right>
                     <DropdownItem onClick={routeToProfile}>
@@ -194,11 +215,9 @@ const NavMenu = (props) => {
                       Личный кабинет
                       </DropdownItem>
                     <DropdownItem divider />
-                    <DropdownItem onClick={() => logout({
-                      returnTo: window.location.origin
-                    })}>
+                    <DropdownItem onClick={handleLogout}>
                       Выйти
-                      </DropdownItem>
+                    </DropdownItem>
                   </DropdownMenu>
                 </UncontrolledDropdown>
               )}
@@ -211,6 +230,12 @@ const NavMenu = (props) => {
       <Container className='p-0'>
         {window.location.pathname === "/" && renderHouses()}
       </Container>
+
+      <Modal isOpen={isLoginOpen} toggle={toggleLogin}>
+        <ModalBody>
+          <LoginRegister handleLogin = {handleLogin}/>
+        </ModalBody>
+      </Modal>
     </header>
   )
 }

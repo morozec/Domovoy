@@ -10,7 +10,6 @@ import './components/Main.css';
 
 import Profile from './components/Profile'
 import PrivateRoute from './components/PrivateRoute'
-import LoginRegister from './components/Login/LoginRegister';
 
 const App = () => {
 
@@ -18,7 +17,7 @@ const App = () => {
   const [house, setHouse] = useState(undefined)
   const [houses, setHouses] = useState(undefined)
   const [map, setMap] = useState(undefined)
-  
+
   useEffect(() => { //componentDidMount      
     fetch(`api/GeoData/GetHouses`)
       .then(response => response.json())
@@ -48,7 +47,9 @@ const App = () => {
 
   return (
     <div className='layout'>
-      <NavMenu handleMenuSelected={updateHouse} />
+      <NavMenu
+        handleMenuSelected={updateHouse}        
+      />
       <Container className='layout-content'>
         <Switch>
           <Route exact path='/' render={(props) => (
@@ -62,8 +63,7 @@ const App = () => {
               updateMap={updateMap}
             />
           )} />
-          <Route exact path='/House/:id' component={HouseComponent} />
-          <Route exact path = '/login' component = {LoginRegister} />
+          <Route exact path='/House/:id' component={HouseComponent} />          
           <PrivateRoute exact path='/profile' component={Profile} />
         </Switch>
       </Container>
