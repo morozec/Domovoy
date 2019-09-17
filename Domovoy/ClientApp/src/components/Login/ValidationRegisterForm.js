@@ -9,9 +9,12 @@ const ValidationRegisterForm = (props) => {
 
     const handleSubmit = (values, setSubmitting, setErrors) => {
         let data = {
-            userName: values.email,
-            password: values.password
+            Email: values.email,
+            Password: values.password,
+            PasswordConfirm : values.passwordConfirm
         }
+
+        console.log(data)
 
         fetch('api/Identity/register', {
             method: 'POST',
@@ -42,7 +45,7 @@ const ValidationRegisterForm = (props) => {
 
     return (
         <Formik
-            initialValues={{ email: "", password: "" }}
+            initialValues={{ email: "", password: "", passwordConfirm:"" }}
             onSubmit={(values, { setSubmitting, setErrors }) => handleSubmit(values, setSubmitting, setErrors)}
 
             validationSchema={Yup.object().shape({
@@ -50,6 +53,10 @@ const ValidationRegisterForm = (props) => {
                     .email('Некорректный email')
                     .required('Обзательное поле'),
                 password: Yup.string()
+                    .required('Обзательное поле')
+                    .min(8, 'Длина пароля должна быть не менее 8 символов')
+                    .matches(/(?=.*[0-9])/, 'Некорректный пароль. Пароль должен содержать хотя бы одну цифру'),
+                passwordConfirm: Yup.string()
                     .required('Обзательное поле')
                     .min(8, 'Длина пароля должна быть не менее 8 символов')
                     .matches(/(?=.*[0-9])/, 'Некорректный пароль. Пароль должен содержать хотя бы одну цифру')
@@ -101,7 +108,25 @@ const ValidationRegisterForm = (props) => {
                                     <div className="input-feedback">{errors.password}</div>
                                 )}
                             </div>
-                        </FormGroup>      
+                        </FormGroup>  
+
+                        <FormGroup className='row'>
+                            <Label for='passwordConfirm' className='col-sm-3 col-form-label'>Подтверждение пароля</Label>
+                            <div className='col-sm-9'>
+                                <Input
+                                    id='passwordConfirm'
+                                    type='password'
+                                    placeholder='Подтвердите пароль'
+                                    value={values.passwordConfirm}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    className={errors.passwordConfirm && touched.passwordConfirm && 'error'}
+                                />
+                                {errors.passwordConfirm && touched.passwordConfirm && (
+                                    <div className="input-feedback">{errors.passwordConfirm}</div>
+                                )}
+                            </div>
+                        </FormGroup>        
 
                          {errors.auth && (
                             <div className="input-feedback">{errors.auth}</div>

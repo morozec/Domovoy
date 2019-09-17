@@ -3,6 +3,8 @@ using DBRepository.Factories;
 using Microsoft.EntityFrameworkCore;
 using Models;
 
+using Microsoft.AspNetCore.Identity;
+
 namespace DBRepository.Repositories
 {
     public class IdentityRepository : BaseRepository, IIdentityRepository
@@ -15,10 +17,11 @@ namespace DBRepository.Repositories
         {
             using (var context = DomovoyContextFactory.CreateDbContext(ConnectionString))
             {
-                var user = new User(userName, password);
-                await context.Users.AddAsync(user);
-                await context.SaveChangesAsync();
-                return user;
+                return null;
+                //var user = new User {Email = userName, Password = password};
+                //await context.Users.AddAsync(user);
+                //await context.SaveChangesAsync();
+                //return user;
             }
         }
 
@@ -26,7 +29,8 @@ namespace DBRepository.Repositories
         {
             using (var context = DomovoyContextFactory.CreateDbContext(ConnectionString))
             {
-                return await context.Users.SingleOrDefaultAsync(u => u.Login == userName);
+                return null;
+                //return await context.Users.SingleOrDefaultAsync(u => u.Email == userName);
             }
         }
     }

@@ -39,6 +39,8 @@ namespace Domovoy
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -69,6 +71,12 @@ namespace Domovoy
 
             services.AddScoped<IHouseService, HouseService>();
             services.AddScoped<IIdentityService, IdentityService>();
+
+
+            services.AddDbContext<DomovoyContext>(options => options.UseSqlServer(Configuration.GetConnectionString("domovoyConnection")));
+            services.AddIdentity<User, IdentityRole>()
+                .AddEntityFrameworkStores<DomovoyContext>()
+                .AddDefaultTokenProviders();
 
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>

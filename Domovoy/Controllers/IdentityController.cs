@@ -10,8 +10,11 @@ using System.Threading.Tasks;
 using Domovoy.Helpers;
 using Domovoy.Services;
 using Domovoy.ViewModels;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using Models;
 
 namespace Domovoy.Controllers
 {
@@ -20,10 +23,12 @@ namespace Domovoy.Controllers
     public class IdentityController : Controller
     {
         private readonly IIdentityService _identityService;
+        private readonly UserManager<User> _userManager;
 
-        public IdentityController(IIdentityService identityService)
+        public IdentityController(UserManager<User> userManager, IIdentityService identityService)
         {
             _identityService = identityService;
+            _userManager = userManager;
         }
 
         [Route("token")]
@@ -57,31 +62,70 @@ namespace Domovoy.Controllers
 
         [Route("register")]
         [HttpPost]
-        public async Task<IActionResult> Register([FromBody]IdentityViewModel model)
+        public async Task<IActionResult> Register([FromBody] RegisterViewModel model)
         {
-            var identity = await GetNewIdentity(model.Username, model.Password);
-            if (identity == null)
+
+            var user = new User { Email = model.Email, UserName = model.Email };
+
+            //var identity = await GetNewIdentity(model.Email, model.Password);
+            //if (identity == null)
+            //{
+            //    return Unauthorized();
+            //}
+
+            // генерация токена для пользователя
+            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            var callbackUrl = Url.Action(
+                "ConfirmEmail",
+                "Identity",
+                new { userId = user.Id, code = code },
+                protocol: HttpContext.Request.Scheme);
+
+            var emailService = new EmailService();
+            await emailService.SendEmailAsync(model.Email,
+                "Confirm your account",
+                $"Подтвердите регистрацию, перейдя по ссылке: <a href='{callbackUrl}'>link</a>");
+
+            return Content("Для завершения регистрации проверьте электронную почту и перейдите по ссылке, указанной в письме");
+
+            //var now = DateTime.UtcNow;
+            //var jwt = new JwtSecurityToken(
+            //    issuer: AuthOptions.ISSUER,
+            //    audience: AuthOptions.AUDIENCE,
+            //    notBefore: now,
+            //    claims: identity.Claims,
+            //    expires: now.Add(TimeSpan.FromMinutes(AuthOptions.LIFETIME)),
+            //    signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
+            //var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
+
+            //var response = new
+            //{
+            //    access_token = encodedJwt,
+            //    user_name = identity.Name
+            //};
+
+            //return Ok(response);
+        }
+
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> ConfirmEmail(string userId, string code)
+        {
+            if (userId == null || code == null)
             {
-                return Unauthorized();
+                return View("Error");
             }
-
-            var now = DateTime.UtcNow;
-            var jwt = new JwtSecurityToken(
-                issuer: AuthOptions.ISSUER,
-                audience: AuthOptions.AUDIENCE,
-                notBefore: now,
-                claims: identity.Claims,
-                expires: now.Add(TimeSpan.FromMinutes(AuthOptions.LIFETIME)),
-                signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
-            var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
-
-            var response = new
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
             {
-                access_token = encodedJwt,
-                user_name = identity.Name
-            };
-
-            return Ok(response);
+                return View("Error");
+            }
+            var result = await _userManager.ConfirmEmailAsync(user, code);
+            if (result.Succeeded)
+                return Ok();
+            else
+                return View("Error");
         }
 
         private async Task<ClaimsIdentity> GetIdentity(string userName, string password)
@@ -92,11 +136,11 @@ namespace Domovoy.Controllers
             {
                 var sha256 = new SHA256Managed();
                 var passwordHash = Convert.ToBase64String(sha256.ComputeHash(Encoding.UTF8.GetBytes(password)));
-                if (passwordHash == user.Password)
+                if (passwordHash == user.PasswordHash)
                 {
                     var claims = new List<Claim>
                     {
-                        new Claim(ClaimsIdentity.DefaultNameClaimType, user.Login)
+                        new Claim(ClaimsIdentity.DefaultNameClaimType, user.Email)
                     };
                     identity = new ClaimsIdentity(claims,
                         "Token",
@@ -118,7 +162,7 @@ namespace Domovoy.Controllers
 
                 var claims = new List<Claim>
                 {
-                    new Claim(ClaimsIdentity.DefaultNameClaimType, user.Login)
+                    new Claim(ClaimsIdentity.DefaultNameClaimType, user.Email)
                 };
                 identity = new ClaimsIdentity(claims,
                     "Token",
