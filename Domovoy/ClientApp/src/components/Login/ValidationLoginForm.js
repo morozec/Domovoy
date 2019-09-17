@@ -8,7 +8,7 @@ import classnames from 'classnames'
 
 const ValidationLoginForm = (props) => {
 
-    const handleSubmit = (values, setSubmitting) => {
+    const handleSubmit = (values, setSubmitting, setErrors) => {       
         let data = {
             userName: values.email,
             password: values.password
@@ -31,8 +31,9 @@ const ValidationLoginForm = (props) => {
         }).then(data => {
             AuthHelper.saveAuth(data.user_name, data.access_token)
             props.handleLogin()
-        }).catch(ex => {
-            alert(ex)
+        }).catch(ex => {            
+            setErrors({auth:ex})
+            //errors.emailPassword = true
         })
     }
 
@@ -41,7 +42,7 @@ const ValidationLoginForm = (props) => {
     return (
         <Formik
             initialValues={{ email: "", password: "" }}
-            onSubmit={(values, { setSubmitting }) => handleSubmit(values, setSubmitting)}
+            onSubmit={(values, { setSubmitting, setErrors }) => handleSubmit(values, setSubmitting, setErrors)}
             //********Handling validation messages yourself*******/
             // validate={values => {
             //     let errors = {}
@@ -120,6 +121,10 @@ const ValidationLoginForm = (props) => {
                                 )}
                             </div>
                         </FormGroup>
+
+                        {errors.auth && (
+                            <div className="input-feedback">{errors.auth}</div>
+                        )}
 
                         <Button className='btn-block' type='submit' disabled={isSubmitting}>Войти</Button>
                     </Form>

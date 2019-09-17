@@ -2,11 +2,12 @@ import React from 'react'
 import { Formik } from "formik";
 import * as Yup from 'yup'
 import { Form, Label, Input, FormGroup, Button } from 'reactstrap'
+import AuthHelper from './AuthHelper'
 
 
-const ValidationRegisterForm = () => {
+const ValidationRegisterForm = (props) => {
 
-    const handleSubmit = (values, setSubmitting) => {
+    const handleSubmit = (values, setSubmitting, setErrors) => {
         let data = {
             userName: values.email,
             password: values.password
@@ -27,9 +28,10 @@ const ValidationRegisterForm = () => {
                 throw 'Ошибка авторизации'
             }
         }).then(data => {
-            console.log(data)
+            AuthHelper.saveAuth(data.user_name, data.access_token)
+            props.handleLogin()
         }).catch(ex => {
-            alert(ex)
+            setErrors({auth:ex})
         })
     }
 
@@ -96,7 +98,11 @@ const ValidationRegisterForm = () => {
                                     <div className="input-feedback">{errors.password}</div>
                                 )}
                             </div>
-                        </FormGroup>
+                        </FormGroup>      
+
+                         {errors.auth && (
+                            <div className="input-feedback">{errors.auth}</div>
+                        )}                  
 
                         <Button className='btn-block' type='submit' disabled={isSubmitting}>Зарегестрироваться</Button>
                     </Form>
