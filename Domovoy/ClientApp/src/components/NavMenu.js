@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Navbar, NavbarBrand, NavbarToggler, Nav, NavItem, NavLink, Collapse, Container, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem, Modal, ModalBody } from 'reactstrap';
+import { Navbar, NavbarBrand, NavbarToggler, Nav, NavItem, NavLink, Collapse, Container, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem, Modal, ModalBody, ModalHeader } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import './NavMenu.css';
 
@@ -199,7 +199,7 @@ const NavMenu = (props) => {
 
               {!isLogged && (
                 <NavItem>
-                  <NavLink tag={Link} to='/' onClick={() => setIsLoginOpen(true)} className="header-menu-item">ВОЙТИ/РЕГИСТРАЦИЯ</NavLink>
+                  <NavLink tag={Link} to='/' onClick={() => setIsLoginOpen(true)} className="header-menu-item">ВХОД/РЕГИСТРАЦИЯ</NavLink>
                 </NavItem>
               )}
 
@@ -231,8 +231,9 @@ const NavMenu = (props) => {
       </Container>
 
       <Modal isOpen={isLoginOpen} toggle={toggleLogin}>
+        <ModalHeader toggle={toggleLogin} className='login-header'>Домовой</ModalHeader>
         <ModalBody>
-          <LoginRegister handleLogin = {handleLogin}/>
+          <LoginRegister handleLogin={handleLogin} />
         </ModalBody>
       </Modal>
     </header>

@@ -16,3 +16,20 @@ html {
 .box-shadow {
   box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
 }
+
+.login-header {   
+  background: url(../img/header.jpg) no-repeat;
+  background-color: black;  
+  color: white;
+}
+
+.close{
+  color: #fff;     
+}
+
+.close:hover{
+  color: #fff;   
+  opacity: 1;
+}
+
+

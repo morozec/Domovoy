@@ -17,7 +17,7 @@ const LoginRegister = (props) => {
             <Nav tabs className='mt-2'>
                 <NavItem>
                     <NavLink className={classnames({ active: activeTab === 'login' }, { navLink: true })} onClick={() => toggle('login')}>
-                        Войти
+                        Вход
                     </NavLink>
                 </NavItem>
                 <NavItem>

@@ -2,8 +2,9 @@ import React from 'react'
 import { Formik } from "formik";
 import * as EmailValidator from 'email-validator'
 import * as Yup from 'yup'
-import { Form, Label, Input, FormGroup, Button} from 'reactstrap'
+import { Form, Label, Input, FormGroup, Button } from 'reactstrap'
 import AuthHelper from './AuthHelper'
+import classnames from 'classnames'
 
 const ValidationLoginForm = (props) => {
 
@@ -22,12 +23,12 @@ const ValidationLoginForm = (props) => {
         }).then(response => {
             setSubmitting(false)
             if (response.ok) {
-                let rJson = response.json()               
+                let rJson = response.json()
                 return rJson
             } else {
                 throw 'Ошибка авторизации'
             }
-        }).then(data => {    
+        }).then(data => {
             AuthHelper.saveAuth(data.user_name, data.access_token)
             props.handleLogin()
         }).catch(ex => {
@@ -64,12 +65,12 @@ const ValidationLoginForm = (props) => {
             // }}
             validationSchema={Yup.object().shape({
                 email: Yup.string()
-                    .email()
+                    .email('Некорректный email')
                     .required('Обзательное поле'),
                 password: Yup.string()
                     .required('Обзательное поле')
                     .min(8, 'Длина пароля должна быть не менее 8 символов')
-                    .matches(/(?=.*[0-9])/, 'Некорретный пароль. Пароль должен содержать хотя бы одну цифру')
+                    .matches(/(?=.*[0-9])/, 'Некорректный пароль. Пароль должен содержать хотя бы одну цифру')
             })}
         >
             {props => {
@@ -85,38 +86,42 @@ const ValidationLoginForm = (props) => {
                 return (
 
                     <Form onSubmit={handleSubmit}>
-                        <FormGroup>
-                            <Label for='email'>Email</Label>
-                            <Input
-                                id='email'
-                                placeholder='Введите адрес электронной почты'
-                                value={values.email}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                                className={errors.email && touched.email && 'error'}
-                            />
-                            {errors.email && touched.email && (
-                                <div className='input-feedback'>{errors.email}</div>
-                            )}
+                        <FormGroup className='row'>
+                            <Label for='email' className='col-sm-3 col-form-label'>Email</Label>
+                            <div className='col-sm-9'>
+                                <Input
+                                    id='email'
+                                    placeholder='Введите адрес электронной почты'
+                                    value={values.email}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    className={classnames({ error: errors.email && touched.email })}
+                                />
+                                {errors.email && touched.email && (
+                                    <div className='input-feedback'>{errors.email}</div>
+                                )}
+                            </div>
                         </FormGroup>
 
-                        <FormGroup>
-                            <Label for='password'>Пароль</Label>
-                            <Input
-                                id='password'
-                                type='password'
-                                placeholder='Введите пароль'
-                                value={values.password}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                                className={errors.password && touched.password && 'error'}
-                            />
-                            {errors.password && touched.password && (
-                                <div className="input-feedback">{errors.password}</div>
-                            )}
+                        <FormGroup className='row'>
+                            <Label for='password' className='col-sm-3 col-form-label'>Пароль</Label>
+                            <div className='col-sm-9'>
+                                <Input
+                                    id='password'
+                                    type='password'
+                                    placeholder='Введите пароль'
+                                    value={values.password}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    className={errors.password && touched.password && 'error'}
+                                />
+                                {errors.password && touched.password && (
+                                    <div className="input-feedback">{errors.password}</div>
+                                )}
+                            </div>
                         </FormGroup>
 
-                        <Button type='submit' disabled={isSubmitting}>Войти</Button>
+                        <Button className='btn-block' type='submit' disabled={isSubmitting}>Войти</Button>
                     </Form>
 
                 )
