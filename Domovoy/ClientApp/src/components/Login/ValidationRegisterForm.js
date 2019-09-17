@@ -31,6 +31,7 @@ const ValidationRegisterForm = (props) => {
             AuthHelper.saveAuth(data.user_name, data.access_token)
             props.handleLogin()
         }).catch(ex => {
+            console.log(ex)
             setErrors({auth:ex})
         })
     }
@@ -40,7 +41,7 @@ const ValidationRegisterForm = (props) => {
     return (
         <Formik
             initialValues={{ email: "", password: "" }}
-            onSubmit={(values, { setSubmitting }) => handleSubmit(values, setSubmitting)}
+            onSubmit={(values, { setSubmitting, setErrors }) => handleSubmit(values, setSubmitting, setErrors)}
 
             validationSchema={Yup.object().shape({
                 email: Yup.string()
