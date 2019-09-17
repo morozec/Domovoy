@@ -16,7 +16,8 @@ namespace Domovoy.Services
 
         public async Task<User> CreateUser(string userName, string password)
         {
-            if (_identityRepository.GetUser(userName) != null) return null;//пользователь существует
+            var user = await _identityRepository.GetUser(userName);
+            if (user != null) return null;//пользователь существует
             return await _identityRepository.CreateUser(userName, password);
         }
 
