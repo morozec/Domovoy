@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net;
+using System.Net.Http;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -58,6 +60,10 @@ namespace Domovoy.Controllers
         public async Task<IActionResult> Register([FromBody]IdentityViewModel model)
         {
             var identity = await GetNewIdentity(model.Username, model.Password);
+            if (identity == null)
+            {
+                return Unauthorized();
+            }
 
             var now = DateTime.UtcNow;
             var jwt = new JwtSecurityToken(
@@ -103,18 +109,22 @@ namespace Domovoy.Controllers
 
         private async Task<ClaimsIdentity> GetNewIdentity(string userName, string password)
         {
+            ClaimsIdentity identity = null;
             var sha256 = new SHA256Managed();
             var passwordHash = Convert.ToBase64String(sha256.ComputeHash(Encoding.UTF8.GetBytes(password)));
             var user = await _identityService.CreateUser(userName, passwordHash);
-
-            var claims = new List<Claim>
+            if (user != null)
             {
-                new Claim(ClaimsIdentity.DefaultNameClaimType, user.Login)
-            };
-            var identity = new ClaimsIdentity(claims,
-                "Token",
-                ClaimsIdentity.DefaultNameClaimType,
-                ClaimsIdentity.DefaultRoleClaimType);
+
+                var claims = new List<Claim>
+                {
+                    new Claim(ClaimsIdentity.DefaultNameClaimType, user.Login)
+                };
+                identity = new ClaimsIdentity(claims,
+                    "Token",
+                    ClaimsIdentity.DefaultNameClaimType,
+                    ClaimsIdentity.DefaultRoleClaimType);
+            }
 
             return identity;
         }

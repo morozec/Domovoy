@@ -21,12 +21,15 @@ const ValidationLoginForm = (props) => {
             },
             body: JSON.stringify(data)
         }).then(response => {
+            console.log(response)
             setSubmitting(false)
             if (response.ok) {
                 let rJson = response.json()
                 return rJson
-            } else {
-                throw 'Ошибка авторизации'
+            } else if (response.status === 401){
+                throw 'Ошибка авторизации: неверный email или пароль'
+             }else {
+                throw 'Произошла ошибка. Попробуйте позже'
             }
         }).then(data => {
             AuthHelper.saveAuth(data.user_name, data.access_token)

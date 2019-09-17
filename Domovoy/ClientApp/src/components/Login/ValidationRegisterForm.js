@@ -20,18 +20,20 @@ const ValidationRegisterForm = (props) => {
             },
             body: JSON.stringify(data)
         }).then(response => {
-            setSubmitting(false)
+            setSubmitting(false)            
             if (response.ok) {
                 let rJson = response.json()
                 return rJson
-            } else {
-                throw 'Ошибка авторизации'
+            } else if (response.status === 401) {
+                throw 'Ошибка регистрации: пользователь с указанным email уже сущестувует'
+            }
+            else {
+                throw 'Произошла ошибка. Попробуйте позже'
             }
         }).then(data => {
             AuthHelper.saveAuth(data.user_name, data.access_token)
             props.handleLogin()
-        }).catch(ex => {
-            console.log(ex)
+        }).catch(ex => {            
             setErrors({auth:ex})
         })
     }

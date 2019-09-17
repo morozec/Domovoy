@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using DBRepository.Repositories;
+using Microsoft.AspNetCore.Identity.UI;
 using Models;
 
 namespace Domovoy.Services
@@ -15,6 +16,7 @@ namespace Domovoy.Services
 
         public async Task<User> CreateUser(string userName, string password)
         {
+            if (_identityRepository.GetUser(userName) != null) return null;//пользователь существует
             return await _identityRepository.CreateUser(userName, password);
         }
 
