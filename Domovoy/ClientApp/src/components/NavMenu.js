@@ -12,7 +12,6 @@ import { Dropdown } from 'react-bootstrap'
 import $ from 'jquery'
 
 import { withRouter } from 'react-router-dom'
-import { useAuth0 } from "../react-auth0-wrapper";
 import LoginRegister from './Login/LoginRegister'
 import AuthHelper from './Login/AuthHelper'
 

@@ -9,7 +9,6 @@ import { Navbar } from 'react-bootstrap'
 import './components/Main.css';
 
 import Profile from './components/Profile'
-import PrivateRoute from './components/PrivateRoute'
 
 const App = () => {
 
@@ -64,7 +63,7 @@ const App = () => {
             />
           )} />
           <Route exact path='/House/:id' component={HouseComponent} />          
-          <PrivateRoute exact path='/profile' component={Profile} />
+          <Route exact path='/profile' component={Profile} />
         </Switch>
       </Container>
 
