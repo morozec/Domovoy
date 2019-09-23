@@ -11,7 +11,7 @@ const ValidationLoginForm = (props) => {
     const handleSubmit = (values, setSubmitting, setErrors) => {       
         let data = {
             userName: values.email,
-            password: values.password
+            password: values.password            
         }
 
         fetch('api/Identity/token', {
@@ -90,9 +90,9 @@ const ValidationLoginForm = (props) => {
                 return (
 
                     <Form onSubmit={handleSubmit}>
-                        <FormGroup className='row'>
-                            <Label for='email' className='col-sm-3 col-form-label'>Email</Label>
-                            <div className='col-sm-9'>
+                        <FormGroup>
+                            <Label for='email'>Email</Label>
+                            <div>
                                 <Input
                                     id='email'
                                     placeholder='Введите адрес электронной почты'
@@ -107,9 +107,9 @@ const ValidationLoginForm = (props) => {
                             </div>
                         </FormGroup>
 
-                        <FormGroup className='row'>
-                            <Label for='password' className='col-sm-3 col-form-label'>Пароль</Label>
-                            <div className='col-sm-9'>
+                        <FormGroup>
+                            <Label for='password'>Пароль</Label>
+                            <div>
                                 <Input
                                     id='password'
                                     type='password'
